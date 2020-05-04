@@ -1,6 +1,6 @@
 # Escape The Werehouse!
 My first Python game using graphics
-It is a "Boxed in" kind of game.
+It's a Sokoban-ish game style.
 
 I have created my game with help of the PyGame framework.
 
