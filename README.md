@@ -19,7 +19,7 @@ This was my final assignment during my course "Complete Python Bootcamp: Go from
 <br>
 <br>
 <br>
-Evil eyes for the Pits can be created with these images from depositphotis.com (NOT for free, only royalty free)
+Evil eyes for the Pits have been created with these images from depositphotis.com (NOT for free, only royalty free)
 https://depositphotos.com/115932316/stock-illustration-evli-angry-eye-on-dark.html<br>
 https://depositphotos.com/13951792/stock-illustration-halloween.html<br>
 https://depositphotos.com/48384563/stock-illustration-eyes-background.html<br>
