@@ -4,6 +4,8 @@ It is a "Boxed in" kind of game.
 
 I have created my game with help of the PyGame framework.
 
+![Image description](https://github.com/CrowStudio/Escape-The-Werehouse-/blob/master/graphics/Escape_the_Werehouse!.png)
+
 The graphic and sound is made by me, or modified by me from free online content.<br>
 Wooden Box:<br>
 https://opengameart.org/content/2d-wooden-box<br>
