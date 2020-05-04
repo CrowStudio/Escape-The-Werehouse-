@@ -4,15 +4,15 @@ It is a "Boxed in" kind of game.
 
 I have created my game with help of the PyGame framework.
 
-The graphic and sound is made by me, or modified by me from free online content.
-Wooden Box:
-https://opengameart.org/content/2d-wooden-box
-Star:
-https://icons8.com/icon/104578/star
-Moving Box:
-http://soundbible.com/671-Sliding.html
-Box in Pit:
-http://soundbible.com/1086-Wooden-Thump.html
+The graphic and sound is made by me, or modified by me from free online content.<br>
+Wooden Box:<br>
+https://opengameart.org/content/2d-wooden-box<br>
+Star:<br>
+https://icons8.com/icon/104578/star<br>
+Moving Box:<br>
+http://soundbible.com/671-Sliding.html<br>
+Box in Pit:<br>
+http://soundbible.com/1086-Wooden-Thump.html<br>
 
 This was my final assignment during my course "Complete Python Bootcamp: Go from zero to hero in Python 3" @Udemy
 
