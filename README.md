@@ -1,5 +1,6 @@
-# Escape-The-Werehouse!
+# Escape The Werehouse!
 My first Python game using graphics
+It is a "Boxed in" kind of game.
 
 I have used the PyGame framework.
 The graphic is made by me or modified by me from free online content.
