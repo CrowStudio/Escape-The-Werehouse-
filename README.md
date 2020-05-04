@@ -16,8 +16,9 @@ http://soundbible.com/1086-Wooden-Thump.html
 
 This was my final assignment during my course "Complete Python Bootcamp: Go from zero to hero in Python 3" @Udemy
 
-
-
+<br>
+<br>
+<br>
 Evil eyes for the Pits can be created with these images from depositphotis.com (NOT for free, only royalty free)
 https://depositphotos.com/115932316/stock-illustration-evli-angry-eye-on-dark.html
 https://depositphotos.com/13951792/stock-illustration-halloween.html
