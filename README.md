@@ -27,18 +27,16 @@ https://depositphotos.com/13951792/stock-illustration-halloween.html<br>
 https://depositphotos.com/48384563/stock-illustration-eyes-background.html<br>
 https://depositphotos.com/171514474/stock-illustration-orange-predatory-monster-eyes-isolated.html<br>
 https://depositphotos.com/85031000/stock-illustration-cat-eyes.html<br>
-https://depositphotos.com/1048669/stock-illustration-emo.html<br>
 https://depositphotos.com/232236208/stock-illustration-black-background-with-yellow-eyes.html<br>
-https://depositphotos.com/124871544/stock-photo-skull-with-evil-laugh.html<br>
-https://depositphotos.com/27588065/stock-illustration-something-hidden-in-darkness.html<br>
+My licenses for the images are as follows:<br>
+evli-angry-eye-on-dark: #180708826<br>
+halloween: #180708898<br>
+eyes-background: #180708914<br>
+orange-predatory-monster-eyes-isolated: #180708970<br>
+cat-eyes: #180709682<br>
+black-background-with-yellow-eyes: #180709846<br>
 
-my licenses are:<br>
-#180709980<br>
-#180709846<br>
-#180709682<br>
-#180709584<br>
-#180709480<br>
-#180708970<br>
-#180708914<br>
-#180708898<br>
-#180708826<br>
+
+
+
+
