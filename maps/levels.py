@@ -5,40 +5,56 @@ import time
 # Set images for blitting
 start = pygame.image.load('graphics/start.png')
 
-floor = [pygame.image.load('graphics/floor1.png'), pygame.image.load('graphics/floor2.png'), \
-        pygame.image.load('graphics/floor3.png'), pygame.image.load('graphics/floor4.png'),\
-        pygame.image.load('graphics/floor5.png'),pygame.image.load('graphics/floor6.png'),\
-        pygame.image.load('graphics/floor7.png'), pygame.image.load('graphics/floor8.png'),\
-        pygame.image.load('graphics/floor9.png'), pygame.image.load('graphics/floor10.png'),\
-        pygame.image.load('graphics/floor11.png'), pygame.image.load('graphics/floor12.png'),\
-        pygame.image.load('graphics/floor13.png'), pygame.image.load('graphics/floor14.png'),\
-        pygame.image.load('graphics/floor15.png'),pygame.image.load('graphics/floor16.png'),\
-        pygame.image.load('graphics/floor17.png'), pygame.image.load('graphics/floor18.png'),\
-        pygame.image.load('graphics/floor19.png'), pygame.image.load('graphics/floor20.png'),\
-        pygame.image.load('graphics/floor21.png'), pygame.image.load('graphics/floor22.png'),\
-        pygame.image.load('graphics/floor23.png'), pygame.image.load('graphics/floor24.png'),\
-        pygame.image.load('graphics/floor25.png'),pygame.image.load('graphics/floor26.png'),\
-        pygame.image.load('graphics/floor27.png'), pygame.image.load('graphics/floor28.png'),\
-        pygame.image.load('graphics/floor29.png'), pygame.image.load('graphics/floor30.png'),\
-        pygame.image.load('graphics/floor31.png'), pygame.image.load('graphics/floor32.png'),\
-        pygame.image.load('graphics/floor33.png'), pygame.image.load('graphics/floor34.png'),\
-        pygame.image.load('graphics/floor35.png'),pygame.image.load('graphics/floor36.png'),\
-        pygame.image.load('graphics/floor37.png'), pygame.image.load('graphics/floor38.png'),\
+floor = [pygame.image.load('graphics/floor1.png'), pygame.image.load('graphics/floor2.png'),
+        pygame.image.load('graphics/floor3.png'), pygame.image.load('graphics/floor4.png'),
+        pygame.image.load('graphics/floor5.png'),pygame.image.load('graphics/floor6.png'),
+        pygame.image.load('graphics/floor7.png'), pygame.image.load('graphics/floor8.png'),
+        pygame.image.load('graphics/floor9.png'), pygame.image.load('graphics/floor10.png'),
+        pygame.image.load('graphics/floor11.png'), pygame.image.load('graphics/floor12.png'),
+        pygame.image.load('graphics/floor13.png'), pygame.image.load('graphics/floor14.png'),
+        pygame.image.load('graphics/floor15.png'),pygame.image.load('graphics/floor16.png'),
+        pygame.image.load('graphics/floor17.png'), pygame.image.load('graphics/floor18.png'),
+        pygame.image.load('graphics/floor19.png'), pygame.image.load('graphics/floor20.png'),
+        pygame.image.load('graphics/floor21.png'), pygame.image.load('graphics/floor22.png'),
+        pygame.image.load('graphics/floor23.png'), pygame.image.load('graphics/floor24.png'),
+        pygame.image.load('graphics/floor25.png'),pygame.image.load('graphics/floor26.png'),
+        pygame.image.load('graphics/floor27.png'), pygame.image.load('graphics/floor28.png'),
+        pygame.image.load('graphics/floor29.png'), pygame.image.load('graphics/floor30.png'),
+        pygame.image.load('graphics/floor31.png'), pygame.image.load('graphics/floor32.png'),
+        pygame.image.load('graphics/floor33.png'), pygame.image.load('graphics/floor34.png'),
+        pygame.image.load('graphics/floor35.png'),pygame.image.load('graphics/floor36.png'),
+        pygame.image.load('graphics/floor37.png'), pygame.image.load('graphics/floor38.png'),
         pygame.image.load('graphics/floor39.png'), pygame.image.load('graphics/floor40.png')]
 
 wall = pygame.image.load('graphics/wall.png')
 
 pit = pygame.image.load('graphics/pit.png')
 pit_evil = [pygame.image.load('graphics/pit_evil1.png'), pygame.image.load('graphics/pit.png'),
-           pygame.image.load('graphics/pit_evil2.png'), pygame.image.load('graphics/pit.png'),\
-           pygame.image.load('graphics/pit_evil3.png'), pygame.image.load('graphics/pit.png'),\
-           pygame.image.load('graphics/pit_evil4.png'), pygame.image.load('graphics/pit.png')]
+            pygame.image.load('graphics/pit.png'), pygame.image.load('graphics/pit.png'),
+            pygame.image.load('graphics/pit_evil2.png'), pygame.image.load('graphics/pit.png'),
+            pygame.image.load('graphics/pit.png'), pygame.image.load('graphics/pit.png'),
+            pygame.image.load('graphics/pit_evil3.png'), pygame.image.load('graphics/pit.png'),
+            pygame.image.load('graphics/pit.png'), pygame.image.load('graphics/pit.png'),
+            pygame.image.load('graphics/pit_evil4.png'), pygame.image.load('graphics/pit.png'),
+            pygame.image.load('graphics/pit.png'), pygame.image.load('graphics/pit.png'),
+            pygame.image.load('graphics/pit_evil5.png'), pygame.image.load('graphics/pit.png'),
+            pygame.image.load('graphics/pit.png'), pygame.image.load('graphics/pit.png')]
+pit_crazy = [pygame.image.load('graphics/pit_crazy1.png'), pygame.image.load('graphics/pit.png'),
+            pygame.image.load('graphics/pit.png'), pygame.image.load('graphics/pit.png'),
+            pygame.image.load('graphics/pit_crazy2.png'), pygame.image.load('graphics/pit.png'),
+            pygame.image.load('graphics/pit.png'), pygame.image.load('graphics/pit.png'),
+            pygame.image.load('graphics/pit_crazy3.png'), pygame.image.load('graphics/pit.png'),
+            pygame.image.load('graphics/pit.png'), pygame.image.load('graphics/pit.png'),
+            pygame.image.load('graphics/pit_crazy4.png'), pygame.image.load('graphics/pit.png'),
+            pygame.image.load('graphics/pit.png'), pygame.image.load('graphics/pit.png'),
+            pygame.image.load('graphics/pit_crazy5.png'), pygame.image.load('graphics/pit.png'),
+            pygame.image.load('graphics/pit.png'), pygame.image.load('graphics/pit.png')]
 
 exit = pygame.image.load('graphics/exit.png')
 
-boxes = [pygame.image.load('graphics/box_in_pit.png'), pygame.image.load('graphics/box.png'),\
-        pygame.image.load('graphics/box_in_pit_return_.png'), pygame.image.load('graphics/box_return.png'),\
-        pygame.image.load('graphics/box_in_pit_fragile.png'), pygame.image.load('graphics/box_fragile.png'),\
+boxes = [pygame.image.load('graphics/box_in_pit.png'), pygame.image.load('graphics/box.png'),
+        pygame.image.load('graphics/box_in_pit_return_.png'), pygame.image.load('graphics/box_return.png'),
+        pygame.image.load('graphics/box_in_pit_fragile.png'), pygame.image.load('graphics/box_fragile.png'),
         pygame.image.load('graphics/box_in_pit_biohazard.png'), pygame.image.load('graphics/box_biohazard.png')]
 
 player = pygame.image.load('graphics/player.png')
@@ -47,7 +63,7 @@ player_down = pygame.image.load('graphics/player_down.png')
 player_left = pygame.image.load('graphics/player_left.png')
 player_right = pygame.image.load('graphics/player_right.png')
 
-stars = [pygame.image.load('graphics/0_stars.png'), pygame.image.load('graphics/1_stars.png'),\
+stars = [pygame.image.load('graphics/0_stars.png'), pygame.image.load('graphics/1_stars.png'),
         pygame.image.load('graphics/2_stars.png'), pygame.image.load('graphics/3_stars.png')]
 
 
@@ -164,7 +180,7 @@ player_start.append(t2r6)
 # LEVEL 2
 # Setup for tiles
 level_map.append([F, F, W, W, W, E,\
-                 F, F, F, F, P4, F,\
+                 F, F, F, F, P1, F,\
                  F, F ,W, P2, W, W,\
                  P3, W ,F, F, F, S,\
                  F, F, F, F, W, PW,
@@ -235,12 +251,12 @@ class BoardElements():
 
 
     # Blit pit1 tile
-    def __pit_1__(self, game_board, pos, box):
+    def __pit_1__(self, game_board, pos, box, i):
         '''__pit_1__'''
         # If Pit active
         # - Blit pit1 
         if self.pit1:
-            game_board.blit(pit, (pos))
+            game_board.blit(pit_evil[i], (pos))
 
         # Else
         # - Blit box_n's box_in_pit 
@@ -249,12 +265,12 @@ class BoardElements():
 
 
     # Blit pit2 tile
-    def __pit_2__(self, game_board, pos, box):
+    def __pit_2__(self, game_board, pos, box, i):
         '''__pit_2__'''
         # If Pit active
         # - Blit pit2 
         if self.pit2:
-            game_board.blit(pit, (pos))
+            game_board.blit(pit_crazy[i], (pos))
 
         # Else
         # - Blit box_n's box_in_pit 
@@ -276,12 +292,12 @@ class BoardElements():
             game_board.blit(boxes[box], (pos))
 
     # Blit pit4 tile
-    def __pit_4__(self, game_board, pos, box):
+    def __pit_4__(self, game_board, pos, box, i):
         '''__pit_4__'''
         # If Pit active
         # - Blit pit4
         if self.pit4:
-            game_board.blit(pit, (pos))
+            game_board.blit(pit_crazy[i], (pos))
 
         # Else
         # - Blit box_n's box_in_pit 
@@ -309,7 +325,7 @@ class BoardElements():
         for i in range(len(level_map)):
             # Genrate random floor and pit tile
             rand_floor = randrange(0, 40)
-            rand_pit = randrange(0,5)
+            rand_pit = randrange(0,20)
 
             # Set tile cooresponding to value of Game Board element
             if level_map[i] == 0:
@@ -322,16 +338,16 @@ class BoardElements():
                 self.__wall__(game_board, tiles[i])
 
             elif level_map[i] == 3:
-                self.__pit_1__(game_board, tiles[i], self.in_pit1)
+                self.__pit_1__(game_board, tiles[i], self.in_pit1, rand_pit)
 
             elif level_map[i] == 4:
-                self.__pit_2__(game_board, tiles[i], self.in_pit2)
+                self.__pit_2__(game_board, tiles[i], self.in_pit2, rand_pit)
 
             elif level_map[i] == 5:
                 self.__pit_3__(game_board, tiles[i], self.in_pit3, rand_pit)
 
             elif level_map[i] == 6:
-                self.__pit_4__(game_board, tiles[i], self.in_pit4)
+                self.__pit_4__(game_board, tiles[i], self.in_pit4, rand_pit)
 
             elif level_map[i] == 7:
                 self.__pit_w__(game_board, tiles[i])
@@ -429,16 +445,16 @@ class BoardElements():
                 self.__wall__(game_board, el[1])
 
             elif el[0] == 3:
-                self.__pit_1__(game_board, el[1], self.in_pit1)
+                self.__pit_1__(game_board, el[1], self.in_pit1, el[3])
 
             elif el[0] == 4:
-                self.__pit_2__(game_board, el[1], self.in_pit2)
+                self.__pit_2__(game_board, el[1], self.in_pit2, el[3])
 
             elif el[0] == 5:
                 self.__pit_3__(game_board, el[1], self.in_pit3, el[3])
 
             elif el[0] == 6:
-                self.__pit_4__(game_board, el[1], self.in_pit4)
+                self.__pit_4__(game_board, el[1], self.in_pit4, el[3])
 
             elif el[0] == 7:
                 self.__pit_w__(game_board, el[1])
