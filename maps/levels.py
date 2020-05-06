@@ -251,12 +251,12 @@ class BoardElements():
 
 
     # Blit pit1 tile
-    def __pit_1__(self, game_board, pos, box, i):
+    def __pit_1__(self, game_board, pos, box):
         '''__pit_1__'''
         # If Pit active
         # - Blit pit1 
         if self.pit1:
-            game_board.blit(pit_evil[i], (pos))
+            game_board.blit(pit, (pos))
 
         # Else
         # - Blit box_n's box_in_pit 
@@ -265,12 +265,12 @@ class BoardElements():
 
 
     # Blit pit2 tile
-    def __pit_2__(self, game_board, pos, box, i):
+    def __pit_2__(self, game_board, pos, box):
         '''__pit_2__'''
         # If Pit active
         # - Blit pit2 
         if self.pit2:
-            game_board.blit(pit_crazy[i], (pos))
+            game_board.blit(pit, (pos))
 
         # Else
         # - Blit box_n's box_in_pit 
@@ -284,7 +284,7 @@ class BoardElements():
         # If Pit active
         # - Blit pit3
         if self.pit3:
-            game_board.blit(pit_evil[i], (pos))
+            game_board.blit(pit_crazy[i], (pos))
 
         # Else
         # - Blit box_n's box_in_pit 
@@ -297,7 +297,7 @@ class BoardElements():
         # If Pit active
         # - Blit pit4
         if self.pit4:
-            game_board.blit(pit_crazy[i], (pos))
+            game_board.blit(pit_evil[i], (pos))
 
         # Else
         # - Blit box_n's box_in_pit 
@@ -338,10 +338,10 @@ class BoardElements():
                 self.__wall__(game_board, tiles[i])
 
             elif level_map[i] == 3:
-                self.__pit_1__(game_board, tiles[i], self.in_pit1, rand_pit)
+                self.__pit_1__(game_board, tiles[i], self.in_pit1)
 
             elif level_map[i] == 4:
-                self.__pit_2__(game_board, tiles[i], self.in_pit2, rand_pit)
+                self.__pit_2__(game_board, tiles[i], self.in_pit2)
 
             elif level_map[i] == 5:
                 self.__pit_3__(game_board, tiles[i], self.in_pit3, rand_pit)
@@ -445,10 +445,10 @@ class BoardElements():
                 self.__wall__(game_board, el[1])
 
             elif el[0] == 3:
-                self.__pit_1__(game_board, el[1], self.in_pit1, el[3])
+                self.__pit_1__(game_board, el[1], self.in_pit1)
 
             elif el[0] == 4:
-                self.__pit_2__(game_board, el[1], self.in_pit2, el[3])
+                self.__pit_2__(game_board, el[1], self.in_pit2)
 
             elif el[0] == 5:
                 self.__pit_3__(game_board, el[1], self.in_pit3, el[3])
