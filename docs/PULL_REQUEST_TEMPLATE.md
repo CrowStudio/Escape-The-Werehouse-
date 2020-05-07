@@ -7,4 +7,4 @@ This pull request solves #2
 - A description of the elements behavior
 
 ### Mentions
-Perons responsible for reviewing: @CrowStudio
+Persons responsible for reviewing: @CrowStudio
