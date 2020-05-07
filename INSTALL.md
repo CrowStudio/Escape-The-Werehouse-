@@ -22,5 +22,5 @@
 
 To run the game type:
 ```
-python escape_the_warehouse.py
+python3 escape_the_warehouse.py
 ```
