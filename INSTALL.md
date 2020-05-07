@@ -18,7 +18,7 @@
 	```
 
 	If it works, you are ready to go!
-	If not, more platform-specific instructions can be found here: https://www.pygame.org/wiki/GettingStarted
+	If not, more platform-specific instructions can be found [HERE](https://www.pygame.org/wiki/GettingStarted)
 
 To run the game type:
 ```
