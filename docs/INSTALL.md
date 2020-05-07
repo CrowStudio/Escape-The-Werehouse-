@@ -1,6 +1,6 @@
 ## Install the Game 
 
-- Download the blob and extract it in a location of your choice.<br><br>
+- Download the [ZIP](https://github.com/CrowStudio/Escape-The-Werehouse-/archive/master.zip) and extract it in a location of your choice.<br><br>
 - Install [Python](https://python.org) and/or [PyGame](https://www.pygame.org)<br>
   >...**Use python 3.7.7** or greater, because it is much friendlier to newbies, and additionally runs faster.<br>
   ><br>The best way to install pygame is with the [pip](https://pip.pypa.io/en/stable/) tool (which is what python uses to install packages).<br>
