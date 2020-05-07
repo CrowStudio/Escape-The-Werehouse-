@@ -1,7 +1,7 @@
 ## Install the Game 
 
 - Download the blob and extract it in a location of your choice.
-- Install Python and/or PyGame 
+- Install [Python](https://python.org) and/or [PyGame](https://www.pygame.org)<br>
 	PyGame requires Python; if you don't already have it, you can download it from python.org.
 	Use python 3.7.7 or greater, because it is much friendlier to newbies, and additionally runs faster.
 
@@ -18,9 +18,9 @@
 	```
 
 	If it works, you are ready to go!
-	If not, more platform-specific instructions can be found here: https://www.pygame.org/wiki/GettingStarted
+	If not, more platform-specific instructions can be found [HERE](https://www.pygame.org/wiki/GettingStarted)
 
 To run the game type:
 ```
-python escape_the_warehouse.py
+python3 escape_the_warehouse.py
 ```
