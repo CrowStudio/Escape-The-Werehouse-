@@ -23,18 +23,18 @@ Submitting patches
   without your patch.
 - Include a string like "Fixes #123" in your commit message
   (where 123 is the issue you fixed).
-  See [Closing issues using keyword](https://help.github.com/en/github/managing-your-work-on-github/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword)
+  See [Closing issues using keyword](https://help.github.com/en/github/managing-your-work-on-github/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword), and please follow the [50/72 rule](https://www.midori-global.com/blog/2018/04/02/git-50-72-rule).
 
 First time setup
 ----------------
 
-- Download and install the [latest version of git](https://git-scm.com/downloads)
+- Download and install the [latest version of git](https://git-scm.com/downloads).
 - Configure git with your [username](https://help.github.com/en/github/using-git/setting-your-username-in-git) and [email](https://help.github.com/en/github/setting-up-and-managing-your-github-user-account/setting-your-commit-email-address):
 
         git config --global user.name 'your name'
         git config --global user.email 'your email'
 
-- Make sure you have a [GitHub account](https://github.com/join)
+- Make sure you have a [GitHub account](https://github.com/join).
 - Fork Escape The Weerehouse to your GitHub account by clicking the [Fork](https://github.com/CrowStudio/Escape-The-Werehouse-/fork) button.
 - [Clone](https://help.github.com/en/github/getting-started-with-github/fork-a-repo#step-2-create-a-local-clone-of-your-fork) your GitHub fork locally:
 
@@ -64,7 +64,7 @@ Start coding
 
         git checkout -b branch-name-your-feature escape_game/master
 
-- Using your favorite editor, make your changes, [committing as you go](https://dont-be-afraid-to-commit.readthedocs.io/en/latest/git/commandlinegit.html#commit-your-changes)
+- Using your favorite editor, make your changes, [committing as you go](https://dont-be-afraid-to-commit.readthedocs.io/en/latest/git/commandlinegit.html#commit-your-changes).
 - Push your commits to GitHub:
 
         git push --set-upstream escape_game your-branch-name
