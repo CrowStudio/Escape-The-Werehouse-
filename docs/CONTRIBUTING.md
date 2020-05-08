@@ -69,9 +69,9 @@ Start coding
 
         git push --set-upstream escape_game your-branch-name
 
-  and [create a pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request)
+- Create a [pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request)
   
-- Celebrate 🎉
+- Celebrate! 🎉
 
 <br>
 <br>
