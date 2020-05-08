@@ -4,8 +4,14 @@ It's a Sokoban-ish game style, that I have created with the help of [PyGame](htt
 
 <img src="https://github.com/CrowStudio/Escape-The-Werehouse-/blob/master/graphics/Escape_the_Werehouse!.png" width="400">
 
+This was my final assignment during my [Udemy](https://www.udemy.com/) course [Complete Python Bootcamp: Go from zero to hero in Python 3](https://www.udemy.com/course/complete-python-bootcamp/)
 
 ### Install the game
 Please read the [INSTALL.md](https://github.com/CrowStudio/Escape-The-Werehouse-/blob/master/docs/INSTALL.md) in the **_docs/_** folder.
 
-This was my final assignment during my [Udemy](https://www.udemy.com/) course [Complete Python Bootcamp: Go from zero to hero in Python 3](https://www.udemy.com/course/complete-python-bootcamp/)
+### Contributing
+I would be very happy if someone liked this game and would contribute with levels and/or further development of elemts etc. :blush:
+Please read the [CONTRIBUTING.md](https://github.com/CrowStudio/Escape-The-Werehouse-/blob/master/docs/CONTRIBUTING.md) in the **_docs/_** folder.
+
+### Code of Conduct
+PLease be nice to eachother :two_hearts: and read the [CODE_OF_CONDUCT.md]((https://github.com/CrowStudio/Escape-The-Werehouse-/blob/master/docs/CODE_OF_CONDUCT.md), also in the **_docs/_** folder.
