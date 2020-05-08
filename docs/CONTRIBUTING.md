@@ -36,7 +36,7 @@ First time setup
 
 - Make sure you have a [GitHub account](https://github.com/join)
 - Fork Escape The Weerehouse to your GitHub account by clicking the [Fork](https://github.com/CrowStudio/Escape-The-Werehouse-/fork) button.
-- [Clone](https://help.github.com/en/github/getting-started-with-github/fork-a-repo#step-2-create-a-local-clone-of-your-fork) your GitHub fork locally::
+- [Clone](https://help.github.com/en/github/getting-started-with-github/fork-a-repo#step-2-create-a-local-clone-of-your-fork) your GitHub fork locally:
 
         git clone https://github.com/{username}/Escape-The-Werehouse-
         cd Escape-The-Werehouse-
