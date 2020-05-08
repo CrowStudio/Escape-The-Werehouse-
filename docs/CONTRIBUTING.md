@@ -41,10 +41,10 @@ First time setup
         git clone https://github.com/{username}/Escape-The-Werehouse-
         cd Escape-The-Werehouse-
 
-- Add the main repository as a remote to update later:
+- Add the MAIN repository (not your fork) as a remote to update later:
 
-        git remote add escape_game https://github.com/{username}/Escape-The-Werehouse-
-        git fetch 
+        git remote add origin https://github.com/CrowStudio/Escape-The-Werehouse-
+        git fetch origin
 
 - Install Pygame ([for troubleshooting](https://www.pygame.org/wiki/GettingStarted#Further%20information%20on%20installation)):
 
@@ -54,22 +54,18 @@ First time setup
 Start coding
 ------------
 
--   If you're submitting a bug or documentation fix, create a branch to 
-    identify the issue you would like to work on:
+-   Create a branch to identify the issue you would like to work on. If you're submitting a bug or documentation fix, branch off of the latest master branch of the MAIN repository:
 
-        git checkout -b branch-name-of-the-issue escape_game/master
+        git checkout -b branch-name-of-the-issue origin/master
 
-    If you're submitting a feature addition or change, create a branch to 
-    identify the feature you would like to work on:
+    If you're submitting a feature addition or change, create a branch off of the master branch of the MAIN repository:
 
-        git checkout -b branch-name-your-feature escape_game/master
+        git checkout -b branch-name-your-feature origin/master
 
 - Using your favorite editor, make your changes, [committing as you go](https://dont-be-afraid-to-commit.readthedocs.io/en/latest/git/commandlinegit.html#commit-your-changes).
-- Push your commits to GitHub:
+- Push your commits to GitHub and [create a pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request):
 
-        git push --set-upstream escape_game your-branch-name
-
-- Create a [pull request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request)
+        git push --set-upstream origin your-branch-name
   
 - Celebrate! 🎉
 
