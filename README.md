@@ -2,7 +2,7 @@
 My first Python game using graphics.<br>
 It's a Sokoban-ish game style, that I have created with the help of [PyGame](https://www.pygame.org).
 
-[<img src="https://github.com/CrowStudio/Escape-The-Werehouse-/blob/master/docs/Escape_the_Werehouse!.png" width="400">](https://youtu.be/5SxIALomPpc)
+[![Click for video](https://github.com/CrowStudio/Escape-The-Werehouse-/blob/master/docs/Escape_the_Werehouse!.png)](https://youtu.be/5SxIALomPpc)
 
 This was my final assignment during my [Udemy](https://www.udemy.com/) course [Complete Python Bootcamp: Go from zero to hero in Python 3](https://www.udemy.com/course/complete-python-bootcamp/)
 
