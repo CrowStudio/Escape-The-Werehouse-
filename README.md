@@ -6,7 +6,7 @@ _Click the image below to see a preview of the first level_
 [![](https://github.com/CrowStudio/Escape-The-Werehouse-/blob/master/docs/Escape_the_Werehouse!.png)](https://youtu.be/5SxIALomPpc)<br>
 
 ### Install the game
-Please read the [INSTALL.md](https://github.com/CrowStudio/Escape-The-Werehouse-/blob/master/docs/INSTALL.md) in the **_docs/_** folder.
+Please read the [INSTALL](https://github.com/CrowStudio/Escape-The-Werehouse-/blob/master/docs/INSTALL.md) document.
 
 ### Contributing
 I would be very happy if someone liked this game and would contribute with levels and/or further development of elemts etc. :blush:
