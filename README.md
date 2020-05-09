@@ -10,7 +10,7 @@ Please read the [INSTALL.md](https://github.com/CrowStudio/Escape-The-Werehouse-
 
 ### Contributing
 I would be very happy if someone liked this game and would contribute with levels and/or further development of elemts etc. :blush:
-Please read the [CONTRIBUTING.md](https://github.com/CrowStudio/Escape-The-Werehouse-/blob/master/docs/CONTRIBUTING.md) in the **_docs/_** folder.
+Please read the [CONTRIBUTING](https://github.com/CrowStudio/Escape-The-Werehouse-/blob/master/docs/CONTRIBUTING.md) document.
 
 ### Code of Conduct
-Please be nice to eachother :two_hearts: and read the [CODE_OF_CONDUCT.md](https://github.com/CrowStudio/Escape-The-Werehouse-/blob/master/docs/CODE_OF_CONDUCT.md), also in the **_docs/_** folder.
+Please be nice to eachother :two_hearts: and read the [CODE_OF_CONDUCT](https://github.com/CrowStudio/Escape-The-Werehouse-/blob/master/docs/CODE_OF_CONDUCT.md) document.
