@@ -25,6 +25,11 @@ Submitting patches
   (where 123 is the issue you fixed).
   See [Closing issues using keyword](https://help.github.com/en/github/managing-your-work-on-github/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword), and please follow the [50/72 rule](https://www.midori-global.com/blog/2018/04/02/git-50-72-rule).
 
+Commenting code
+---------------
+
+Please make make comments that explains your code well, and also are understandable for beginners :-)
+
 First time setup
 ----------------
 
