@@ -13,4 +13,4 @@ I would be very happy if someone liked this game and would contribute with level
 Please read the [CONTRIBUTING](https://github.com/CrowStudio/Escape-The-Werehouse-/blob/master/docs/CONTRIBUTING.md) document.
 
 ### Code of Conduct
-Please be nice to eachother :two_hearts: and read the [CODE_OF_CONDUCT](https://github.com/CrowStudio/Escape-The-Werehouse-/blob/master/docs/CODE_OF_CONDUCT.md) document.
+Please read the [CODE_OF_CONDUCT](https://github.com/CrowStudio/Escape-The-Werehouse-/blob/master/docs/CODE_OF_CONDUCT.md) document, and be nice to eachother :two_hearts:
