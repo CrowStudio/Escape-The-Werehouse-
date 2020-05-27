@@ -177,7 +177,7 @@ positions.append([t6r4, t5r2, t4r1, t3r4])
 player_start.append(t2r6)
 
 
-# LEVEL 2
+# LEVEL 3
 # Setup for tiles
 level_map.append([F, F, W, W, W, E,\
                  F, F, F, F, P1, F,\
@@ -396,8 +396,8 @@ class BoardElements():
         
 
     # Place Boxes, Player, and reset Pits
-    def __place_boxes__player_and_reset_pits__(self, active_boxes, positions, player_start):
-        '''__place_boxes__player_and_reset_pits__'''
+    def __place_boxes_player_and_reset_pits__(self, active_boxes, positions, player_start):
+        '''__place_boxes_player_and_reset_pits__'''
         # Activate/inactivate box1
         self.box1 = active_boxes[0]
         # Set startpoint for box1
@@ -477,7 +477,7 @@ class BoardElements():
             self.box = []
             self.pit_box = []
             self.__create_boxes__(boxes)
-            self.__place_boxes__player_and_reset_pits__(active_boxes[self.lv],\
+            self.__place_boxes_player_and_reset_pits__(active_boxes[self.lv],\
                                                         positions[self.lv], player_start[self.lv])
             
             self.lv += 1
