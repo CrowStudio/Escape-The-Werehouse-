@@ -1,6 +1,7 @@
 import pygame
 from random import randrange
 import time
+from blit.maps import game_maps, tutorial_maps
 
 # Set images for blitting
 start = pygame.image.load('graphics/start.png')
@@ -68,160 +69,39 @@ stars = [pygame.image.load('graphics/0_stars.png'), pygame.image.load('graphics/
         pygame.image.load('graphics/2_stars.png'), pygame.image.load('graphics/3_stars.png')]
 
 
-# Set tile coordinate for X
-x1 = 0
-x2 = 100
-x3 = 200
-x4 = 300
-x5 = 400
-x6 = 500
+tiles = game_maps.tiles
 
-# Set tile coordinate for Y
-y1 = 0
-y2 = 100
-y3 = 200
-y4 = 300
-y5 = 400
-y6 = 500
+level_map = [tutorial_maps.tutorial_map]
+level_map.append(game_maps.level_map)
 
-# Tile coordinates
-t1r1 = (x1, y1)
-t2r1 = (x2, y1)
-t3r1 = (x3, y1)
-t4r1 = (x4, y1)
-t5r1 = (x5, y1)
-t6r1 = (x6, y1)
-t1r2 = (x1, y2)
-t2r2 = (x2, y2)
-t3r2 = (x3, y2)
-t4r2 = (x4, y2)
-t5r2 = (x5, y2)
-t6r2 = (x6, y2)
-t1r3 = (x1, y3)
-t2r3 = (x2, y3)
-t3r3 = (x3, y3)
-t4r3 = (x4, y3)
-t5r3 = (x5, y3)
-t6r3 = (x6, y3)
-t1r4 = (x1, y4)
-t2r4 = (x2, y4)
-t3r4 = (x3, y4)
-t4r4 = (x4, y4)
-t5r4 = (x5, y4)
-t6r4 = (x6, y4)
-t1r5 = (x1, y5)
-t2r5 = (x2, y5)
-t3r5 = (x3, y5)
-t4r5 = (x4, y5)
-t5r5 = (x5, y5)
-t6r5 = (x6, y5)
-t1r6 = (x1, y6)
-t2r6 = (x2, y6)
-t3r6 = (x3, y6)
-t4r6 = (x4, y6)
-t5r6 = (x5, y6)
-t6r6 = (x6, y6)
+active_boxes = [tutorial_maps.active_boxes]
+active_boxes.append(game_maps.active_boxes)
 
-# Game Board coordinates
-tiles = (t1r1, t2r1, t3r1, t4r1, t5r1, t6r1,\
-        t1r2, t2r2, t3r2, t4r2, t5r2, t6r2,\
-        t1r3, t2r3, t3r3, t4r3, t5r3, t6r3,\
-        t1r4, t2r4, t3r4, t4r4, t5r4, t6r4,\
-        t1r5, t2r5, t3r5, t4r5, t5r5, t6r5,\
-        t1r6, t2r6, t3r6, t4r6, t5r6, t6r6,)
+positions = [tutorial_maps.positions]
+positions.append(game_maps.positions)
 
-# Value of Game Board elements 
-S = 0  # Start
-F = 1  # Floor
-W = 2  # Wall
-P1 = 3  # Pit1
-P2 = 4  # Pit2
-P3 = 5  # Pit3
-P4 = 6  # Pit4
-PW = 7  # Pit as Wall - not able to put box in it
-E = 8  # Exit
+player_start = [tutorial_maps.player_start]
+player_start.append(game_maps.player_start)
+
+active_exit = [tutorial_maps.active_exit]
+active_exit.append(game_maps.active_exit)
 
 
-# TUTORIAL 1
-titel = [' Tutorial: Move Box          ']
-# Setup for tiles
-tutorial_map = [[W, W, W, W, W, W,\
-                W, W, F, W, W, W,\
-                W, W ,F, E, W, W,\
-                W, W ,F, W, W, W,\
-                W, W, S, W, W, W,
-                W, W, W, W, W, W]]
 
-# Setup for active Boxes
-active_boxes = [[True, False, False, False]]
-# Setup of Boxes startpoints
-positions = [[t3r4, t4r3, t5r3, t4r5]]
-
-# Set startpoint for Player
-player_start = [t3r5]
-
-# Set exit to active
-active_exit = [1]
-
-
-# TUTORIAL 2
-titel.append(' Tutorial: Drag Box          ')
-# Setup for tiles
-tutorial_map.append([W, W, W, E, W, W,\
-                    W, W, W, F, F, W,\
-                    W, W ,W, F, F, W,\
-                    W, W ,W, F, F, W,\
-                    W, W, F, F, W, W,
-                    W, W, S, W, W, W])
-
-# Setup for active Boxes
-active_boxes.append([True, False, False, False])
-# Setup of Boxes startpoints
-positions.append([t4r2, t5r2, t4r1, t3r4])
-
-# Set startpoint for Player
-player_start.append(t3r6)
-
-# Set exit to active
-active_exit.append(1)
-
-
-# TUTORIAL 3
-titel.append('    Tutorial: Push Box into Pit')
-# Setup for tiles
-tutorial_map.append([W, W, E, W, W, W,\
-                    W, W, F, W, W, W,\
-                    W, W ,F, W, W, W,\
-                    W, W ,P1, W, W, W,\
-                    W, W, F, W, W, W,
-                    W, W, S, W, W, W])
-
-# Setup for active Boxes
-active_boxes.append([True, False, False, False])
-# Setup of Boxes startpoints
-positions.append([t3r5, t2r1, t6r2, t3r6])
-
-# Set startpoint for Player
-player_start.append(t3r6)
-
-# Set exit to active
-active_exit.append(1)
-
-
-# CLASS for setup of tutorials and blitting of game elements
+# CLASS for setup of levels and blitting of game elements
 class BoardElements():
     '''BoardElements'''
     #
-    def __init__(self):
+    def __init__(self, s):
         '''__init__'''
         # Setup of Game Board size
         self.game_board_x = 600
         self.game_board_y = 600
 
-        # Variable to keep track of numbers of tutorials
-        self.no_of_levels = sum(type(i) == type([]) for i in tutorial_map)
+        self.titel = tutorial_maps.titel
 
-        self.titel = titel
+        # Variable to keep track of numbers of Levels
+        self.no_of_levels = sum(type(i) == type([]) for i in level_map[s])
 
         # Variable to tell if Player finished the Game or fell into a Pit
         self.play = True
@@ -241,12 +121,12 @@ class BoardElements():
         self.in_pit3 = 0
         self.in_pit4 = 0
 
-        # Lists for creation of tutorials
+        # Lists for creation of Levels
         self.elements = []
         self.box = []
         self.pit_box = []
 
-        # Variable to keep track of tutorials
+        # Variable to keep track of Levels
         self.lv = 0
 
 
@@ -343,55 +223,55 @@ class BoardElements():
             game_board.blit(no_exit, (pos))
 
 
-    # Setup tiles for tutorial n
-    def __create_tutorial__(self, game_board, tutorial_map):
-        '''__create_tutorial__'''
-        # For each coordinate in tutorial_map
+    # Setup tiles for Level n
+    def __create_level__(self, game_board, level_map):
+        '''__create_level__'''
+        # For each coordinate in level_map
         # - Set tiles depending on value of Game Board element
-        for i in range(len(tutorial_map)):
+        for i in range(len(level_map)):
             # Genrate random floor and pit tile
             rand_floor = randrange(0, 40)
             rand_pit = randrange(0,20)
 
             # Set tile cooresponding to value of Game Board element
-            if tutorial_map[i] == 0:
+            if level_map[i] == 0:
                 self.__start__(game_board, tiles[i])
 
-            elif tutorial_map[i] == 1:
+            elif level_map[i] == 1:
                 self.__floor__(game_board, tiles[i], rand_floor)
 
-            elif tutorial_map[i] == 2:
+            elif level_map[i] == 2:
                 self.__wall__(game_board, tiles[i])
 
-            elif tutorial_map[i] == 3:
+            elif level_map[i] == 3:
                 self.__pit_1__(game_board, tiles[i], self.in_pit1)
 
-            elif tutorial_map[i] == 4:
+            elif level_map[i] == 4:
                 self.__pit_2__(game_board, tiles[i], self.in_pit2)
 
-            elif tutorial_map[i] == 5:
+            elif level_map[i] == 5:
                 self.__pit_3__(game_board, tiles[i], self.in_pit3, rand_pit)
 
-            elif tutorial_map[i] == 6:
+            elif level_map[i] == 6:
                 self.__pit_4__(game_board, tiles[i], self.in_pit4, rand_pit)
 
-            elif tutorial_map[i] == 7:
+            elif level_map[i] == 7:
                 self.__pit_as_wall__(game_board, tiles[i])
 
-            elif tutorial_map[i] == 8:
+            elif level_map[i] == 8:
                 self.__exit___(game_board, tiles[i])
 
-            # Append tile to list of elements for tutorial n
-            self.elements.append([tutorial_map[i], tiles[i], rand_floor, rand_pit])
+            # Append tile to list of elements for Level n
+            self.elements.append([level_map[i], tiles[i], rand_floor, rand_pit])
 
 
     # Setup of Boxes graphics
-    def __create_boxes__(self, tutorial_boxes):
+    def __create_boxes__(self, level_boxes):
         '''__create_boxes__'''
         # Generate random Box
         rand = randrange(1, 8, 2)
         # Set graphic for random Box
-        rand_box = [rand, tutorial_boxes[rand]]
+        rand_box = [rand, level_boxes[rand]]
         # Set box_in_pit to coorespond to Box graphic
         rand_pit_box = (rand - 1)
 
@@ -407,7 +287,7 @@ class BoardElements():
             # Generate new random Box
             rand = randrange(1, 8, 2)
             # Set graphic for random Box
-            rand_box = [rand, tutorial_boxes[rand]]
+            rand_box = [rand, level_boxes[rand]]
             # Set box_in_pit to coorespond to Box graphic
             rand_pit_box = (rand - 1)
             
@@ -457,10 +337,10 @@ class BoardElements():
         self.pit4 = 1
 
 
-    # Blit tiles for tutorial n
+    # Blit tiles for Level n
     def blit_level(self, game_board):
         '''blit_level'''
-        # For each element in list of tutorial elements
+        # For each element in list of Level elements
         # - Blit tiles depending on value of Game Board element
         for el in self.elements:
             # Blit tile cooresponding to value of Game Board element
@@ -492,22 +372,22 @@ class BoardElements():
                 self.__exit___(game_board, el[1])
 
 
-    # Setup of new tutorial
-    def generate_level(self, game_board, new_tutorial):
+    # Setup of new Level
+    def generate_level(self, game_board, new_level, s):
         '''generate_level'''
-        # If new_tutorial equals True
+        # If new_level equals True
         # - Reset elements list and setup tiles,
         #   reset box and pit_box list and Pits then place Boxes and Player, 
-        #   increase tutorial counter, and set new_tutorial to False
-        if new_tutorial:
+        #   increase level counter, and set new_level to False
+        if new_level:
             self.elements = []
-            self.__create_tutorial__(game_board, tutorial_map[self.lv])
+            self.__create_level__(game_board, level_map[s][self.lv])
 
             self.box = []
             self.pit_box = []
             self.__create_boxes__(boxes)
-            self.__place_boxes_player_and_reset_pits_and_exit__(active_boxes[self.lv], positions[self.lv],\
-                                                                player_start[self.lv], active_exit[self.lv])
+            self.__place_boxes_player_and_reset_pits_and_exit__(active_boxes[s][self.lv], positions[s][self.lv],\
+                                                        player_start[s][self.lv], active_exit[s][self.lv])
             
             self.lv += 1
 
@@ -629,10 +509,10 @@ class BoardElements():
                 game_board.blit(player, (self.px, self.py))
 
 
-    # Blit tutorial score
+    # Blit Level score
     def blit_stars(self, game_board, moves):
         '''blit_stars'''
-        # Blit score for tutorial 1 depending on number of moves
+        # Blit score for LEVEL 1 depending on number of moves
         if self.lv == 1:
             if moves <= 17:
                 # Blit 3 highlighted Stars
@@ -646,7 +526,7 @@ class BoardElements():
                 # Blit 1 highlighted Star
                 game_board.blit(stars[1], (186, 115))
         
-        # Blit score for tutorial 2 depending on number of moves
+        # Blit score for LEVEL 2 depending on number of moves
         elif self.lv == 2:
             if moves <= 24:
                 # Blit 3 highlighted Stars
@@ -660,7 +540,7 @@ class BoardElements():
                 # Blit 1 highlighted Star
                 game_board.blit(stars[1], (186, 115))
 
-        # Blit score for tutorial 3 depending on number of moves
+        # Blit score for LEVEL 3 depending on number of moves
         elif self.lv == 3:
             if moves <= 35:
                 # Blit 3 highlighted Stars
