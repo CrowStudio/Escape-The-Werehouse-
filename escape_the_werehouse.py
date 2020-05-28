@@ -967,7 +967,7 @@ option = 0
 while game_on:
     # Set frame rate to 20 frames per second
     clock.tick(24)
-    print(board.play, new_level)
+    
     # Blit new level if new_level equals True, refresh state of new_level
     new_level = board.generate_level(game_board, new_level, option)
 
