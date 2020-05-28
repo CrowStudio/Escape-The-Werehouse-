@@ -43,6 +43,11 @@ E = 8  # Exit
 DIFF = 100
 ANIMATE = 17
 
+# Boundry varibales
+UPPER = 0
+LOWER = (board.game_board_y - DIFF)
+LEFTMOST = 0
+RIGHTMOST = (board.game_board_x - DIFF)
 
 
 # CLASS for Player and Box movements
@@ -256,13 +261,13 @@ class Movements():
 
         # Checks for Walls, and refresh direction coordinates for Player
         self.__detect_wall_up__(board.px, board.py, self.p_travel, self.p_dest, self.p_move)
-
+        
 
     # Move Box Up
     def move_box_up(self, box_n, bn, pit_bn, bx, by, b_travel, b_dest, b_move):
         '''move_box_up'''         
         # If Player's coorinates matches coordinates of box_n, and dragging Box up (space + up key)
-        if board.px == bx and self.p_dest + (DIFF * 2)  == by\
+        if board.px == bx and self.p_dest + (DIFF * 2) == by\
         and key[pygame.K_SPACE] and key[pygame.K_UP]:
             # Update direction coordinate of box_n
             if not b_travel:
@@ -273,6 +278,7 @@ class Movements():
             elif b_travel:
                 by, b_travel, b_move = \
                 self.__move_up__(by, b_travel, b_dest, b_move)
+
 
         # If Player's coorinates matches coordinates of box_n, moving up and box_n is active
         if board.px == bx and self.p_dest == by and key[pygame.K_UP] and box_n:
@@ -991,7 +997,7 @@ while game_on:
     
     # If arrow-up key is pressed and Player's coordinate is within game_board
     # - +1 to moves, increase debounce varibale, refresh direction coordinate, and move Player and Box 
-    if bounce == 0 and board.py > 0 and (key[pygame.K_UP] or key[pygame.K_UP] and key[pygame.K_SPACE]):
+    if bounce == 0 and board.py > UPPER and (key[pygame.K_UP] or key[pygame.K_UP] and key[pygame.K_SPACE]):
         movements.moves += 1
         bounce = 1
         movements.move_player_up()
@@ -1007,7 +1013,7 @@ while game_on:
 
     # If arrow-down key is pressed and Player's coordinate is within game_board
     # - +1 to moves, increase debounce varibale, refresh direction coordinate, and move Player and Box 
-    if bounce == 0 and board.py < (board.game_board_y - DIFF) and (key[pygame.K_DOWN] or key[pygame.K_DOWN] and key[pygame.K_SPACE]):
+    if bounce == 0 and board.py < LOWER and (key[pygame.K_DOWN] or key[pygame.K_DOWN] and key[pygame.K_SPACE]):
         movements.moves += 1
         bounce = 1
         movements.move_player_down()
@@ -1023,7 +1029,7 @@ while game_on:
     
     # If arrow-left key is pressed and Player's coordinate is within game_board
     # - +1 to moves, increase debounce varibale, refresh direction coordinate, and move Player and Box 
-    if bounce == 0 and board.px > 0 and (key[pygame.K_LEFT] or key[pygame.K_LEFT] and key[pygame.K_SPACE]):
+    if bounce == 0 and board.px > LEFTMOST and (key[pygame.K_LEFT] or key[pygame.K_LEFT] and key[pygame.K_SPACE]):
         movements.moves += 1
         bounce = 1
         movements.move_player_left()
@@ -1039,7 +1045,7 @@ while game_on:
 
     # If arrow-right key is pressed and Player's coordinate is within game_board
     # - +1 to moves, increase debounce varibale, refresh direction coordinate, and move Player and Box 
-    if bounce == 0 and board.px < (board.game_board_x - DIFF) and (key[pygame.K_RIGHT] or key[pygame.K_RIGHT] and key[pygame.K_SPACE]):
+    if bounce == 0 and board.px < RIGHTMOST and (key[pygame.K_RIGHT] or key[pygame.K_RIGHT] and key[pygame.K_SPACE]):
         movements.moves += 1
         bounce = 1
         movements.move_player_right()
