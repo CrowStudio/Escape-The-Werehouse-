@@ -1,8 +1,8 @@
 import pygame
 from random import randrange
 import time
-from blit.maps import game_maps, tutorial_maps
-from blit.elements import gfx
+from game_board.maps import game_maps, tutorial_maps
+from game_board.elements import gfx
 
 
 # Rename variable for imported tiles (tiles are the same in tutorial_maps)

@@ -1,5 +1,5 @@
 import pygame
-from blit import levels
+from game_board import blitting
 
 # Initiate PyGame Mixer to avoid delay of sound playback 
 pygame.mixer.pre_init(44100, -16, 1, 2048)
@@ -11,7 +11,7 @@ pygame.init()
 option = 0
 
 # Create BoardElements objekt
-board = levels.BoardElements()   
+board = blitting.BoardElements()   
 
 # Set size of game board surface with a color depth of 24-bit 
 game_board = pygame.display.set_mode((board.game_board_x, board.game_board_y), 0, 24)
