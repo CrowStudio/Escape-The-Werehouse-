@@ -69,39 +69,46 @@ stars = [pygame.image.load('graphics/0_stars.png'), pygame.image.load('graphics/
         pygame.image.load('graphics/2_stars.png'), pygame.image.load('graphics/3_stars.png')]
 
 
+# Rename variable for imported tiles (tiles are the same in tutorial_maps)
 tiles = game_maps.tiles
 
+# Creates a list of maps from tutorial_maps and game_maps
 level_map = [tutorial_maps.tutorial_map]
 level_map.append(game_maps.level_map)
 
+# Creates a list of active boxes from tutorial_maps and game_maps
 active_boxes = [tutorial_maps.active_boxes]
 active_boxes.append(game_maps.active_boxes)
 
+# Creates a list of box positions from tutorial_maps and game_maps
 positions = [tutorial_maps.positions]
 positions.append(game_maps.positions)
 
+# Creates a list of start positions from tutorial_maps and game_maps
 player_start = [tutorial_maps.player_start]
 player_start.append(game_maps.player_start)
 
+# Creates a list of active/inactive exits from tutorial_maps and game_maps
 active_exit = [tutorial_maps.active_exit]
 active_exit.append(game_maps.active_exit)
-
 
 
 # CLASS for setup of levels and blitting of game elements
 class BoardElements():
     '''BoardElements'''
     #
-    def __init__(self, s):
+    def __init__(self):
         '''__init__'''
         # Setup of Game Board size
         self.game_board_x = 600
         self.game_board_y = 600
 
+        # List of Tutorial map titles
         self.titel = tutorial_maps.titel
 
         # Variable to keep track of numbers of Levels
-        self.no_of_levels = sum(type(i) == type([]) for i in level_map[s])
+        self.no_of_levels = [sum(type(i) == type([]) for i in level_map[0])]
+        self.no_of_levels.append(sum(type(i) == type([]) for i in level_map[1]))
 
         # Variable to tell if Player finished the Game or fell into a Pit
         self.play = True
@@ -373,7 +380,7 @@ class BoardElements():
 
 
     # Setup of new Level
-    def generate_level(self, game_board, new_level, s):
+    def generate_level(self, game_board, new_level, option):
         '''generate_level'''
         # If new_level equals True
         # - Reset elements list and setup tiles,
@@ -381,13 +388,15 @@ class BoardElements():
         #   increase level counter, and set new_level to False
         if new_level:
             self.elements = []
-            self.__create_level__(game_board, level_map[s][self.lv])
+            self.__create_level__(game_board, level_map[option][self.lv])
 
             self.box = []
             self.pit_box = []
             self.__create_boxes__(boxes)
-            self.__place_boxes_player_and_reset_pits_and_exit__(active_boxes[s][self.lv], positions[s][self.lv],\
-                                                        player_start[s][self.lv], active_exit[s][self.lv])
+            self.__place_boxes_player_and_reset_pits_and_exit__(active_boxes[option][self.lv],\
+                                                                positions[option][self.lv],\
+                                                                player_start[option][self.lv],\
+                                                                active_exit[option][self.lv])
             
             self.lv += 1
 
@@ -509,7 +518,7 @@ class BoardElements():
                 game_board.blit(player, (self.px, self.py))
 
 
-    # Blit Level score
+    # Blit Game Level score
     def blit_stars(self, game_board, moves):
         '''blit_stars'''
         # Blit score for LEVEL 1 depending on number of moves

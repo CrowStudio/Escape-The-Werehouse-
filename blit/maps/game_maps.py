@@ -73,7 +73,7 @@ E = 8  # Exit
 
 
 # LEVEL 1
-# Setup for tiles
+# Map layout for tiles
 level_map = [[F, F, F, W, E, F,\
             P1, W, W, W, W, F,\
             F, F ,F, F, F, P2,\
@@ -94,7 +94,7 @@ active_exit = [1]
 
 
 # LEVEL 2
-# Setup for tiles
+# Map layout for tiles
 level_map.append([E, F, F, F, F, PW,\
                  F, F, F, W, F, PW,\
                  PW, PW ,PW, P4, P3, W,\
@@ -115,7 +115,7 @@ active_exit.append(1)
 
 
 # LEVEL 3
-# Setup for tiles
+# Map layout for tiles
 level_map.append([F, F, W, W, W, E,\
                  F, F, F, F, P1, F,\
                  F, F ,W, P2, W, W,\

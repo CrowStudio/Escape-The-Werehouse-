@@ -73,8 +73,10 @@ E = 8  # Exit
 
 
 # TUTORIAL 1
+# Tutorial title
 titel = [' Tutorial: Move Box          ']
-# Setup for tiles
+
+# Map layout for tiles 
 tutorial_map = [[W, W, W, W, W, W,\
                 W, W, F, W, W, W,\
                 W, W ,F, E, W, W,\
@@ -95,8 +97,10 @@ active_exit = [1]
 
 
 # TUTORIAL 2
+# Tutorial title
 titel.append(' Tutorial: Drag Box          ')
-# Setup for tiles
+
+# Map layout for tiles 
 tutorial_map.append([W, W, W, E, W, W,\
                     W, W, W, F, F, W,\
                     W, W ,W, F, F, W,\
@@ -117,8 +121,10 @@ active_exit.append(1)
 
 
 # TUTORIAL 3
+# Tutorial title
 titel.append('    Tutorial: Push Box into Pit')
-# Setup for tiles
+
+# Map layout for tiles 
 tutorial_map.append([W, W, E, W, W, W,\
                     W, W, F, W, W, W,\
                     W, W ,F, W, W, W,\

@@ -8,10 +8,10 @@ pygame.init()
 
 # Game mode variable
 # - 0 = tutorial, 1 = game
-s = 0
+option = 0
 
 # Create BoardElements objekt
-board = levels.BoardElements(s)   
+board = levels.BoardElements()   
 
 # Set size of game board surface with a color depth of 24-bit 
 game_board = pygame.display.set_mode((board.game_board_x, board.game_board_y), 0, 24)
@@ -757,7 +757,7 @@ class Movements():
 
 
     # Check if Player hit Exit or Pit 
-    def player_detect_exit_or_pit(self, new_level, s):
+    def player_detect_exit_or_pit(self, new_level, option):
         '''player_detect_exit_or_pit'''
         # Check for Exit or Pit tiles in list of board elements 
         for e in board.elements:
@@ -777,12 +777,12 @@ class Movements():
             
             # If Player's coordinates matches coordinates of Exit, and there is more levels
             # - Add moves to total_moves, set moves to 0, and set new_level to True
-            elif pos_o == (board.px, board.py) and tile == E and board.lv < board.no_of_levels:
+            if pos_o == (board.px, board.py) and tile == E and board.lv < board.no_of_levels[option]:
                 self.total_moves += self.moves
 
-                # If s equals game (1)
-                # - show scores
-                if s:
+                # If option equals game (1)
+                # - Show scores
+                if option:
                     stars = self.moves
                     board.blit_stars(game_board, stars)
 
@@ -792,26 +792,25 @@ class Movements():
 
             # If Player's coordinates matches coordinates of Exit, and there is no more levels
             # - Set play to False and new_level to True 
-            elif pos_o == (board.px, board.py) and tile == E and board.lv >= board.no_of_levels:
+            elif pos_o == (board.px, board.py) and tile == E and board.lv >= board.no_of_levels[option]:
                 board.play = False
                 new_level = True
 
         # Player has not yet finished the level
         if board.play and not new_level:
-            # Returns state for game_on and new_level
-            return s, True, False
+            # Returns state for option, game_on, and new_level
+            return option, True, False
 
         # Player has finished the level
         elif board.play and new_level:
-            # Returns state for game_on and new_level
-            return s, True, True
+            # Returns state for option, game_on, and new_level
+            return option, True, True
 
         # Player has finished the last level
         elif not board.play and new_level:
-            # If s equals 1
-            # - game_mode equals game, and will show score
-            
-            if s:
+            # If option equals 1
+            # - option equals game and will show score
+            if option:
                 # Compare moves to level score table, and set number of Stars accordingly
                 stars = self.moves
                 board.blit_stars(game_board, stars)
@@ -819,14 +818,18 @@ class Movements():
                 print('Congratulations! You finished the last level!')
                 print(f'Your have made a total of {self.total_moves} successful moves!')
             
-                # Returns state for game_on and new_level
-                return s, False, False
+                # Returns state for option, game_on, and new_level
+                return option, False, False
+
+            # Else
+            # - Set option equals game, reset moves, and level
             else:
-                s = 1
+                print('tutriala done!')
+                option = 1
                 self.moves = 0
                 board.lv = 0
-
-                return s, True, True
+                # Returns state for option, game_on, and new_level
+                return option, True, True
 
 
         # Player fell into a Pit
@@ -840,14 +843,14 @@ class Movements():
                 board.play = True
                 self.moves = 0
                 board.lv -= 1
-                # Returns state for game_on and new_level
-                return s, True, True    
+                # Returns state for option, game_on, and new_level
+                return option, True, True    
             
             # Else Game Over
             else:
                 print('Game Over!')
-                # Returns state for game_on and new_level
-                return s, False, False
+                # Returns state for option, game_on, and new_level
+                return option, False, False
 
 
 # FUNCTIONS for movement data
@@ -929,10 +932,13 @@ def blit():
     board.blit_player(game_board, movements.p_travel, movements.p_move)
     
     # Set caption for window
-
-    if s:
+    # If s equals game (1)
+    # - Set caption + Moves and Retries
+    if option:
         pygame.display.set_caption(f'Escape the Werehouse!                 Moves: {movements.moves}                 Retries: {movements.retries}     ')
 
+    # Else - option equals tutorial (0)
+    # - Set caption + Tutorial title
     else:
         pygame.display.set_caption(f'Escape the Werehouse!                    {board.titel[board.lv - 1]}')
 
@@ -949,7 +955,9 @@ new_level = True
 # Initiate bounce - used for debouncing key press
 bounce = 0
 
-s = 0
+# 0 = tutorial, 1 = game
+# This will be changed into an option in the beginning of the game later on
+option = 0
 
 #MAIN LOOP
 while game_on:
@@ -957,7 +965,7 @@ while game_on:
     clock.tick(24)
 
     # Blit new level if new_level equals True, refresh state of new_level
-    new_level = board.generate_level(game_board, new_level, s)
+    new_level = board.generate_level(game_board, new_level, option)
 
     # Check for pygame.QUIT event (close window button)
     for event in pygame.event.get():
@@ -1042,17 +1050,9 @@ while game_on:
             move_boxes_right()
 
     # Check for Exit or Pit tiles
-    prev_s, game_on, new_level = movements.player_detect_exit_or_pit(new_level, s)
-    # Blit Level, Boxes, Player, update Moves and Retries 
-    
-
-    if prev_s != s:
-        s = 1
-        prev_s = 0
-        blit()
-
-    else:
-        blit()
+    option, game_on, new_level = movements.player_detect_exit_or_pit(new_level, option)
+    # Blit Level, Boxes, Player, update Moves and Retries for game levels 
+    blit()
 
 # Game Over
 # - Quite PyGame and Exit program
