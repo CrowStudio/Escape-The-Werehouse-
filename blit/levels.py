@@ -2,71 +2,7 @@ import pygame
 from random import randrange
 import time
 from blit.maps import game_maps, tutorial_maps
-
-# Set images for blitting
-start = pygame.image.load('graphics/start.png')
-
-floor = [pygame.image.load('graphics/floor1.png'), pygame.image.load('graphics/floor2.png'),
-        pygame.image.load('graphics/floor3.png'), pygame.image.load('graphics/floor4.png'),
-        pygame.image.load('graphics/floor5.png'),pygame.image.load('graphics/floor6.png'),
-        pygame.image.load('graphics/floor7.png'), pygame.image.load('graphics/floor8.png'),
-        pygame.image.load('graphics/floor9.png'), pygame.image.load('graphics/floor10.png'),
-        pygame.image.load('graphics/floor11.png'), pygame.image.load('graphics/floor12.png'),
-        pygame.image.load('graphics/floor13.png'), pygame.image.load('graphics/floor14.png'),
-        pygame.image.load('graphics/floor15.png'),pygame.image.load('graphics/floor16.png'),
-        pygame.image.load('graphics/floor17.png'), pygame.image.load('graphics/floor18.png'),
-        pygame.image.load('graphics/floor19.png'), pygame.image.load('graphics/floor20.png'),
-        pygame.image.load('graphics/floor21.png'), pygame.image.load('graphics/floor22.png'),
-        pygame.image.load('graphics/floor23.png'), pygame.image.load('graphics/floor24.png'),
-        pygame.image.load('graphics/floor25.png'),pygame.image.load('graphics/floor26.png'),
-        pygame.image.load('graphics/floor27.png'), pygame.image.load('graphics/floor28.png'),
-        pygame.image.load('graphics/floor29.png'), pygame.image.load('graphics/floor30.png'),
-        pygame.image.load('graphics/floor31.png'), pygame.image.load('graphics/floor32.png'),
-        pygame.image.load('graphics/floor33.png'), pygame.image.load('graphics/floor34.png'),
-        pygame.image.load('graphics/floor35.png'),pygame.image.load('graphics/floor36.png'),
-        pygame.image.load('graphics/floor37.png'), pygame.image.load('graphics/floor38.png'),
-        pygame.image.load('graphics/floor39.png'), pygame.image.load('graphics/floor40.png')]
-
-wall = pygame.image.load('graphics/wall.png')
-
-pit = pygame.image.load('graphics/pit.png')
-pit_evil = [pygame.image.load('graphics/pit_evil1.png'), pygame.image.load('graphics/pit.png'),
-            pygame.image.load('graphics/pit.png'), pygame.image.load('graphics/pit.png'),
-            pygame.image.load('graphics/pit_evil2.png'), pygame.image.load('graphics/pit.png'),
-            pygame.image.load('graphics/pit.png'), pygame.image.load('graphics/pit.png'),
-            pygame.image.load('graphics/pit_evil3.png'), pygame.image.load('graphics/pit.png'),
-            pygame.image.load('graphics/pit.png'), pygame.image.load('graphics/pit.png'),
-            pygame.image.load('graphics/pit_evil4.png'), pygame.image.load('graphics/pit.png'),
-            pygame.image.load('graphics/pit.png'), pygame.image.load('graphics/pit.png'),
-            pygame.image.load('graphics/pit_evil5.png'), pygame.image.load('graphics/pit.png'),
-            pygame.image.load('graphics/pit.png'), pygame.image.load('graphics/pit.png')]
-pit_crazy = [pygame.image.load('graphics/pit_crazy1.png'), pygame.image.load('graphics/pit.png'),
-            pygame.image.load('graphics/pit.png'), pygame.image.load('graphics/pit.png'),
-            pygame.image.load('graphics/pit_crazy2.png'), pygame.image.load('graphics/pit.png'),
-            pygame.image.load('graphics/pit.png'), pygame.image.load('graphics/pit.png'),
-            pygame.image.load('graphics/pit_crazy3.png'), pygame.image.load('graphics/pit.png'),
-            pygame.image.load('graphics/pit.png'), pygame.image.load('graphics/pit.png'),
-            pygame.image.load('graphics/pit_crazy4.png'), pygame.image.load('graphics/pit.png'),
-            pygame.image.load('graphics/pit.png'), pygame.image.load('graphics/pit.png'),
-            pygame.image.load('graphics/pit_crazy5.png'), pygame.image.load('graphics/pit.png'),
-            pygame.image.load('graphics/pit.png'), pygame.image.load('graphics/pit.png')]
-
-exit = pygame.image.load('graphics/exit.png')
-no_exit = pygame.image.load('graphics/exit_inactive.png')
-
-boxes = [pygame.image.load('graphics/box_in_pit.png'), pygame.image.load('graphics/box.png'),
-        pygame.image.load('graphics/box_in_pit_return_.png'), pygame.image.load('graphics/box_return.png'),
-        pygame.image.load('graphics/box_in_pit_fragile.png'), pygame.image.load('graphics/box_fragile.png'),
-        pygame.image.load('graphics/box_in_pit_biohazard.png'), pygame.image.load('graphics/box_biohazard.png')]
-
-player = pygame.image.load('graphics/player.png')
-player_up = pygame.image.load('graphics/player_up.png')
-player_down = pygame.image.load('graphics/player_down.png')
-player_left = pygame.image.load('graphics/player_left.png')
-player_right = pygame.image.load('graphics/player_right.png')
-
-stars = [pygame.image.load('graphics/0_stars.png'), pygame.image.load('graphics/1_stars.png'),
-        pygame.image.load('graphics/2_stars.png'), pygame.image.load('graphics/3_stars.png')]
+from blit.elements import gfx
 
 
 # Rename variable for imported tiles (tiles are the same in tutorial_maps)
@@ -140,19 +76,19 @@ class BoardElements():
     # Blit start tile
     def __start__(self, game_board,pos):
         '''__start__'''
-        game_board.blit(start, (pos))
+        game_board.blit(gfx.start, (pos))
 
 
     # Blit floor tile
     def __floor__(self, game_board, pos, i):
         '''__floor__'''
-        game_board.blit(floor[i], (pos))
+        game_board.blit(gfx.floor[i], (pos))
 
 
     # Blit wall tile
     def __wall__(self, game_board, pos):
         '''__wall__'''
-        game_board.blit(wall, (pos))
+        game_board.blit(gfx.wall, (pos))
 
 
     # Blit pit1 tile
@@ -161,12 +97,12 @@ class BoardElements():
         # If Pit active
         # - Blit pit1 
         if self.pit1:
-            game_board.blit(pit, (pos))
+            game_board.blit(gfx.pit, (pos))
 
         # Else
         # - Blit box_n's box_in_pit 
         else:
-            game_board.blit(boxes[box], (pos))
+            game_board.blit(gfx.boxes[box], (pos))
 
 
     # Blit pit2 tile
@@ -175,12 +111,12 @@ class BoardElements():
         # If Pit active
         # - Blit pit2 
         if self.pit2:
-            game_board.blit(pit, (pos))
+            game_board.blit(gfx.pit, (pos))
 
         # Else
         # - Blit box_n's box_in_pit 
         else:
-            game_board.blit(boxes[box], (pos))
+            game_board.blit(gfx.boxes[box], (pos))
 
 
     # Blit pit3 tile
@@ -189,12 +125,12 @@ class BoardElements():
         # If Pit active
         # - Blit pit3
         if self.pit3:
-            game_board.blit(pit_crazy[i], (pos))
+            game_board.blit(gfx.pit_crazy[i], (pos))
 
         # Else
         # - Blit box_n's box_in_pit 
         else:
-            game_board.blit(boxes[box], (pos))
+            game_board.blit(gfx.boxes[box], (pos))
 
     # Blit pit4 tile
     def __pit_4__(self, game_board, pos, box, i):
@@ -202,18 +138,18 @@ class BoardElements():
         # If Pit active
         # - Blit pit4
         if self.pit4:
-            game_board.blit(pit_evil[i], (pos))
+            game_board.blit(gfx.pit_evil[i], (pos))
 
         # Else
         # - Blit box_n's box_in_pit 
         else:
-            game_board.blit(boxes[box], (pos))
+            game_board.blit(gfx.boxes[box], (pos))
 
 
     # Blit pit_as_wall tile
     def __pit_as_wall__(self, game_board, pos):
         '''__pit_as_wall__'''
-        game_board.blit(pit, (pos))
+        game_board.blit(gfx.pit, (pos))
 
 
     # Blit exit tile
@@ -222,12 +158,12 @@ class BoardElements():
         # If Exit is active
         # - Blit exit
         if self.exit:
-            game_board.blit(exit, (pos))
+            game_board.blit(gfx.exit, (pos))
 
         # Else
         # - Blit no_exit
         else:
-            game_board.blit(no_exit, (pos))
+            game_board.blit(gfx.no_exit, (pos))
 
 
     # Setup tiles for Level n
@@ -392,7 +328,7 @@ class BoardElements():
 
             self.box = []
             self.pit_box = []
-            self.__create_boxes__(boxes)
+            self.__create_boxes__(gfx.boxes)
             self.__place_boxes_player_and_reset_pits_and_exit__(active_boxes[option][self.lv],\
                                                                 positions[option][self.lv],\
                                                                 player_start[option][self.lv],\
@@ -495,27 +431,27 @@ class BoardElements():
             # If movement is Up
             # - Blit player in direction of y corresponding of p_move' value
             if p_travel == 1:
-                game_board.blit(player_up, (self.px, p_move))
+                game_board.blit(gfx.player_up, (self.px, p_move))
 
             # Else iff movement is Down
             # - Blit player in direction of y corresponding of p_move' value
             elif p_travel == 2:
-                game_board.blit(player_down, (self.px, p_move))
+                game_board.blit(gfx.player_down, (self.px, p_move))
 
             # Else iff movement is Left
             # - Blit player in direction of x corresponding of p_move' value
             elif p_travel == 3:
-                game_board.blit(player_left, (p_move, self.py))
+                game_board.blit(gfx.player_left, (p_move, self.py))
 
             # Else iff movement is Right
             # - Blit player in direction of x corresponding of p_move' value
             elif p_travel == 4:
-                game_board.blit(player_right, (p_move, self.py))
+                game_board.blit(gfx.player_right, (p_move, self.py))
 
             # Else
             # - Blit position of player
             else:
-                game_board.blit(player, (self.px, self.py))
+                game_board.blit(gfx.player, (self.px, self.py))
 
 
     # Blit Game Level score
@@ -525,43 +461,43 @@ class BoardElements():
         if self.lv == 1:
             if moves <= 17:
                 # Blit 3 highlighted Stars
-                game_board.blit(stars[3], (186, 115))
+                game_board.blit(gfx.stars[3], (186, 115))
     
             elif moves > 17 and moves <= 19:
                 # Blit 2 highlighted Stars
-                game_board.blit(stars[2], (186, 115))
+                game_board.blit(gfx.stars[2], (186, 115))
 
             else:
                 # Blit 1 highlighted Star
-                game_board.blit(stars[1], (186, 115))
+                game_board.blit(gfx.stars[1], (186, 115))
         
         # Blit score for LEVEL 2 depending on number of moves
         elif self.lv == 2:
             if moves <= 24:
                 # Blit 3 highlighted Stars
-                game_board.blit(stars[3], (186, 115))
+                game_board.blit(gfx.stars[3], (186, 115))
     
             elif moves > 24 and moves <= 28:
                 # Blit 2 highlighted Stars
-                game_board.blit(stars[2], (186, 115))
+                game_board.blit(gfx.stars[2], (186, 115))
 
             else:
                 # Blit 1 highlighted Star
-                game_board.blit(stars[1], (186, 115))
+                game_board.blit(gfx.stars[1], (186, 115))
 
         # Blit score for LEVEL 3 depending on number of moves
         elif self.lv == 3:
             if moves <= 35:
                 # Blit 3 highlighted Stars
-                game_board.blit(stars[3], (186, 115))
+                game_board.blit(gfx.stars[3], (186, 115))
     
             elif moves > 35 and moves <= 39:
                 # Blit 2 highlighted Stars
-                game_board.blit(stars[2], (186, 115))
+                game_board.blit(gfx.stars[2], (186, 115))
 
             else:
                 # Blit 1 highlighted Star
-                game_board.blit(stars[1], (186, 115))
+                game_board.blit(gfx.stars[1], (186, 115))
 
         # Update all changes to display
         pygame.display.update()
