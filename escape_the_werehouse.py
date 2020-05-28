@@ -87,12 +87,12 @@ class Movements():
         # Checks for Pit tiles in list of board elements 
         for e in board.elements:
             tile = e[0]
-            pos_o = e[1]
+            tile_pos = e[1]
             
             # If Box bn's coordinates matches coordinates of pit1
             # - Set pit1 equals False to fill pit, box_active to False to inactivate Box bn,
             #   and set in_pit1 equals to Box bn's box_in_pit sprite to fill pit, then break foor loop
-            if pos_o == (x, y) and tile == P1 and board.pit1:
+            if tile_pos == (x, y) and tile == P1 and board.pit1:
                 board.pit1 = False
                 box_active = False
                 board.in_pit1 = bn
@@ -104,7 +104,7 @@ class Movements():
             # If Box bn's coordinates matches coordinates of pit2
             # - Set pit2 equals False to fill pit, box_active to False to inactivate Box bn,print(bn)
             #   and set in_pit2 equals to Box bn's box_in_pit sprite to fill pit, then break foor loop
-            elif pos_o == (x, y) and tile == P2 and board.pit2:
+            elif tile_pos == (x, y) and tile == P2 and board.pit2:
                 board.pit2 = False
                 box_active = False
                 board.in_pit2 = bn
@@ -116,7 +116,7 @@ class Movements():
             # If Box bn's coordinates matches coordinates of pit3
             # - Set pit3 equals False to fill pit, box_active to False to inactivate Box bn,print(bn)
             #   and set in_pit3 equals to Box bn's box_in_pit sprite to fill pit, then break foor loop
-            elif pos_o == (x, y) and tile == P3 and board.pit3:
+            elif tile_pos == (x, y) and tile == P3 and board.pit3:
                 board.pit3 = False
                 box_active = False
                 board.in_pit3 = bn
@@ -128,7 +128,7 @@ class Movements():
             # If Box bn's coordinates matches coordinates of pit4
             # - Set pit4 equals False to fill pit, box_active to False to inactivate Box bn,print(bn)
             #   and set in_pit4 equals to Box bn's box_in_pit sprite to fill pit, then break foor loop
-            elif pos_o == (x, y) and tile == P4 and board.pit4:
+            elif tile_pos == (x, y) and tile == P4 and board.pit4:
                 board.pit4 = False
                 box_active = False
                 board.in_pit4 = bn
@@ -157,11 +157,11 @@ class Movements():
         # Checks for Wall tiles in list of board elements 
         for e in board.elements:
             tile = e[0]
-            pos_o = e[1]
+            tile_pos = e[1]
 
             # If Box coordinates matches coordinates of Wall, and if within game_bord
             # - Stop moving sound, and correct Player's/Box direction coordinate, then break for loop
-            if (pos_o == (x, dest) and tile == W) or dest < 0:
+            if (tile_pos == (x, dest) and tile == W) or dest < 0:
                 ch1.stop()
 
                 self.p_travel = False
@@ -308,11 +308,11 @@ class Movements():
         # Checks for Wall tiles in list of board elements 
         for e in board.elements:
             tile = e[0]
-            pos_o = e[1]
+            tile_pos = e[1]
 
             # If Box coordinates matches coordinates of Wall, and if within game_bord
             # - Stop moving sound, and correct Player's/Box direction coordinate, then break for loop
-            if (pos_o == (x, dest) and tile == W) or dest > board.game_board_y - DIFF:
+            if (tile_pos == (x, dest) and tile == W) or dest > board.game_board_y - DIFF:
                 ch1.stop()
 
                 self.p_travel = False
@@ -459,11 +459,11 @@ class Movements():
         # Checks for Wall tiles in list of board elements 
         for e in board.elements:
             tile = e[0]
-            pos_o = e[1]
+            tile_pos = e[1]
 
             # If Box coordinates matches coordinates of Wall, and if within game_bord
             # - Stop moving sound, and correct Player's/Box direction coordinate, then break for loop
-            if (pos_o == (dest, y) and tile == W) or dest < 0:
+            if (tile_pos == (dest, y) and tile == W) or dest < 0:
                 ch1.stop()
 
                 self.p_travel = False
@@ -611,11 +611,11 @@ class Movements():
         # Checks for Wall tiles in list of board elements 
         for e in board.elements:
             tile = e[0]
-            pos_o = e[1]
+            tile_pos = e[1]
 
             # If Box coordinates matches coordinates of Wall, and if within game_bord
             # - Stop moving sound, and correct Player's/Box direction coordinate, then break for loop
-            if (pos_o == (dest, y) and tile == W) or dest > board.game_board_x - DIFF:
+            if (tile_pos == (dest, y) and tile == W) or dest > board.game_board_x - DIFF:
                 ch1.stop()
 
                 self.p_travel = False
@@ -762,22 +762,24 @@ class Movements():
         # Check for Exit or Pit tiles in list of board elements 
         for e in board.elements:
             tile = e[0]
-            pos_o = e[1]
+            tile_pos = e[1]
 
             # If Player's coordinates matches coordinates of Pit
             # - Set play and new_level to False
-            if pos_o == (board.px, board.py) and tile == P1 and board.pit1\
-            or pos_o == (board.px, board.py) and tile == P2 and board.pit2\
-            or pos_o == (board.px, board.py) and tile == P3 and board.pit3\
-            or pos_o == (board.px, board.py) and tile == P4 and board.pit4\
-            or pos_o == (board.px, board.py) and tile == PW:
+            if tile_pos == (board.px, board.py) and tile == P1 and board.pit1\
+            or tile_pos == (board.px, board.py) and tile == P2 and board.pit2\
+            or tile_pos == (board.px, board.py) and tile == P3 and board.pit3\
+            or tile_pos == (board.px, board.py) and tile == P4 and board.pit4\
+            or tile_pos == (board.px, board.py) and tile == PW:
+                # Player lose 1 retry
+                self.retries -= 1
                 board.play = False
                 new_level = False
                 break
             
             # If Player's coordinates matches coordinates of Exit, and there is more levels
             # - Add moves to total_moves, set moves to 0, and set new_level to True
-            if pos_o == (board.px, board.py) and tile == E and board.lv < board.no_of_levels[option]:
+            elif tile_pos == (board.px, board.py) and tile == E and board.lv < board.no_of_levels[option]:
                 self.total_moves += self.moves
 
                 # If option equals game (1)
@@ -792,25 +794,57 @@ class Movements():
 
             # If Player's coordinates matches coordinates of Exit, and there is no more levels
             # - Set play to False and new_level to True 
-            elif pos_o == (board.px, board.py) and tile == E and board.lv >= board.no_of_levels[option]:
+            elif tile_pos == (board.px, board.py) and tile == E and board.lv >= board.no_of_levels[option]:
                 board.play = False
                 new_level = True
+                break
 
-        # Player has not yet finished the level
+        # If board.play equals 0 and new_level equals 0
+        # - Player fell into a Pit
+        if not board.play and not new_level:         
+            # If retries greater than 0
+            # - Reset level and moves
+            if self.retries > 0:
+                self.moves = 0
+                board.lv -= 1
+                board.play = True
+                # Returns state for option, game_on, and new_level
+                return option, True, True    
+            
+            # Else Game Over
+            else:
+                print('Game Over!')
+                # Returns state for option, game_on, and new_level
+                return option, False, False
+
+        # If board.play equals 1 and new_level equals 0
+        # - Player has not yet finished the level
         if board.play and not new_level:
             # Returns state for option, game_on, and new_level
             return option, True, False
 
-        # Player has finished the level
+        # If board.play equals 1 and new_level equals 1
+        # - Player has finished the level
         elif board.play and new_level:
             # Returns state for option, game_on, and new_level
             return option, True, True
 
-        # Player has finished the last level
+        # If board.play equals 0 and new_level equals 1
+        # - Player has finished the last level
         elif not board.play and new_level:
-            # If option equals 1
-            # - option equals game and will show score
-            if option:
+            # If option equals 0 (tutorial)
+            # - Set option equals game, reset moves, and level
+            if not option:
+                print('Well done, you finished the Tutorials! Now try to Escape the Werehouse!')
+                option = 1
+                self.moves = 0
+                board.lv = 0
+                # Returns state for option, game_on, and new_level
+                return option, True, True
+
+            # Else
+            # - option equals 1 (game), and will show score
+            else:
                 # Compare moves to level score table, and set number of Stars accordingly
                 stars = self.moves
                 board.blit_stars(game_board, stars)
@@ -821,36 +855,6 @@ class Movements():
                 # Returns state for option, game_on, and new_level
                 return option, False, False
 
-            # Else
-            # - Set option equals game, reset moves, and level
-            else:
-                print('tutriala done!')
-                option = 1
-                self.moves = 0
-                board.lv = 0
-                # Returns state for option, game_on, and new_level
-                return option, True, True
-
-
-        # Player fell into a Pit
-        else:
-            # Player lose 1 retry
-            self.retries -= 1
-            
-            # If retries greater than 0
-            # - Reset level and moves
-            if self.retries > 0:
-                board.play = True
-                self.moves = 0
-                board.lv -= 1
-                # Returns state for option, game_on, and new_level
-                return option, True, True    
-            
-            # Else Game Over
-            else:
-                print('Game Over!')
-                # Returns state for option, game_on, and new_level
-                return option, False, False
 
 
 # FUNCTIONS for movement data
@@ -940,7 +944,7 @@ def blit():
     # Else - option equals tutorial (0)
     # - Set caption + Tutorial title
     else:
-        pygame.display.set_caption(f'Escape the Werehouse!                    {board.titel[board.lv - 1]}')
+        pygame.display.set_caption(f'{board.titel[board.lv - 1]}')
 
     # Update all changes to display
     pygame.display.update()
@@ -963,7 +967,7 @@ option = 0
 while game_on:
     # Set frame rate to 20 frames per second
     clock.tick(24)
-
+    print(board.play, new_level)
     # Blit new level if new_level equals True, refresh state of new_level
     new_level = board.generate_level(game_board, new_level, option)
 
