@@ -165,13 +165,13 @@ class Movements():
                 ch1.stop()
 
                 self.p_travel = False
-                self.p_dest = board.py - DIFF
-                self.p_move += board.py
+                self.p_dest = board.py
+                self.p_move = board.py
                 self.moves -= 1
 
                 travel = False
-                dest = y - DIFF
-                move += y
+                dest = y
+                move = y
                 break
 
         # Returns reset of Box movment
@@ -192,13 +192,13 @@ class Movements():
             ch1.stop()
 
             self.p_travel = False
-            self.p_dest = board.py - DIFF
-            self.p_move += board.py
+            self.p_dest = board.py
+            self.p_move = board.py
             self.moves -= 1
 
             travel = False
-            dest = y - DIFF
-            move += y
+            dest = y
+            move = y
 
         # Returns reset of Box movment
         return y, travel, dest, move
@@ -316,13 +316,13 @@ class Movements():
                 ch1.stop()
 
                 self.p_travel = False
-                self.p_dest = board.py + DIFF
-                self.p_move += board.py
+                self.p_dest = board.py
+                self.p_move = board.py
                 self.moves -= 1
 
                 travel = False
-                dest = y + DIFF
-                move += y
+                dest = y
+                move = y
                 break
 
         # Returns reset of Box movment
@@ -343,13 +343,13 @@ class Movements():
             ch1.stop()
 
             self.p_travel = False
-            self.p_dest = board.py + DIFF
-            self.p_move += board.py
+            self.p_dest = board.py
+            self.p_move = board.py
             self.moves -= 1
 
             travel = False
-            dest = y + DIFF
-            move += y
+            dest = y
+            move = y
 
         # Returns reset of Box movment
         return y, travel, dest, move
@@ -467,13 +467,13 @@ class Movements():
                 ch1.stop()
 
                 self.p_travel = False
-                self.p_dest = board.px - DIFF
-                self.p_move += board.px
+                self.p_dest = board.px
+                self.p_move = board.px
                 self.moves -= 1
 
                 travel = False
-                dest = x - DIFF
-                move += x
+                dest = x
+                move = x
                 break
 
         # Returns reset of Box movment
@@ -494,13 +494,13 @@ class Movements():
             ch1.stop()
 
             self.p_travel = False
-            self.p_dest = board.px - DIFF
-            self.p_move += board.px
+            self.p_dest = board.px
+            self.p_move = board.px
             self.moves -= 1
 
             travel = False
-            dest = x - DIFF
-            move += x
+            dest = x
+            move = x
 
         # Returns reset of Box movment
         return x, travel, dest, move
@@ -605,7 +605,7 @@ class Movements():
         return box_n, bx, by, b_travel, b_dest, b_move
 
 
-    # Detect Wall when moving up 
+    # Detect Wall when moving right 
     def __detect_wall_right__(self, x, y, travel, dest, move):
         '''__detect_wall_right__'''
         # Checks for Wall tiles in list of board elements 
@@ -619,13 +619,13 @@ class Movements():
                 ch1.stop()
 
                 self.p_travel = False
-                self.p_dest = board.px - DIFF
-                self.p_move += board.px
+                self.p_dest = board.px
+                self.p_move = board.px
                 self.moves -= 1
 
                 travel = False
-                dest = x - DIFF
-                move += x
+                dest = x
+                move = x
                 break
 
         # Returns reset of Box movment
@@ -646,13 +646,13 @@ class Movements():
             ch1.stop()
 
             self.p_travel = False
-            self.p_dest = board.px - DIFF
-            self.p_move += board.px
+            self.p_dest = board.px
+            self.p_move = board.px
             self.moves -= 1
 
             travel = False
-            dest = x - DIFF
-            move += x
+            dest = x
+            move = x
 
         # Returns reset of Box movment
         return x, travel, dest, move
@@ -967,7 +967,7 @@ option = 0
 while game_on:
     # Set frame rate to 20 frames per second
     clock.tick(24)
-    
+
     # Blit new level if new_level equals True, refresh state of new_level
     new_level = board.generate_level(game_board, new_level, option)
 
