@@ -329,6 +329,9 @@ class BoardElements():
             self.box = []
             self.pit_box = []
             self.__create_boxes__(gfx.boxes)
+            # For debugging, comment the row above, and uncomment the row below to make boxes appear as 1, 2, 3, 4  
+            #self.box = [[0, pygame.image.load('graphics/box1.png')], [1, pygame.image.load('graphics/box2.png')], [2, pygame.image.load('graphics/box3.png')], [3, pygame.image.load('graphics/box4.png')]]
+            self.pit_box = [0, 2, 4, 6]
             self.__place_boxes_player_and_reset_pits_and_exit__(active_boxes[option][self.lv],\
                                                                 positions[option][self.lv],\
                                                                 player_start[option][self.lv],\

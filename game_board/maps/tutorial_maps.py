@@ -72,6 +72,29 @@ PW = 7  # Pit as Wall - not able to put box in it
 E = 8  # Exit
 
 
+# # DEBUG LÈVEL
+# # Tutorial title
+# titel = [' Debugging Mode']
+
+# # Map layout for tiles 
+# tutorial_map = [[F, F, F, F, F, E,\
+#                 F, F, W, W, F, F,\
+#                 F, F ,F, F, F, F,\
+#                 F, F ,F, F, F, F,\
+#                 F, F, S, F, F, F,
+#                 F, F, F, F, F, F]]
+
+# # Setup for active Boxes
+# active_boxes = [[True, True, True, True]]
+# # Setup of Boxes startpoints
+# positions = [[t3r3, t4r3, t3r4, t4r4]]
+
+# # Set startpoint for Player
+# player_start = [t3r5]
+
+# # Set exit to active
+# active_exit = [1]
+
 # TUTORIAL 1
 # Tutorial title
 titel = [' Tutorial: Push Box to reach Exit']
