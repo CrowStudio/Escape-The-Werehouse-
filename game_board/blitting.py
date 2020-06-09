@@ -100,7 +100,7 @@ class BoardElements():
             game_board.blit(gfx.pit, (pos))
 
         # Else
-        # - Blit box_n's box_in_pit 
+        # - Blit box_n's box_in_pit
         else:
             game_board.blit(gfx.boxes[box], (pos))
 
@@ -109,12 +109,12 @@ class BoardElements():
     def __pit_2__(self, game_board, pos, box):
         '''__pit_2__'''
         # If Pit active
-        # - Blit pit2 
+        # - Blit pit2
         if self.pit2:
             game_board.blit(gfx.pit, (pos))
 
         # Else
-        # - Blit box_n's box_in_pit 
+        # - Blit box_n's box_in_pit
         else:
             game_board.blit(gfx.boxes[box], (pos))
 
@@ -128,7 +128,7 @@ class BoardElements():
             game_board.blit(gfx.pit_crazy[i], (pos))
 
         # Else
-        # - Blit box_n's box_in_pit 
+        # - Blit box_n's box_in_pit
         else:
             game_board.blit(gfx.boxes[box], (pos))
 
@@ -141,7 +141,7 @@ class BoardElements():
             game_board.blit(gfx.pit_evil[i], (pos))
 
         # Else
-        # - Blit box_n's box_in_pit 
+        # - Blit box_n's box_in_pit
         else:
             game_board.blit(gfx.boxes[box], (pos))
 
@@ -256,12 +256,12 @@ class BoardElements():
         self.box2 = active_boxes[1]
         # Set startpoint for box2
         self.b2x, self.b2y = positions[1]
-        
+
         # Activate/inactivate box3
         self.box3 = active_boxes[2]
         # Set startpoint for box3
         self.b3x, self.b3y = positions[2]
-        
+
         # Activate/inactivate box4
         self.box4 = active_boxes[3]
         # Set startpoint for box4
@@ -329,14 +329,14 @@ class BoardElements():
             self.box = []
             self.pit_box = []
             self.__create_boxes__(gfx.boxes)
-            # For debugging, comment the row above, and uncomment the row below to make boxes appear as 1, 2, 3, 4  
+            # For debugging, comment the row above, and uncomment the row below to make boxes appear as 1, 2, 3, 4
             #self.box = [[0, pygame.image.load('graphics/box1.png')], [1, pygame.image.load('graphics/box2.png')], [2, pygame.image.load('graphics/box3.png')], [3, pygame.image.load('graphics/box4.png')]]
             self.pit_box = [0, 2, 4, 6]
             self.__place_boxes_player_and_reset_pits_and_exit__(active_boxes[option][self.lv],\
                                                                 positions[option][self.lv],\
                                                                 player_start[option][self.lv],\
                                                                 active_exit[option][self.lv])
-            
+
             self.lv += 1
 
             return False
@@ -345,7 +345,7 @@ class BoardElements():
     # Blit box1
     def blit_box_1(self, game_board, b1_travel, b1_move):
         '''blit_box_1'''
-        # If box1 is active 
+        # If box1 is active
         if self.box1:
             # If movement is Up or Down
             # - Blit box1 in direction of y corresponding of b1_move' value
@@ -354,7 +354,7 @@ class BoardElements():
 
             # Else if movement is Left or Right
             # - Blit box1 in direction of x corresponding of b1_move' value
-            elif b1_travel == 3 or b1_travel == 4: 
+            elif b1_travel == 3 or b1_travel == 4:
                 game_board.blit(self.box[0][1], (b1_move, self.b1y))
 
             # Else
@@ -366,7 +366,7 @@ class BoardElements():
     # Blit box2
     def blit_box_2(self, game_board, b2_travel, b2_move):
         '''blit_box2'''
-        # If box2 is active 
+        # If box2 is active
         if self.box2:
             # If movement is Up or Down
             # - Blit box2 in direction of y corresponding of b2_move' value
@@ -387,7 +387,7 @@ class BoardElements():
     # Blit box3
     def blit_box_3(self, game_board, b3_travel, b3_move):
         '''blit_box3'''
-        # If box3 is active 
+        # If box3 is active
         if self.box3:
             # If movement is Up or Down
             # - Blit box3 in direction of y corresponding of b3_move' value
@@ -408,7 +408,7 @@ class BoardElements():
     # Blit box4
     def blit_box_4(self, game_board, b4_travel, b4_move):
         '''blit_box4'''
-        # If box4 is active     
+        # If box4 is active
         if self.box4:
             # If movement is Up or Down
             # - Blit box4 in direction of y corresponding of b4_move' value
@@ -429,7 +429,7 @@ class BoardElements():
     # Blit player
     def blit_player(self, game_board, p_travel, p_move):
         '''blit_player'''
-        # If play eqauls True 
+        # If play eqauls True
         if self.play:
             # If movement is Up
             # - Blit player in direction of y corresponding of p_move' value
@@ -473,13 +473,13 @@ class BoardElements():
             else:
                 # Blit 1 highlighted Star
                 game_board.blit(gfx.stars[1], (186, 115))
-        
+
         # Blit score for LEVEL 2 depending on number of moves
         elif self.lv == 2:
             if moves <= 24:
                 # Blit 3 highlighted Stars
                 game_board.blit(gfx.stars[3], (186, 115))
-    
+
             elif moves > 24 and moves <= 28:
                 # Blit 2 highlighted Stars
                 game_board.blit(gfx.stars[2], (186, 115))
@@ -493,7 +493,7 @@ class BoardElements():
             if moves <= 35:
                 # Blit 3 highlighted Stars
                 game_board.blit(gfx.stars[3], (186, 115))
-    
+
             elif moves > 35 and moves <= 39:
                 # Blit 2 highlighted Stars
                 game_board.blit(gfx.stars[2], (186, 115))

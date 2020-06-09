@@ -60,7 +60,7 @@ tiles = (t1r1, t2r1, t3r1, t4r1, t5r1, t6r1,\
         t1r5, t2r5, t3r5, t4r5, t5r5, t6r5,\
         t1r6, t2r6, t3r6, t4r6, t5r6, t6r6,)
 
-# Value of Game Board elements 
+# Value of Game Board elements
 S = 0  # Start
 F = 1  # Floor
 W = 2  # Wall
@@ -72,6 +72,8 @@ PW = 7  # Pit as Wall - not able to put box in it
 E = 8  # Exit
 
 
+# For Debug Level - uncomment line 77 -98 and comment line 101-122
+
 # # DEBUG LÈVEL
 # # Tutorial title
 # titel = [' Debugging Mode']
@@ -80,26 +82,27 @@ E = 8  # Exit
 # tutorial_map = [[F, F, F, F, F, E,\
 #                 F, F, W, W, F, F,\
 #                 F, F ,F, F, F, F,\
-#                 F, F ,F, F, F, F,\
-#                 F, F, S, F, F, F,
+#                 F, F ,S, F, F, F,\
+#                 F, F, F, F, F, F,
 #                 F, F, F, F, F, F]]
 
 # # Setup for active Boxes
 # active_boxes = [[True, True, True, True]]
 # # Setup of Boxes startpoints
-# positions = [[t3r3, t4r3, t3r4, t4r4]]
+# positions = [[t3r3, t4r3, t3r6, t4r4]]
 
 # # Set startpoint for Player
-# player_start = [t3r5]
+# player_start = [t3r4]
 
 # # Set exit to active
 # active_exit = [1]
+
 
 # TUTORIAL 1
 # Tutorial title
 titel = [' Tutorial: Push Box to reach Exit']
 
-# Map layout for tiles 
+# Map layout for tiles
 tutorial_map = [[W, W, W, W, W, W,\
                 W, W, F, W, W, W,\
                 W, W ,F, E, W, W,\
@@ -123,7 +126,7 @@ active_exit = [1]
 # Tutorial title
 titel.append('Tutorial: Pits are DANGEROUS! Push Box into the Pit to be able to cross')
 
-# Map layout for tiles 
+# Map layout for tiles
 tutorial_map.append([W, W, W, W, W, W,\
                     W, PW, P1, E, W, W,\
                     W, PW, F, W, W, W,\
@@ -147,7 +150,7 @@ active_exit.append(1)
 # Tutorial title
 titel.append('Tutorial: Two Boxes in a row cannot be pushed')
 
-# Map layout for tiles 
+# Map layout for tiles
 tutorial_map.append([W, W, F, W, W, W,\
                     W, E, F, W, W, W,\
                     W, F, F, F, W, W,\
@@ -171,7 +174,7 @@ active_exit.append(1)
 # Tutorial title
 titel.append('Tutorial: To drag Box stand close to it, hold space bar while moving away from Box')
 
-# Map layout for tiles 
+# Map layout for tiles
 tutorial_map.append([W, W, W, E, W, W,\
                     W, W, W, F, F, W,\
                     W, W, W, F, F, W,\
@@ -189,4 +192,3 @@ player_start.append(t3r6)
 
 # Set exit to active
 active_exit.append(1)
-
