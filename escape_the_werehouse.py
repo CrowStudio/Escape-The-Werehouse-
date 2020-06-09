@@ -147,13 +147,13 @@ class Movements():
 
 
     # Logic for Box detection used in private methods __detect_box_*
-    def __detect_other_box__(self, x, y, compX, compY):
+    def __detect_other_box__(self, x, y):
         '''__detect_other_box__'''
         # List of logic to detect if other box is blocking active Box
-        self.box_pos = [x == (board.b1x + compX) and y == (board.b1y + compY) and board.box1,\
-                        x == (board.b2x + compX) and y == (board.b2y + compY) and board.box2,\
-                        x == (board.b3x + compX) and y == (board.b3y + compY) and board.box3,\
-                        x == (board.b4x + compX) and y == (board.b4y + compY) and board.box4]
+        self.box_pos = [x == board.b1x and y == board.b1y and board.box1,\
+                        x == board.b2x and y == board.b2y and board.box2,\
+                        x == board.b3x and y == board.b3y and board.box3,\
+                        x == board.b4x and y == board.b4y and board.box4]
 
 
     # Detect Wall when moving Up
@@ -189,11 +189,11 @@ class Movements():
         # If drag equals true, and there is one space between Player and box_n to below
         if drag and board.py == (y - 200):
             # Refresh box_pos with logic
-            self.__detect_other_box__(x, dest, 0, 200)
+            self.__detect_other_box__(x, dest - 200)
 
         else:
             # Refresh box_pos with logic
-            self.__detect_other_box__(x, dest, 0, 0)
+            self.__detect_other_box__(x, dest)
 
         # Remove box_n's compare logic from box_pos
         self.box_pos.pop(box_n)
@@ -359,11 +359,11 @@ class Movements():
         # If drag equals true, and there is one space between Player and box_n to above 
         if drag and board.py == (y + 200):
             # Refresh box_pos with logic
-            self.__detect_other_box__(x, dest, 0, 200)
+            self.__detect_other_box__(x, dest + 200)
 
         else:
             # Refresh box_pos with logic
-            self.__detect_other_box__(x, dest, 0, 0)
+            self.__detect_other_box__(x, dest)
 
         # Remove box_n's compare logic from box_pos
         self.box_pos.pop(box_n)
@@ -524,11 +524,11 @@ class Movements():
         # If drag equals true, and there is one space between Player and box_n to the right
         if drag and (board.px == (x - 200)):
             # Refresh box_pos with logic
-            self.__detect_other_box__(dest, y, 200, 0)
+            self.__detect_other_box__(dest - 200, y)
 
         else:
             # Refresh box_pos with logic
-            self.__detect_other_box__(dest, y, 0, 0)
+            self.__detect_other_box__(dest, y)
 
         # Remove box_n's compare logic from box_pos
         self.box_pos.pop(box_n)
@@ -690,11 +690,11 @@ class Movements():
         # If drag equals true, and there is one space between Player and box_n to the left
         if drag and board.px == (x + 200):
             # Refresh box_pos with logic
-            self.__detect_other_box__(dest, y, 200, 0)
+            self.__detect_other_box__(dest + 200, y)
 
         else:
             # Refresh box_pos with logic
-            self.__detect_other_box__(dest, y, 0, 0)
+            self.__detect_other_box__(dest, y)
 
         # Remove box_n's compare logic from box_pos
         self.box_pos.pop(box_n)
