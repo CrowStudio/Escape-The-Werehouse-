@@ -72,7 +72,7 @@ PW = 7  # Pit as Wall - not able to put box in it
 E = 8  # Exit
 
 
-# For Debug Level - uncomment line 77 -98 and comment line 101-122
+# For Debug Level - uncomment line 77-98 and comment line 101-122
 
 # # DEBUG LÈVEL
 # # Tutorial title
