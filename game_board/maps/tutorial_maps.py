@@ -89,7 +89,7 @@ E = 8  # Exit
 # # Setup for active Boxes
 # active_boxes = [[True, True, True, True]]
 # # Setup of Boxes startpoints
-# positions = [[t3r3, t4r3, t3r6, t4r4]]
+# positions = [[t3r3, t3r6, t4r3, t4r5]]
 
 # # Set startpoint for Player
 # player_start = [t3r4]
