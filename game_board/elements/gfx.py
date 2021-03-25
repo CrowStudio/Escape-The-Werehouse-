@@ -1,5 +1,8 @@
 import pygame
 
+# For Debug set debug = True
+debug = False
+
 # Set images for blitting
 start = pygame.image.load('graphics/start.png')
 
@@ -51,17 +54,13 @@ pit_crazy = [pygame.image.load('graphics/pit_crazy1.png'), pygame.image.load('gr
 exit = pygame.image.load('graphics/exit.png')
 no_exit = pygame.image.load('graphics/exit_inactive.png')
 
-# For Debug Level - uncomment line 55-59 and comment line 61-64
-
-# boxes = [pygame.image.load('graphics/box_in_pit.png'), pygame.image.load('graphics/box1.png'),
-#         pygame.image.load('graphics/box_in_pit_return_.png'), pygame.image.load('graphics/box2.png'),
-#         pygame.image.load('graphics/box_in_pit_fragile.png'), pygame.image.load('graphics/box3.png'),
-#         pygame.image.load('graphics/box_in_pit_biohazard.png'), pygame.image.load('graphics/box4.png')]
-
 boxes = [pygame.image.load('graphics/box_in_pit.png'), pygame.image.load('graphics/box.png'),
         pygame.image.load('graphics/box_in_pit_return_.png'), pygame.image.load('graphics/box_return.png'),
         pygame.image.load('graphics/box_in_pit_fragile.png'), pygame.image.load('graphics/box_fragile.png'),
-        pygame.image.load('graphics/box_in_pit_biohazard.png'), pygame.image.load('graphics/box_biohazard.png')]
+        pygame.image.load('graphics/box_in_pit_biohazard.png'), pygame.image.load('graphics/box_biohazard.png'),
+        pygame.image.load('graphics/box1.png'), pygame.image.load('graphics/box2.png'),
+        pygame.image.load('graphics/box3.png'), pygame.image.load('graphics/box4.png')]
+
 
 player = pygame.image.load('graphics/player.png')
 player_up = pygame.image.load('graphics/player_up.png')

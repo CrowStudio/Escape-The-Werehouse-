@@ -1,3 +1,5 @@
+from game_board.elements import gfx
+
 # Set tile coordinate for X
 x1 = 0
 x2 = 100
@@ -72,123 +74,126 @@ PW = 7  # Pit as Wall - not able to put box in it
 E = 8  # Exit
 
 
-# For Debug Level - uncomment line 77-98 and comment line 101-122
+# If gfx.debug = True 
+# - DEBUG LEVEL
+if gfx.debug:
+    # DEBUG LEVEL
+    # Tutorial title
+    titel = [' Debugging Mode']
 
-# # DEBUG LÈVEL
-# # Tutorial title
-# titel = [' Debugging Mode']
+    # Map layout for tiles
+    tutorial_map = [[F, F, F, F, F, E,\
+                    F, F, W, W, F, F,\
+                    F, F ,F, F, F, F,\
+                    F, F ,S, F, F, F,\
+                    F, F, F, F, F, F,
+                    F, F, F, F, F, F]]
 
-# # Map layout for tiles 
-# tutorial_map = [[F, F, F, F, F, E,\
-#                 F, F, W, W, F, F,\
-#                 F, F ,F, F, F, F,\
-#                 F, F ,S, F, F, F,\
-#                 F, F, F, F, F, F,
-#                 F, F, F, F, F, F]]
+    # Setup for active Boxes
+    active_boxes = [[True, True, True, True]]
+    # Setup of Boxes startpoints
+    positions = [[t3r3, t3r6, t4r3, t4r5]]
 
-# # Setup for active Boxes
-# active_boxes = [[True, True, True, True]]
-# # Setup of Boxes startpoints
-# positions = [[t3r3, t3r6, t4r3, t4r5]]
+    # Set startpoint for Player
+    player_start = [t3r4]
 
-# # Set startpoint for Player
-# player_start = [t3r4]
+    # Set exit to active
+    active_exit = [1]
 
-# # Set exit to active
-# active_exit = [1]
+# Else
+# - TUTORIAL LEVELS
+else:
+    # TUTORIAL 1
+    # Tutorial title
+    titel = [' Tutorial: Push Box to reach Exit']
 
-
-# TUTORIAL 1
-# Tutorial title
-titel = [' Tutorial: Push Box to reach Exit']
-
-# Map layout for tiles
-tutorial_map = [[W, W, W, W, W, W,\
-                W, W, F, W, W, W,\
-                W, W ,F, E, W, W,\
-                W, W ,F, W, W, W,\
-                W, W, S, W, W, W,
-                W, W, W, W, W, W]]
-
-# Setup for active Boxes
-active_boxes = [[True, False, False, False]]
-# Setup of Boxes startpoints
-positions = [[t3r4, t4r3, t5r3, t4r5]]
-
-# Set startpoint for Player
-player_start = [t3r5]
-
-# Set exit to active
-active_exit = [1]
-
-
-# TUTORIAL 2
-# Tutorial title
-titel.append('Tutorial: Pits are DANGEROUS! Push Box into the Pit to be able to cross')
-
-# Map layout for tiles
-tutorial_map.append([W, W, W, W, W, W,\
-                    W, PW, P1, E, W, W,\
-                    W, PW, F, W, W, W,\
-                    W, PW, F, W, W, W,\
+    # Map layout for tiles
+    tutorial_map = [[W, W, W, W, W, W,\
+                    W, W, F, W, W, W,\
+                    W, W ,F, E, W, W,\
+                    W, W ,F, W, W, W,\
                     W, W, S, W, W, W,
-                    W, W, W, W, W, W])
+                    W, W, W, W, W, W]]
 
-# Setup for active Boxes
-active_boxes.append([True, False, False, False])
-# Setup of Boxes startpoints
-positions.append([t3r4, t2r1, t6r2, t3r6])
+    # Setup for active Boxes
+    active_boxes = [[True, False, False, False]]
+    # Setup of Boxes startpoints
+    positions = [[t3r4, t4r3, t5r3, t4r5]]
 
-# Set startpoint for Player
-player_start.append(t3r5)
+    # Set startpoint for Player
+    player_start = [t3r5]
 
-# Set exit to active
-active_exit.append(1)
-
-
-# TUTORIAL 3
-# Tutorial title
-titel.append('Tutorial: Two Boxes in a row cannot be pushed')
-
-# Map layout for tiles
-tutorial_map.append([W, W, F, W, W, W,\
-                    W, E, F, W, W, W,\
-                    W, F, F, F, W, W,\
-                    W, W, F, F, W, W,\
-                    W, W, F, W, W, W,
-                    W, W, S, W, W, W])
-
-# Setup for active Boxes
-active_boxes.append([True, True, False, False])
-# Setup of Boxes startpoints
-positions.append([t3r2, t3r3, t4r1, t3r4])
-
-# Set startpoint for Player
-player_start.append(t3r6)
-
-# Set exit to active
-active_exit.append(1)
+    # Set exit to active
+    active_exit = [1]
 
 
-# TUTORIAL 4
-# Tutorial title
-titel.append('Tutorial: To drag Box stand close to it, hold space bar while moving away from Box')
+    # TUTORIAL 2
+    # Tutorial title
+    titel.append('Tutorial: Pits are DANGEROUS! Push Box into the Pit to be able to cross')
 
-# Map layout for tiles
-tutorial_map.append([W, W, W, E, W, W,\
-                    W, W, W, F, F, W,\
-                    W, W, W, F, F, W,\
-                    W, W, W, F, F, W,\
-                    W, W, F, F, W, W,
-                    W, W, S, W, W, W])
+    # Map layout for tiles
+    tutorial_map.append([W, W, W, W, W, W,\
+                        W, PW, P1, E, W, W,\
+                        W, PW, F, W, W, W,\
+                        W, PW, F, W, W, W,\
+                        W, W, S, W, W, W,
+                        W, W, W, W, W, W])
 
-# Setup for active Boxes
-active_boxes.append([True, False, False, False])
-# Setup of Boxes startpoints
-positions.append([t4r2, t5r2, t4r1, t3r4])
+    # Setup for active Boxes
+    active_boxes.append([True, False, False, False])
+    # Setup of Boxes startpoints
+    positions.append([t3r4, t2r1, t6r2, t3r6])
 
-# Set startpoint for Player
-player_start.append(t3r6)
+    # Set startpoint for Player
+    player_start.append(t3r5)
 
-# Set exit to active
-active_exit.append(1)
+    # Set exit to active
+    active_exit.append(1)
+
+
+    # TUTORIAL 3
+    # Tutorial title
+    titel.append('Tutorial: Two Boxes in a row cannot be pushed')
+
+    # Map layout for tiles
+    tutorial_map.append([W, W, F, W, W, W,\
+                        W, E, F, W, W, W,\
+                        W, F, F, F, W, W,\
+                        W, W, F, F, W, W,\
+                        W, W, F, W, W, W,
+                        W, W, S, W, W, W])
+
+    # Setup for active Boxes
+    active_boxes.append([True, True, False, False])
+    # Setup of Boxes startpoints
+    positions.append([t3r2, t3r3, t4r1, t3r4])
+
+    # Set startpoint for Player
+    player_start.append(t3r6)
+
+    # Set exit to active
+    active_exit.append(1)
+
+
+    # TUTORIAL 4
+    # Tutorial title
+    titel.append('Tutorial: To drag Box stand close to it, hold space bar while moving away from Box')
+
+    # Map layout for tiles
+    tutorial_map.append([W, W, W, E, W, W,\
+                        W, W, W, F, F, W,\
+                        W, W, W, F, F, W,\
+                        W, W, W, F, F, W,\
+                        W, W, F, F, W, W,
+                        W, W, S, W, W, W])
+
+    # Setup for active Boxes
+    active_boxes.append([True, False, False, False])
+    # Setup of Boxes startpoints
+    positions.append([t4r2, t5r2, t4r1, t3r4])
+
+    # Set startpoint for Player
+    player_start.append(t3r6)
+
+    # Set exit to active
+    active_exit.append(1)

@@ -225,23 +225,32 @@ class BoardElements():
         # Set counter to 1
         r = 1
 
-        # While counter is less than 4
-        while r < 4:
-            # Generate new random Box
-            rand = randrange(1, 8, 2)
-            # Set graphic for random Box
-            rand_box = [rand, level_boxes[rand]]
-            # Set box_in_pit to coorespond to Box graphic
-            rand_pit_box = (rand - 1)
-            
-            # If Box not in list of Boxes
-            # - Set graphics for Box to list of Boxes
-            if rand_box not in self.box:
-                self.pit_box.append(rand_pit_box)
-                self.box.append(rand_box)
+        # If gfx.debug = True
+        # - Set create Boxes with index numbers 1-4
+        if gfx.debug:
+            self.pit_box = [0, 2, 4, 6]
+            self.box = [[0, level_boxes[8]], [1, level_boxes[9]], [2, level_boxes[10]], [3, level_boxes[11]]]
 
-                # Increase counter
-                r += 1
+        # Else
+        # - Setup random Boxes
+        else:
+            # While counter is less than 4
+            while r < 4:
+                # Generate new random Box
+                rand = randrange(1, 8, 2)
+                # Set graphic for random Box
+                rand_box = [rand, level_boxes[rand]]
+                # Set box_in_pit to coorespond to Box graphic
+                rand_pit_box = (rand - 1)
+
+                # If Box not in list of Boxes
+                # - Set graphics for Box to list of Boxes
+                if rand_box not in self.box:
+                    self.pit_box.append(rand_pit_box)
+                    self.box.append(rand_box)
+
+                    # Increase counter
+                    r += 1
         
 
     # Place Boxes, Player, and reset Pits
@@ -329,9 +338,7 @@ class BoardElements():
             self.box = []
             self.pit_box = []
             self.__create_boxes__(gfx.boxes)
-            # For debugging, comment the row above, and uncomment the row below to make boxes appear as 1, 2, 3, 4
-            #self.box = [[0, pygame.image.load('graphics/box1.png')], [1, pygame.image.load('graphics/box2.png')], [2, pygame.image.load('graphics/box3.png')], [3, pygame.image.load('graphics/box4.png')]]
-            self.pit_box = [0, 2, 4, 6]
+
             self.__place_boxes_player_and_reset_pits_and_exit__(active_boxes[option][self.lv],\
                                                                 positions[option][self.lv],\
                                                                 player_start[option][self.lv],\
