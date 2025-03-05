@@ -2,7 +2,8 @@
 My first Python game using graphics.<br>
 It's a Sokoban-ish game style, that I have created with the help of [PyGame](https://www.pygame.org).<br>
 
-[<img src="https://www.youtube.com/watch?v=N8yT1P5T2vw/hqdefault.jpg" width="600" height="300"
+_click the below image to see the tutorial levels_<br>
+[<img src="docs/Escape_the_Werehouse!.png" width="400" height="400"
 />](https://www.youtube.com/watch?v=N8yT1P5T2vw)<br>
 
 ### Install the game
