@@ -361,12 +361,12 @@ def main():
 
     while True:
         # # Prompt the user to enter the grid size in a single dialog
-        # grid_size = simpledialog.askstring("Grid Size", "Enter rows and columns (n,n) - min 4/max 6")
+        # grid_size = simpledialog.askstring("Grid Size", "Enter rows and columns (n,n) - min 4/max 12")
         # if grid_size:
         #     try:
         #         rows, cols = map(int, grid_size.split(','))
-        #         if not (4 <= rows <= 6) or not (4 <= cols <= 6):
-        #             messagebox.showwarning("Input Warning", "Rows and columns must be between 4 and 6.")
+        #         if not (4 <= rows <= 12) or not (4 <= cols <= 12):
+        #             messagebox.showwarning("Input Warning", "Rows and columns must be between 4 and 12.")
         #             continue  # Ask again if the input is out of range
         #     except ValueError:
         #         messagebox.showwarning("Input Warning", "Invalid input format. Please enter rows and columns as 'rows,cols'.")
