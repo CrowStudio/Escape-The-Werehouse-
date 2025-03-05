@@ -8,7 +8,7 @@ pygame.init()
 
 # Game mode variable
 # - 0 = tutorial, 1 = game
-option = 0
+option = 1
 
 # Create BoardElements objekt
 board = blitting.BoardElements()
@@ -1027,7 +1027,7 @@ bounce = 0
 
 # 0 = tutorial, 1 = game
 # This will be changed into an option in the beginning of the game later on
-option = 0
+option = 1
 
 #MAIN LOOP
 while game_on:

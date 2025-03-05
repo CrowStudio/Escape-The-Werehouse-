@@ -190,3 +190,25 @@ active_exit.append(1)
 
 # # Set exit to active
 # active_exit.append(1)
+
+
+# LEVEL 5
+# Map layout for tiles
+level_map.append([
+    S, W, E, P3, F, F,
+    F, W, W, F, F, F,
+    F, F, F, W, P2, W,
+    F, F, F, P1, F, F,
+    W, F, F, W, F, F,
+    W, W, W, W, F, F,])
+
+# Setup for active Boxes
+active_boxes.append([True, True, True, False])
+positions.append([t2r4, t5r5, t6r4, t2r1])
+
+
+# Set startpoint for Player
+player_start.append(t1r1)
+
+# Set exit to active
+active_exit.append(1)
