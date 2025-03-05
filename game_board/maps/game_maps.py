@@ -144,6 +144,28 @@ player_start.append(t6r4)
 active_exit.append(1)
 
 
+# LEVEL 4
+# Map layout for tiles
+level_map.append([
+    F, F, F, F, F, F,
+    W, W, P1, W, W, F,
+    F, F, F, F, F, F,
+    F, W, F, F, F, P2,
+    F, W, W, W, W, F,
+    S, W, E, F, F, P3,])
+
+# Setup for active Boxes
+active_boxes.append([True, True, True, False])
+positions.append([t5r3, t2r1, t1r1, t1r2])
+
+
+# Set startpoint for Player
+player_start.append(t1r6)
+
+# Set exit to active
+active_exit.append(1)
+
+
 # # LEVEL Test 10x10
 # # Map layout for tiles
 # level_map.append([
