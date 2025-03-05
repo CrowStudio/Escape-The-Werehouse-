@@ -28,17 +28,14 @@ player_start.append(game_maps.player_start)
 active_exit = [tutorial_maps.active_exit]
 active_exit.append(game_maps.active_exit)
 
-# Define TILE_SIZE at the beginning of your file or in a constants section
-TILE_SIZE = 100  # Adjust this value to match the size of your tiles
-
 
 # CLASS for setup of levels and blitting of game elements
 class BoardElements():
     '''BoardElements'''
-
+    #
     def __init__(self):
         '''__init__'''
-        # Initialize game board size to default values
+        # Setup of Game Board size
         self.game_board_x = 600
         self.game_board_y = 600
 
@@ -53,19 +50,19 @@ class BoardElements():
         self.play = True
 
         # Variable for active/inactive Exit
-        self.exit = False
+        self.exit = 0
 
         # Variables for active/inactive Pit
-        self.pit1 = True
-        self.pit2 = True
-        self.pit3 = True
-        self.pit4 = True
+        self.pit1 = 1
+        self.pit2 = 1
+        self.pit3 = 1
+        self.pit4 = 1
 
         # Variables for Box to fill Pit with
-        self.in_pit1 = False
-        self.in_pit2 = False
-        self.in_pit3 = False
-        self.in_pit4 = False
+        self.in_pit1 = 0
+        self.in_pit2 = 0
+        self.in_pit3 = 0
+        self.in_pit4 = 0
 
         # Lists for creation of Levels
         self.elements = []
@@ -76,17 +73,8 @@ class BoardElements():
         self.lv = 0
 
 
-    def update_game_board_size(self, level_map):
-        '''Update game board size based on level map'''
-        # Calculate the dimensions of the game board
-        max_x = max(pos[0] for pos in tiles) + TILE_SIZE
-        max_y = max(pos[1] for pos in tiles) + TILE_SIZE
-        self.game_board_x = max_x
-        self.game_board_y = max_y
-
-
     # Blit start tile
-    def __start__(self, game_board, pos):
+    def __start__(self, game_board,pos):
         '''__start__'''
         game_board.blit(gfx.start, (pos))
 
@@ -186,7 +174,7 @@ class BoardElements():
         for i in range(len(level_map)):
             # Genrate random floor and pit tile
             rand_floor = randrange(0, 40)
-            rand_pit = randrange(0, 20)
+            rand_pit = randrange(0,20)
 
             # Set tile cooresponding to value of Game Board element
             if level_map[i] == 0:
@@ -295,10 +283,10 @@ class BoardElements():
         self.exit = active_exit
 
         # Set all Pits to active
-        self.pit1 = True
-        self.pit2 = True
-        self.pit3 = True
-        self.pit4 = True
+        self.pit1 = 1
+        self.pit2 = 1
+        self.pit3 = 1
+        self.pit4 = 1
 
 
     # Blit tiles for Level n
@@ -346,7 +334,7 @@ class BoardElements():
         if new_level:
             self.elements = []
             self.__create_level__(game_board, level_map[option][self.lv])
-            # self.update_game_board_size(level_map[option][self.lv])
+
             self.box = []
             self.pit_box = []
             self.__create_boxes__(gfx.boxes)
@@ -481,11 +469,11 @@ class BoardElements():
         '''blit_stars'''
         # Blit score for LEVEL 1 depending on number of moves
         if self.lv == 1:
-            if moves <= 19:
+            if moves <= 17:
                 # Blit 3 highlighted Stars
                 game_board.blit(gfx.stars[3], (186, 115))
     
-            elif moves > 19 and moves <= 21:
+            elif moves > 17 and moves <= 19:
                 # Blit 2 highlighted Stars
                 game_board.blit(gfx.stars[2], (186, 115))
 
@@ -499,7 +487,7 @@ class BoardElements():
                 # Blit 3 highlighted Stars
                 game_board.blit(gfx.stars[3], (186, 115))
 
-            elif moves > 24 and moves <= 26:
+            elif moves > 24 and moves <= 28:
                 # Blit 2 highlighted Stars
                 game_board.blit(gfx.stars[2], (186, 115))
 
@@ -513,21 +501,7 @@ class BoardElements():
                 # Blit 3 highlighted Stars
                 game_board.blit(gfx.stars[3], (186, 115))
 
-            elif moves > 35 and moves <= 37:
-                # Blit 2 highlighted Stars
-                game_board.blit(gfx.stars[2], (186, 115))
-
-            else:
-                # Blit 1 highlighted Star
-                game_board.blit(gfx.stars[1], (186, 115))
-
-        # Blit score for LEVEL 4 depending on number of moves
-        elif self.lv == 3:
-            if moves <= 56:
-                # Blit 3 highlighted Stars
-                game_board.blit(gfx.stars[3], (186, 115))
-
-            elif moves > 56 and moves <= 58:
+            elif moves > 35 and moves <= 39:
                 # Blit 2 highlighted Stars
                 game_board.blit(gfx.stars[2], (186, 115))
 
