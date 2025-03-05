@@ -6,14 +6,14 @@ from collections import deque
 # Define tile types and colors for visualization
 TILE_TYPES = {
     'S': 'Start',
+    'E': 'Exit',
     'F': 'Floor',
     'W': 'Wall',
+    'PW': 'Pit as Wall',
     'P1': 'Pit1',
     'P2': 'Pit2',
     'P3': 'Pit3',
     'P4': 'Pit4',
-    'PW': 'Pit as Wall',
-    'E': 'Exit',
     'B1': 'Box1',
     'B2': 'Box2',
     'B3': 'Box3',
@@ -68,8 +68,16 @@ class LevelEditor:
             button.pack(side=tk.LEFT)
             self.tile_buttons[tile_type] = button
 
+            # Add space between E and F, and PW and P1
+            if tile_name == 'Exit':
+                spacer = tk.Label(controls_frame, text="     ")  # Add a single space after E
+                spacer.pack(side=tk.LEFT)
+            elif tile_name == 'Pit as Wall':
+                spacer = tk.Label(controls_frame, text="     ")  # Add a single space after PW
+                spacer.pack(side=tk.LEFT)
+
         # Add a spacer label to create space between tile buttons and save button
-        spacer = tk.Label(controls_frame, text="                   ")  # Adjust the number of spaces for desired width
+        spacer = tk.Label(controls_frame, text="     ")  # Reduced number of spaces
         spacer.pack(side=tk.LEFT)
 
         # Add save button
@@ -352,23 +360,23 @@ def main():
     root.title("Level Editor")
 
     while True:
-        # Prompt the user to enter the grid size in a single dialog
-        grid_size = simpledialog.askstring("Grid Size", "Enter rows and columns (n,n) - min 4/max 6")
-        if grid_size:
-            try:
-                rows, cols = map(int, grid_size.split(','))
-                if not (4 <= rows <= 6) or not (4 <= cols <= 6):
-                    messagebox.showwarning("Input Warning", "Rows and columns must be between 4 and 6.")
-                    continue  # Ask again if the input is out of range
-            except ValueError:
-                messagebox.showwarning("Input Warning", "Invalid input format. Please enter rows and columns as 'rows,cols'.")
-                continue  # Ask again if the input format is incorrect
-        else:
-            messagebox.showwarning("Input Warning", "Grid size input was canceled or invalid.")
-            return  # Exit if the input is canceled
+        # # Prompt the user to enter the grid size in a single dialog
+        # grid_size = simpledialog.askstring("Grid Size", "Enter rows and columns (n,n) - min 4/max 6")
+        # if grid_size:
+        #     try:
+        #         rows, cols = map(int, grid_size.split(','))
+        #         if not (4 <= rows <= 6) or not (4 <= cols <= 6):
+        #             messagebox.showwarning("Input Warning", "Rows and columns must be between 4 and 6.")
+        #             continue  # Ask again if the input is out of range
+        #     except ValueError:
+        #         messagebox.showwarning("Input Warning", "Invalid input format. Please enter rows and columns as 'rows,cols'.")
+        #         continue  # Ask again if the input format is incorrect
+        # else:
+        #     messagebox.showwarning("Input Warning", "Grid size input was canceled or invalid.")
+        #     return  # Exit if the input is canceled
 
         # Generate a random level map
-        level_map = generate_random_map(rows, cols)
+        level_map = generate_random_map(6, 6)
 
         editor = LevelEditor(root, level_map)
         root.mainloop()
