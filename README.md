@@ -2,8 +2,8 @@
 My first Python game using graphics.<br>
 It's a Sokoban-ish game style, that I have created with the help of [PyGame](https://www.pygame.org).<br>
 
-https://github.com/user-attachments/assets/7b795635-90a6-41d0-adfd-7ddd2da0ee2e
-<br>
+[<img src="https://www.youtube.com/watch?v=N8yT1P5T2vw/hqdefault.jpg" width="600" height="300"
+/>](https://www.youtube.com/watch?v=N8yT1P5T2vw)<br>
 
 ### Install the game
 Please read the [INSTALL](https://github.com/CrowStudio/Escape-The-Werehouse-/blob/master/docs/INSTALL.md) document.
