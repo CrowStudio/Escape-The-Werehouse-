@@ -135,18 +135,22 @@ class HighScores:
 
 
     def load_scores(self):
+        if not os.path.exists('high_scores.py'):
+            # Create the file with default scores if it doesn't exist
+            with open('high_scores.py', 'w') as file:
+                file.write('SCORES = [(100, \'who\'), (200, \'are\'), (300, \'you\')]')
+
         try:
-            if os.path.exists('high_scores.py'):
-                with open('high_scores.py', 'r') as file:
-                    content = file.read()
-                    # Extract scores from the file content
-                    scores = eval(content.split('=')[1])
-                    return scores
+            with open('high_scores.py', 'r') as file:
+                content = file.read()
+                # Extract scores from the file content
+                scores = eval(content.split('=')[1])
+                return scores
         except Exception as e:
             print(f"Error loading scores: {e}")
 
         # Return default scores if loading fails
-        return [(float('inf'), 'AAA')] * 3
+        return [(100, 'who'), (200, 'are'), (300, 'you')]
 
     def save_scores(self):
         with open('high_scores.py', 'w') as file:
