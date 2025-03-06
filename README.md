@@ -3,7 +3,7 @@ My first Python game using graphics.<br>
 It's a Sokoban-ish game style, that I have created with the help of [PyGame](https://www.pygame.org).<br>
 
 _click the below image to see the tutorial levels_<br>
-[<img src="docs/Escape_the_Werehouse!.png" width="400" height="300"
+[<img src="docs/Escape_the_Werehouse!.png" width="300"
 />](https://www.youtube.com/watch?v=N8yT1P5T2vw)<br>
 
 ### Level Editor ###
