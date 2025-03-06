@@ -507,11 +507,12 @@ def handle_level_complete(board, game_state, high_scores):
         if high_scores.is_high_score(game_state.total_moves):
             initials = high_scores.get_initials(pygame.display.get_surface())
             high_scores.add_score(game_state.total_moves, initials)
-            game_state.total_moves = 0
+
+        # Reset total_moves after last level is finished
+        game_state.total_moves = 0
 
         print("Displaying high scores...") # Debug statement
         high_scores.display_scores(pygame.display.get_surface())
-        pygame.time.wait(3000)
 
 # Handle movement of player and associated boxes
 def move_player_and_boxes(board, direction, travel, is_dragging, audio, game_state):
