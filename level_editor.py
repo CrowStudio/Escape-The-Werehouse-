@@ -158,7 +158,7 @@ class LevelEditor:
 
     def save_level(self):
         """
-        Save the current level map to a file.
+        Save the current level map to a file and generate a new random map.
         """
         try:
             # Prompt the user to enter a level name
@@ -243,6 +243,15 @@ class LevelEditor:
                     file.write("active_exit.append(1)\n")
 
                 messagebox.showinfo("Level Saved", f"The level '{level_name}' has been appended to the Python file.")
+
+                # Generate a new random map
+                self.level_map = generate_random_map(self.rows, self.cols)
+                self.draw_grid()
+
+                # Reset placed tiles and reactivate buttons
+                self.placed_tiles = {tile: False for tile in self.placed_tiles}
+                for button in self.tile_buttons.values():
+                    button.config(state=tk.NORMAL)
 
         except Exception as e:
             messagebox.showerror("Error", f"An error occurred while saving the level: {e}")

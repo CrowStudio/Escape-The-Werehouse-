@@ -65,8 +65,6 @@ class AudioManager:
         except (KeyError, pygame.error) as e:
             logger.warning(f"Failed to play sound {sound_name}: {e}")
 
-import os
-
 class HighScores:
     def __init__(self):
         self.scores = self.load_scores()
@@ -521,7 +519,7 @@ def is_valid_move(board, new_x, new_y, direction, is_dragging):
             if box_pos == (new_x, new_y):
                 return False
     else:
-        # Handle pushing boxes (no changes needed here)
+        # Handle pushing boxes
         box_at_target = False
         for box_pos in box_positions:
             if box_pos == (new_x, new_y):
