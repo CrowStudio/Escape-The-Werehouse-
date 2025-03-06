@@ -94,7 +94,7 @@ class HighScores:
         for i, (score, initials) in enumerate(self.scores, start=1):
             score_str = f'{i}. {str(score).rjust(max_score_length)} {initials}'
             score_text = font.render(score_str, True, (255, 255, 255))
-            score_center = score_text.get_rect(center=(screen.get_width() // 2, 150 + i * 50))
+            score_center = score_text.get_rect(center=(screen.get_width() // 2, 50 + i * 50))
             screen.blit(score_text, score_center)
 
         pygame.display.flip()
@@ -323,11 +323,10 @@ def handle_level_complete(board, game_state, high_scores):
     if game_state.game == False and game_state.current_level >= 4:
         game_state.game = True
         game_state.current_level = 0
-        print('Well done, you finished the Tutorials! Now try to Escape the Werehouse!')
+        print('Well done, you finished the Tutorials! Now try to Escape the Werehouse!') # Debug statement
     elif game_state.game == True and game_state.current_level >= 4:
         game_state.is_playing = False
-        print('Congratulations! You finished the last level!')
-        print(f'Your have made a total of {game_state.total_moves} successful moves!')
+        print('Congratulations! You finished the last level!')  # Debug statement
 
         if high_scores.is_high_score(game_state.total_moves):
             initials = high_scores.get_initials(pygame.display.get_surface())
