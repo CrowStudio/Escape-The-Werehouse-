@@ -155,7 +155,7 @@ class HighScores:
 
 class GameState:
     def __init__(self):
-        self.game = False # False == 4 initial tutorial levels, True = 4 game levels
+        self.game = False  # False == 4 initial tutorial levels, True = 5 game levels
 
         self.current_level = 0
         self.moves = 0
@@ -322,7 +322,7 @@ def handle_level_complete(board, game_state, high_scores):
         game_state.game = True
         game_state.current_level = 0
         print('Well done, you finished the Tutorials! Now try to Escape the Werehouse!') # Debug statement
-    elif game_state.game == True and game_state.current_level >= 4:
+    elif game_state.game == True and game_state.current_level >= 5:
         game_state.is_playing = False
         print('Congratulations! You finished the last level!')  # Debug statement
 
