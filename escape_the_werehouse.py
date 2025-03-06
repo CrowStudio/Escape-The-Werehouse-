@@ -16,7 +16,8 @@ try:
     # Create font objects
     font = pygame.font.SysFont('Lucida Console', 24)  # Font for UI text
     dropdown_font = pygame.font.SysFont('Lucida Console', 20)  # Smaller font for dropdown
-    menu_font = pygame.font.SysFont('Arial Black', 42)  # Bigger font for Game Menus
+    hig_score_font = pygame.font.SysFont('Arial Black', 32)  # Bigger font for High Scores
+    menu_font = pygame.font.SysFont('Arial Black', 42)  # Even bigger font for START MENU
 except pygame.error as e:
     logger.error(f"Failed to initialize PyGame: {e}")
     sys.exit(1)
@@ -89,8 +90,9 @@ class HighScores:
         screen.fill((30, 30, 30))
 
         # Render the title
-        title_text = font.render('High Scores', True, (255, 255, 255))
-        title_center = title_text.get_rect(center=(screen.get_width() // 2, 50))
+        pygame.display.set_caption(f'High Scores')
+        title_text = hig_score_font.render('High Scores', True, (255, 215, 115))
+        title_center = title_text.get_rect(center=(screen.get_width() // 2, 120))
         screen.blit(title_text, title_center)
 
         # Determine the maximum score length for alignment
@@ -103,11 +105,11 @@ class HighScores:
             # Highlight the latest added score by rendering text twice with an offset
             if self.latest_score and self.latest_score == (score, initials):
                 bold_text = font.render(score_str, True, (255, 215, 0))  # Gold color for highlight
-                bold_center = bold_text.get_rect(center=(screen.get_width() // 2 + 1, 50 + i * 50 + 1))
+                bold_center = bold_text.get_rect(center=(screen.get_width() // 2 + 1, 120 + i * 50 + 1))
                 screen.blit(bold_text, bold_center)
 
             score_text = font.render(score_str, True, (255, 255, 255))
-            score_center = score_text.get_rect(center=(screen.get_width() // 2, 50 + i * 50))
+            score_center = score_text.get_rect(center=(screen.get_width() // 2, 120 + i * 50))
             screen.blit(score_text, score_center)
 
         # Back button to return to the start screen
@@ -124,14 +126,14 @@ class HighScores:
     # Input box for entering initials after achieving a high score
     def get_initials(self, screen):
         input_box = pygame.Rect(0, 0, 140, 32)
-        input_box.center = (screen.get_width() // 2, 100)
-        color = pygame.Color('white')
+        input_box.center = (screen.get_width() // 2, 120)
+        color = pygame.Color('gold')
         active = True
         text = ''
         done = False
 
         prompt_text = font.render('Enter your initials:', True, (255, 255, 255))
-        prompt_center = prompt_text.get_rect(center=(screen.get_width() // 2, 50))
+        prompt_center = prompt_text.get_rect(center=(screen.get_width() // 2, 90))
 
         while not done:
             for event in pygame.event.get():
@@ -149,6 +151,12 @@ class HighScores:
                                 text += event.unicode.upper()
 
             screen.fill((30, 30, 30))
+            celebration_text = font.render('Congratulations!', True, (255, 255, 255))
+            celebration_center = celebration_text.get_rect(center=(screen.get_width() // 2, 30))
+            screen.blit(celebration_text, celebration_center)
+            three_text = font.render('You made it to the top three!', True, (255, 255, 255))
+            three_center = three_text.get_rect(center=(screen.get_width() // 2, 60))
+            screen.blit(three_text, three_center)
             screen.blit(prompt_text, prompt_center)
             txt_surface = font.render(text, True, color)
             text_center = txt_surface.get_rect(center=input_box.center)
@@ -209,6 +217,7 @@ class StartScreen:
     def draw(self):
         # Draw the start screen UI
         self.screen.fill((30, 30, 30))
+        pygame.display.set_caption(f'Escape the Werehouse! - START MENU')
         title_text = menu_font.render('Escape the Werehouse!', True, (255, 255, 255))
         title_center = title_text.get_rect(center=(self.screen.get_width() // 2, 50))
         self.screen.blit(title_text, title_center)
@@ -234,7 +243,7 @@ class StartScreen:
         # Draw the dropdown menu as a single frame/box
         if self.dropdown_open:
             levels = ['Tutorial 1', 'Tutorial 2', 'Tutorial 3', 'Tutorial 4'] if self.tutorial_checked else ['Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5']
-            dropdown_box = pygame.Rect(200, 250, 200, len(levels) * 35)
+            dropdown_box = pygame.Rect(200, 250, 200, len(levels) * 32)
             pygame.draw.rect(self.screen, (50, 50, 50), dropdown_box)  # Darker background for dropdown
             for i, level in enumerate(levels):
                 level_text = dropdown_font.render(level, True, (255, 255, 255))
@@ -487,14 +496,18 @@ def handle_level_complete(board, game_state, high_scores):
     if game_state.game == False and game_state.current_level >= 4:
         game_state.game = True
         game_state.current_level = 0
-        print('Well done, you finished the Tutorials! Now try to Escape the Werehouse!') # Debug statement
+        # Debug statement
+        print('Well done, you finished the Tutorials! Now try to Escape the Werehouse!')
     elif game_state.game == True and game_state.current_level >= 5:
         game_state.is_playing = False
-        print('Congratulations! You finished the last level!') # Debug statement
+        # Debug statements
+        print('Congratulations! You finished the last level!')
+        print(f'Your have made a total of {game_state.total_moves} successful moves!')
 
         if high_scores.is_high_score(game_state.total_moves):
             initials = high_scores.get_initials(pygame.display.get_surface())
             high_scores.add_score(game_state.total_moves, initials)
+            game_state.total_moves = 0
 
         print("Displaying high scores...") # Debug statement
         high_scores.display_scores(pygame.display.get_surface())
@@ -732,7 +745,9 @@ def check_player_in_pit(board, game_state, x, y, audio):
                     else:
                         # Reset level
                         game_state.new_level = True
+                        game_state.total_moves += game_state.moves
                         game_state.moves = 0
+
                     return True
     return False
 
