@@ -1,5 +1,6 @@
 from ast import If
 import sys
+import os
 import logging
 import pygame
 # from game_board.maps import game_maps, tutorial_maps
@@ -13,6 +14,9 @@ logger = logging.getLogger(__name__)
 try:
     pygame.mixer.pre_init(44100, -16, 1, 2048)
     pygame.init()
+    # Create a font object using a system font
+    font = pygame.font.SysFont('Lucida Console', 36)  # Used for High Scores
+
 except pygame.error as e:
     logger.error(f"Failed to initialize PyGame: {e}")
     sys.exit(1)
@@ -57,21 +61,113 @@ class AudioManager:
             channel.play(self.sounds[sound_name])
             channel.set_volume(1.0)
             channel.fadeout(450)
+
         except (KeyError, pygame.error) as e:
             logger.warning(f"Failed to play sound {sound_name}: {e}")
 
+import os
+
+class HighScores:
+    def __init__(self):
+        self.scores = self.load_scores()
+
+    def add_score(self, score, initials):
+        self.scores.append((score, initials))
+        self.scores = sorted(self.scores, key=lambda x: x[0])[:3]  # Keep only top 3
+        self.save_scores()
+
+    def is_high_score(self, score):
+        return score <= max(self.scores)[0]
+
+    def display_scores(self, screen):
+        screen.fill((30, 30, 30))
+
+        # Render the title
+        title_text = font.render('High Scores', True, (255, 255, 255))
+        title_center = title_text.get_rect(center=(screen.get_width() // 2, 50))
+        screen.blit(title_text, title_center)
+
+        # Determine the maximum score length for alignment
+        max_score_length = max(len(str(score)) for score, _ in self.scores)
+
+        # Render each score entry with alignment
+        for i, (score, initials) in enumerate(self.scores, start=1):
+            score_str = f'{i}. {str(score).rjust(max_score_length)} {initials}'
+            score_text = font.render(score_str, True, (255, 255, 255))
+            score_center = score_text.get_rect(center=(screen.get_width() // 2, 150 + i * 50))
+            screen.blit(score_text, score_center)
+
+        pygame.display.flip()
+
+    def get_initials(self, screen):
+        input_box = pygame.Rect(0, 0, 140, 32)
+        input_box.center = (screen.get_width() // 2, 100)
+        color = pygame.Color('white')
+        active = True
+        text = ''
+        done = False
+
+        prompt_text = font.render('Enter your initials:', True, (255, 255, 255))
+        prompt_center = prompt_text.get_rect(center=(screen.get_width() // 2, 50))
+
+        while not done:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    if active:
+                        if event.key == pygame.K_RETURN:
+                            done = True
+                        elif event.key == pygame.K_BACKSPACE:
+                            text = text[:-1]
+                        else:
+                            if len(text) < 3:
+                                text += event.unicode.upper()
+
+            screen.fill((30, 30, 30))
+            screen.blit(prompt_text, prompt_center)
+            txt_surface = font.render(text, True, color)
+            text_center = txt_surface.get_rect(center=input_box.center)
+            screen.blit(txt_surface, text_center)
+
+            pygame.display.flip()
+
+        return text
+
+
+    def load_scores(self):
+        try:
+            if os.path.exists('high_scores.py'):
+                with open('high_scores.py', 'r') as file:
+                    content = file.read()
+                    # Extract scores from the file content
+                    scores = eval(content.split('=')[1])
+                    return scores
+        except Exception as e:
+            print(f"Error loading scores: {e}")
+
+        # Return default scores if loading fails
+        return [(float('inf'), 'AAA')] * 3
+
+    def save_scores(self):
+        with open('high_scores.py', 'w') as file:
+            file.write(f'SCORES = {self.scores}')
+
+
 class GameState:
     def __init__(self):
-        self.game = False # False == 4 tutorial levels, True = 3 game levels
+        self.game = False # False == 4 initial tutorial levels, True = 4 game levels
 
         self.current_level = 0
         self.moves = 0
         self.retries = 3
 
-        self.debounce_timer = 0
-
         self.is_playing = True
         self.new_level = True
+        self.total_moves = 0
+
+        self.debounce_timer = 0 # To avoid unvanted movements
         self.travel = 0  # Only keep track of direction
 
 def main():
@@ -79,6 +175,7 @@ def main():
     game_state = GameState()
     board = BoardElements()
     audio = AudioManager()
+    high_scores = HighScores()
 
     # # Update the game board size based on the current level
     # mode_index = 0 if game_state.game == False else 1
@@ -111,7 +208,7 @@ def main():
 
         # Check level completion
         if check_level_complete(board, game_state):
-            handle_level_complete(board, game_state)
+            handle_level_complete(board, game_state, high_scores)
 
         # Set background color
         game_board.fill((30, 30, 30))
@@ -164,13 +261,19 @@ def check_level_complete(board, game_state):
                 board.blit_box_3(pygame.display.get_surface(), 0, 0)
                 board.blit_box_4(pygame.display.get_surface(), 0, 0)
                 board.blit_player(pygame.display.get_surface(), 0, 0)  # Show player on exit
+
                 # Show score for completed level
                 if game_state.game:
                     pygame.display.set_caption(f'Escape the Werehouse!                 Moves: {game_state.moves}                 Retries: {game_state.retries}     ')
                     board.blit_stars(pygame.display.get_surface(), game_state.moves)
+                    # Add moves to total_moves for high scores
+                    game_state.total_moves += game_state.moves
+
                 pygame.display.flip()
                 pygame.time.wait(500)  # Wait half a second to show player on exit
+
                 return True
+
     return False
 
 def handle_input(keys, board, game_state, audio):
@@ -208,7 +311,7 @@ def handle_input(keys, board, game_state, audio):
     return False
 
 
-def handle_level_complete(board, game_state):
+def handle_level_complete(board, game_state, high_scores):
     """Handles level completion"""
     game_state.moves = 0
     game_state.new_level = True
@@ -220,8 +323,20 @@ def handle_level_complete(board, game_state):
     if game_state.game == False and game_state.current_level >= 4:
         game_state.game = True
         game_state.current_level = 0
+        print('Well done, you finished the Tutorials! Now try to Escape the Werehouse!')
     elif game_state.game == True and game_state.current_level >= 4:
         game_state.is_playing = False
+        print('Congratulations! You finished the last level!')
+        print(f'Your have made a total of {game_state.total_moves} successful moves!')
+
+        if high_scores.is_high_score(game_state.total_moves):
+            initials = high_scores.get_initials(pygame.display.get_surface())
+            high_scores.add_score(game_state.total_moves, initials)
+
+        print("Displaying high scores...")  # Debug statement
+        high_scores.display_scores(pygame.display.get_surface())
+        pygame.time.wait(5000)  # Display high scores for 5 seconds
+
 
 def move_player_and_boxes(board, direction, travel, is_dragging, audio, game_state):
     """Handles movement of player and associated boxes"""
