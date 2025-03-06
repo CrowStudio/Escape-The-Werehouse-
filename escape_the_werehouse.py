@@ -68,16 +68,18 @@ class AudioManager:
 class HighScores:
     def __init__(self):
         self.scores = self.load_scores()
+        self.latest_score = None  # Track the latest added score
 
     def add_score(self, score, initials):
         self.scores.append((score, initials))
         self.scores = sorted(self.scores, key=lambda x: x[0])[:3]  # Keep only top 3
+        self.latest_score = (score, initials)  # Update the latest score
         self.save_scores()
 
     def is_high_score(self, score):
         return score <= max(self.scores)[0]
 
-    def display_scores(self, screen):
+    def display_scores(self, screen, new_initials=None):
         screen.fill((30, 30, 30))
 
         # Render the title
@@ -91,6 +93,13 @@ class HighScores:
         # Render each score entry with alignment
         for i, (score, initials) in enumerate(self.scores, start=1):
             score_str = f'{i}. {str(score).rjust(max_score_length)} {initials}'
+
+            if self.latest_score and self.latest_score == (score, initials):
+                # Highlight the latest added score by rendering text twice with an offset
+                bold_text = font.render(score_str, True, (255, 215, 0))  # Gold color for highlight
+                bold_center = bold_text.get_rect(center=(screen.get_width() // 2 + 1, 50 + i * 50 + 1))
+                screen.blit(bold_text, bold_center)
+
             score_text = font.render(score_str, True, (255, 255, 255))
             score_center = score_text.get_rect(center=(screen.get_width() // 2, 50 + i * 50))
             screen.blit(score_text, score_center)
@@ -335,7 +344,7 @@ def handle_level_complete(board, game_state, high_scores):
             high_scores.add_score(game_state.total_moves, initials)
 
         print("Displaying high scores...")  # Debug statement
-        high_scores.display_scores(pygame.display.get_surface())
+        high_scores.display_scores(pygame.display.get_surface(), new_initials=initials)
         pygame.time.wait(5000)  # Display high scores for 5 seconds
 
 
