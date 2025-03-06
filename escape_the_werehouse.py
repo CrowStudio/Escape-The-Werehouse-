@@ -321,108 +321,6 @@ class StartScreen:
                     sys.exit()
         return None
 
-
-def main():
-    # Initialize game components
-    game_state = GameState()
-    board = BoardElements()
-    audio = AudioManager()
-    high_scores = HighScores()
-    screen = pygame.display.set_mode((600, 600))
-    start_screen = StartScreen(screen, game_state, high_scores)
-
-    clock = pygame.time.Clock()
-    show_start_screen = True
-
-    # # Update the game board size based on the current level
-    # mode_index = 0 if game_state.game == False else 1
-    # board.update_game_board_size(level_map[mode_index][game_state.current_level])
-
-    while True:
-        if show_start_screen:
-            start_screen.draw()
-            action = start_screen.handle_events()
-            if action == 'start_game':
-                show_start_screen = False
-            elif action == 'show_high_scores':
-                high_scores.from_start_screen = True  # Set the flag to True
-                high_scores.display_scores(screen)
-                while start_screen.show_high_scores:
-                    for event in pygame.event.get():
-                        if event.type == pygame.QUIT:
-                            pygame.quit()
-                            sys.exit()
-                        elif event.type == pygame.MOUSEBUTTONDOWN:
-                            mouse_pos = pygame.mouse.get_pos()
-                            if 150 <= mouse_pos[0] <= 350 and 550 <= mouse_pos[1] <= 590:
-                                start_screen.show_high_scores = False
-                                start_screen.draw()
-        else:
-            # Set up game board
-            game_board = pygame.display.set_mode((board.game_board_x, board.game_board_y))
-            game_state.new_level = True  # Reset level to start from the selected one
-
-            # Main game loop
-            while game_state.is_playing:
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        game_state.is_playing = False
-                        show_start_screen = True
-
-                # Generate new level if needed
-                if game_state.new_level:
-                    board.lv = game_state.current_level
-                    mode_index = 0 if game_state.game == False else 1
-                    game_state.new_level = board.generate_level(game_board, True, mode_index)
-
-                # Handle input only if not in movement cooldown
-                if game_state.debounce_timer == 0:
-                    keys = pygame.key.get_pressed()
-                    if handle_input(keys, board, game_state, audio):
-                        game_state.debounce_timer = MOVEMENT_DELAY
-                else:
-                    game_state.debounce_timer -= 1
-
-                # Check level completion
-                if check_level_complete(board, game_state):
-                    handle_level_complete(board, game_state, high_scores)
-                    if not game_state.is_playing:
-                        high_scores.from_start_screen = False  # Set the flag to False
-                        high_scores.display_scores(screen)
-                        pygame.time.wait(5000)
-                        show_start_screen = True
-
-                # Set background color
-                game_board.fill((30, 30, 30))
-
-                # Render current level
-                board.blit_level(game_board)
-
-                # Render boxes
-                board.blit_box_1(game_board, 0, 0)
-                board.blit_box_2(game_board, 0, 0)
-                board.blit_box_3(game_board, 0, 0)
-                board.blit_box_4(game_board, 0, 0)
-
-                # Render player with direction
-                if game_state.travel in [1, 2]:
-                    board.blit_player(game_board, game_state.travel, board.py)
-                elif game_state.travel in [3, 4]:
-                    board.blit_player(game_board, game_state.travel, board.px)
-                else:
-                    board.blit_player(game_board, 0, 0)
-
-                if game_state.game:
-                    pygame.display.set_caption(f'Escape the Werehouse!                 Moves: {game_state.moves}                 Retries: {game_state.retries}     ')
-                else:
-                    pygame.display.set_caption(f'{board.titel[game_state.current_level]}')
-
-                pygame.display.flip()
-                # Cap frame rate
-                clock.tick(60)
-
-    pygame.quit()
-
 def check_level_complete(board, game_state):
     # Check if the current level is complete
     if not board.exit:
@@ -747,15 +645,144 @@ def check_player_in_pit(board, game_state, x, y, audio):
                     audio.play_sound('fall')
                     game_state.retries -= 1
                     if game_state.retries <= 0:
+                        display_game_over(game_state)
                         game_state.is_playing = False
+                        game_state.retries = 3
+                        game_state.moves = 0
+                        game_state.total_moves = 0
+                        return True
+
                     else:
                         # Reset level
                         game_state.new_level = True
                         game_state.total_moves += game_state.moves
                         game_state.moves = 0
-
                     return True
     return False
+
+# Show GAME OVER screen when out of retries
+def display_game_over(game_state):
+    screen = pygame.display.get_surface()
+    # Clear the screen
+    screen.fill((30, 30, 30))
+
+    # Render "GAME OVER" text
+    game_over_text = menu_font.render('GAME OVER', True, (255, 0, 0))
+    game_over_rect = game_over_text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))
+    screen.blit(game_over_text, game_over_rect)
+
+    # Update the display
+    pygame.display.flip()
+
+    # Wait for a few seconds before returning to the start screen
+    pygame.time.wait(3000)
+
+
+def main():
+    # Initialize game components
+    game_state = GameState()
+    board = BoardElements()
+    audio = AudioManager()
+    high_scores = HighScores()
+    screen = pygame.display.set_mode((600, 600))
+    start_screen = StartScreen(screen, game_state, high_scores)
+
+    clock = pygame.time.Clock()
+    show_start_screen = True
+
+    # # Update the game board size based on the current level
+    # mode_index = 0 if game_state.game == False else 1
+    # board.update_game_board_size(level_map[mode_index][game_state.current_level])
+
+    while True:
+        if show_start_screen:
+            start_screen.draw()
+            action = start_screen.handle_events()
+            if action == 'start_game':
+                show_start_screen = False
+            elif action == 'show_high_scores':
+                high_scores.from_start_screen = True  # Set the flag to True
+                high_scores.display_scores(screen)
+                while start_screen.show_high_scores:
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                            sys.exit()
+                        elif event.type == pygame.MOUSEBUTTONDOWN:
+                            mouse_pos = pygame.mouse.get_pos()
+                            if 150 <= mouse_pos[0] <= 350 and 550 <= mouse_pos[1] <= 590:
+                                start_screen.show_high_scores = False
+                                start_screen.draw()
+        else:
+            # Set up game board
+            game_board = pygame.display.set_mode((board.game_board_x, board.game_board_y))
+            game_state.new_level = True  # Reset level to start from the selected one
+
+            # Main game loop
+            while game_state.is_playing:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        game_state.moves = 0
+                        game_state.is_playing = False
+                        show_start_screen = True
+
+                # Generate new level if needed
+                if game_state.new_level:
+                    board.lv = game_state.current_level
+                    mode_index = 0 if game_state.game == False else 1
+                    game_state.new_level = board.generate_level(game_board, True, mode_index)
+
+                # Handle input only if not in movement cooldown
+                if game_state.debounce_timer == 0:
+                    keys = pygame.key.get_pressed()
+                    if handle_input(keys, board, game_state, audio):
+                        game_state.debounce_timer = MOVEMENT_DELAY
+                else:
+                    game_state.debounce_timer -= 1
+
+                # Check level completion
+                if check_level_complete(board, game_state):
+                    handle_level_complete(board, game_state, high_scores)
+                    if not game_state.is_playing:
+                        high_scores.from_start_screen = False  # Set the flag to False
+                        high_scores.display_scores(screen)
+                        pygame.time.wait(5000)
+                        show_start_screen = True
+
+                # Set background color
+                game_board.fill((30, 30, 30))
+
+                # Render current level
+                board.blit_level(game_board)
+
+                # Render boxes
+                board.blit_box_1(game_board, 0, 0)
+                board.blit_box_2(game_board, 0, 0)
+                board.blit_box_3(game_board, 0, 0)
+                board.blit_box_4(game_board, 0, 0)
+
+                # Render player with direction
+                if game_state.travel in [1, 2]:
+                    board.blit_player(game_board, game_state.travel, board.py)
+                elif game_state.travel in [3, 4]:
+                    board.blit_player(game_board, game_state.travel, board.px)
+                else:
+                    board.blit_player(game_board, 0, 0)
+
+                if game_state.game:
+                    pygame.display.set_caption(f'Escape the Werehouse!                 Moves: {game_state.moves}                 Retries: {game_state.retries}     ')
+                else:
+                    pygame.display.set_caption(f'{board.titel[game_state.current_level]}')
+
+                pygame.display.flip()
+                # Cap frame rate
+                clock.tick(60)
+
+            # Ensure the start screen is shown after game over
+            show_start_screen = True
+            game_state.is_playing = True
+
+    pygame.quit()
 
 if __name__ == '__main__':
     main()
