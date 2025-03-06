@@ -218,7 +218,7 @@ class StartScreen:
         # Draw the start screen UI
         self.screen.fill((30, 30, 30))
         pygame.display.set_caption(f'Escape the Werehouse! - START MENU')
-        title_text = menu_font.render('Escape the Werehouse!', True, (255, 255, 255))
+        title_text = menu_font.render('Escape the Werehouse!', True, (255, 215, 115))
         title_center = title_text.get_rect(center=(self.screen.get_width() // 2, 50))
         self.screen.blit(title_text, title_center)
 
@@ -251,9 +251,14 @@ class StartScreen:
 
         # Display the selected level when dropdown is closed
         if not self.dropdown_open:
-            selected_level_text = dropdown_font.render(f'Level {self.selected_level + 1}', True, (255, 255, 255))
-            selected_level_text_center = selected_level_text.get_rect(center=(self.screen.get_width() // 2, 210))
-            self.screen.blit(selected_level_text, selected_level_text_center)
+            if self.tutorial_checked:
+                selected_level_text = dropdown_font.render(f'Tutorial {self.selected_level + 1}', True, (255, 255, 255))
+                selected_level_text_center = selected_level_text.get_rect(center=(self.screen.get_width() // 2, 210))
+                self.screen.blit(selected_level_text, selected_level_text_center)
+            else:
+                selected_level_text = dropdown_font.render(f'Level {self.selected_level + 1}', True, (255, 255, 255))
+                selected_level_text_center = selected_level_text.get_rect(center=(self.screen.get_width() // 2, 210))
+                self.screen.blit(selected_level_text, selected_level_text_center)
 
         # Start Game button
         start_button = pygame.Rect(200, 440, 200, 40)  # Adjusted start button position
