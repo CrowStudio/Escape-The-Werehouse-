@@ -512,8 +512,9 @@ def move_player_and_boxes(board, direction, travel, is_dragging, audio, game_sta
     return True
 
 # Check if a box has fallen into a pit and update states accordingly
+# Check if a box has fallen into a pit and update states accordingly
 def check_box_in_pit(board, box_num, x, y):
-    # Mapping of pit types to board attribute names
+    # Mapping of pit types to their corresponding attributes
     pit_mapping = {
         TileType.PIT1: ('pit1', 'in_pit1'),
         TileType.PIT2: ('pit2', 'in_pit2'),
@@ -521,24 +522,29 @@ def check_box_in_pit(board, box_num, x, y):
         TileType.PIT4: ('pit4', 'in_pit4'),
     }
 
+    # Iterate over the elements on the board
     for element in board.elements:
-        if element[1] == (x, y):
-            pit_type = element[0]
-            if pit_type in pit_mapping:
-                pit_attr, in_pit_attr = pit_mapping[pit_type]
-                # Only proceed if the pit is active
-                if getattr(board, pit_attr):
-                    setattr(board, pit_attr, False)  # Deactivate pit
-                    setattr(board, in_pit_attr, box_num)  # Store box number
+        position, pit_type = element[1], element[0]
 
-                    if box_num == 1:
-                        board.box1 = False
-                    elif box_num == 2:
-                        board.box2 = False
-                    elif box_num == 3:
-                        board.box3 = False
-                    elif box_num == 4:
-                        board.box4 = False
+        # Check if the current element is a pit and matches the given coordinates
+        if position == (x, y) and pit_type in pit_mapping:
+            pit_attr, in_pit_attr = pit_mapping[pit_type]
+
+            # Check if the pit is active
+            if getattr(board, pit_attr):
+                # Deactivate the pit and set the box number in the pit
+                setattr(board, pit_attr, False)
+                setattr(board, in_pit_attr, box_num)
+                print(f"Box {box_num} fell into pit {pit_type}")  # Debug statement
+
+                if box_num == 1:
+                    board.box1 = False
+                elif box_num == 2:
+                    board.box2 = False
+                elif box_num == 3:
+                    board.box3 = False
+                elif box_num == 4:
+                    board.box4 = False
                 return True
 
             return False
@@ -663,7 +669,7 @@ def check_player_in_pit(board, game_state, x, y, audio):
                         game_state.new_level = True
                         game_state.total_moves += game_state.moves
                         game_state.moves = 0
-                        game_state.reset_cooldown = 30  # Set cooldown period (e.g., 0.5 seconds at 60 FPS)
+                        game_state.reset_cooldown = 30  # Set cooldown period (e.g. 30 = 0.5 seconds at 60 FPS)
                     return True
     return False
 

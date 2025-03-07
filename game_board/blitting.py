@@ -38,6 +38,12 @@ class BoardElements():
 
     def __init__(self):
         '''__init__'''
+        print("BoardElements instance created")  # Debug statement
+
+        if not hasattr(self, 'initialized'):
+            # Initialization code...
+            self.initialized = True
+
         # Initialize game board size to default values
         self.game_board_x = 600
         self.game_board_y = 600
@@ -228,7 +234,7 @@ class BoardElements():
         # Set graphic for random Box
         rand_box = [rand, level_boxes[rand]]
         # Set box_in_pit to coorespond to Box graphic
-        rand_pit_box = (rand - 1)
+        rand_pit_box = (rand - 1, level_boxes[rand -1])
 
         # Append graphics for Box to list of Boxes
         self.box.append(rand_box)
@@ -237,56 +243,50 @@ class BoardElements():
         # Set counter to 1
         r = 1
 
-        # If gfx.debug = True
-        # - Set create Boxes with index numbers 1-4
-        if gfx.debug:
-            self.pit_box = [0, 2, 4, 6]
-            self.box = [[0, level_boxes[8]], [1, level_boxes[9]], [2, level_boxes[10]], [3, level_boxes[11]]]
+        # While counter is less than 4
+        while r < 4:
+            # Generate new random Box
+            rand = randrange(1, 8, 2)
+            # Set graphic for random Box
+            rand_box = [rand, level_boxes[rand]]
+            # Set box_in_pit to coorespond to Box graphic
+            rand_pit_box = (rand - 1, level_boxes[rand -1])
 
-        # Else
-        # - Setup random Boxes
-        else:
-            # While counter is less than 4
-            while r < 4:
-                # Generate new random Box
-                rand = randrange(1, 8, 2)
-                # Set graphic for random Box
-                rand_box = [rand, level_boxes[rand]]
-                # Set box_in_pit to coorespond to Box graphic
-                rand_pit_box = (rand - 1)
+            # If Box not in list of Boxes
+            # - Set graphics for Box to list of Boxes
+            if rand_box not in self.box:
+                self.pit_box.append(rand_pit_box)
+                self.box.append(rand_box)
 
-                # If Box not in list of Boxes
-                # - Set graphics for Box to list of Boxes
-                if rand_box not in self.box:
-                    self.pit_box.append(rand_pit_box)
-                    self.box.append(rand_box)
-
-                    # Increase counter
-                    r += 1
+                # Increase counter
+                r += 1
         
 
-    # Place Boxes, Player, and reset Pits
     def __place_boxes_player_and_reset_pits_and_exit__(self, active_boxes, positions, player_start, active_exit):
         '''__place_boxes_player_and_reset_pits__'''
         # Activate/inactivate box1
         self.box1 = active_boxes[0]
         # Set startpoint for box1
         self.b1x, self.b1y = positions[0]
+        print(f"Box 1: Active={self.box1}, Position={(self.b1x, self.b1y)}")  # Debug statement
 
         # Activate/inactivate box2
         self.box2 = active_boxes[1]
         # Set startpoint for box2
         self.b2x, self.b2y = positions[1]
+        print(f"Box 2: Active={self.box2}, Position={(self.b2x, self.b2y)}")  # Debug statement
 
         # Activate/inactivate box3
         self.box3 = active_boxes[2]
         # Set startpoint for box3
         self.b3x, self.b3y = positions[2]
+        print(f"Box 3: Active={self.box3}, Position={(self.b3x, self.b3y)}")  # Debug statement
 
         # Activate/inactivate box4
         self.box4 = active_boxes[3]
         # Set startpoint for box4
         self.b4x, self.b4y = positions[3]
+        print(f"Box 4: Active={self.box4}, Position={(self.b4x, self.b4y)}")  # Debug statement
 
         # Set startpoint for Player
         self.px, self.py = player_start
@@ -312,25 +312,25 @@ class BoardElements():
                 self.__start__(game_board, el[1])
 
             elif el[0] == 1:
-                self.__floor__(game_board, el[1], el[2])
-
-            elif el[0] == 2:
-                self.__wall__(game_board, el[1])
-
-            elif el[0] == 3:
                 self.__pit_1__(game_board, el[1], self.in_pit1)
 
-            elif el[0] == 4:
+            elif el[0] == 2:
                 self.__pit_2__(game_board, el[1], self.in_pit2)
 
-            elif el[0] == 5:
+            elif el[0] == 3:
                 self.__pit_3__(game_board, el[1], self.in_pit3, el[3])
 
-            elif el[0] == 6:
+            elif el[0] == 4:
                 self.__pit_4__(game_board, el[1], self.in_pit4, el[3])
 
-            elif el[0] == 7:
+            elif el[0] == 5:
                 self.__pit_as_wall__(game_board, el[1])
+
+            elif el[0] == 6:
+                self.__floor__(game_board, el[1], el[2])
+
+            elif el[0] == 7:
+                self.__wall__(game_board, el[1])
 
             elif el[0] == 8:
                 self.__exit___(game_board, el[1])
@@ -365,84 +365,116 @@ class BoardElements():
     def blit_box_1(self, game_board, b1_travel, b1_move):
         '''blit_box_1'''
         # If box1 is active
-        if self.box1:
-            # If movement is Up or Down
-            # - Blit box1 in direction of y corresponding of b1_move' value
-            if b1_travel == 1 or b1_travel == 2:
-                game_board.blit(self.box[0][1], (self.b1x, b1_move))
+        if self.box1 and not self.in_pit1:
+            # Set active box
+            box_image = self.box[0][1]
+        elif self.in_pit1:
+            # Set box in pit
+            box_image = self.pit_box[0][1]
+        else:
+            return False
 
-            # Else if movement is Left or Right
-            # - Blit box1 in direction of x corresponding of b1_move' value
-            elif b1_travel == 3 or b1_travel == 4:
-                game_board.blit(self.box[0][1], (b1_move, self.b1y))
+        # If movement is Up or Down
+        # - Blit box1 in direction of y corresponding of b1_move' value
+        if b1_travel == 1 or b1_travel == 2:
+            game_board.blit(box_image, (self.b1x, b1_move))
 
-            # Else
-            # - Blit position of box1
-            else:
-                game_board.blit(self.box[0][1], (self.b1x, self.b1y))
+        # Else if movement is Left or Right
+        # - Blit box1 in direction of x corresponding of b1_move' value
+        elif b1_travel == 3 or b1_travel == 4:
+            game_board.blit(box_image, (b1_move, self.b1y))
+
+        # Else
+        # - Blit position of box1
+        else:
+            game_board.blit(box_image, (self.b1x, self.b1y))
 
 
     # Blit box2
     def blit_box_2(self, game_board, b2_travel, b2_move):
         '''blit_box2'''
         # If box2 is active
-        if self.box2:
-            # If movement is Up or Down
-            # - Blit box2 in direction of y corresponding of b2_move' value
-            if b2_travel == 1 or b2_travel == 2:
-                game_board.blit(self.box[1][1], (self.b2x, b2_move))
+        if self.box2 and not self.in_pit2:
+            # Set active box
+            box_image = self.box[1][1]
+        elif self.in_pit2:
+            # Set box in pit
+            box_image = self.pit_box[1][1]
+        else:
+            return False
 
-            # Else if movement is Left or Right
-            # - Blit box2 in direction of x corresponding of b2_move' value
-            elif b2_travel == 3 or b2_travel == 4:
-                game_board.blit(self.box[1][1], (b2_move, self.b2y))
+        # If movement is Up or Down
+        # - Blit box2 in direction of y corresponding of b2_move' value
+        if b2_travel == 1 or b2_travel == 2:
+            game_board.blit(box_image, (self.b2x, b2_move))
 
-            # Else
-            # - Blit position of box2
-            else:
-                game_board.blit(self.box[1][1], (self.b2x, self.b2y))
+        # Else if movement is Left or Right
+        # - Blit box2 in direction of x corresponding of b2_move' value
+        elif b2_travel == 3 or b2_travel == 4:
+            game_board.blit(box_image, (b2_move, self.b2y))
+
+        # Else
+        # - Blit position of box2
+        else:
+            game_board.blit(box_image, (self.b2x, self.b2y))
 
 
     # Blit box3
     def blit_box_3(self, game_board, b3_travel, b3_move):
         '''blit_box3'''
         # If box3 is active
-        if self.box3:
-            # If movement is Up or Down
-            # - Blit box3 in direction of y corresponding of b3_move' value
-            if b3_travel == 1 or b3_travel == 2:
-                game_board.blit(self.box[2][1], (self.b3x, b3_move))
+        if self.box3 and not self.in_pit3:
+            # Set active box
+            box_image = self.box[2][1]
+        elif self.in_pit3:
+            # Set box in pit
+            box_image = self.pit_box[2][1]
+        else:
+            return False
 
-            # Else if movement is Left or Right
-            # - Blit box3 in direction of x corresponding of b3_move' value
-            elif b3_travel == 3 or b3_travel == 4:
-                game_board.blit(self.box[2][1], (b3_move, self.b3y))
+        # If movement is Up or Down
+        # - Blit box3 in direction of y corresponding of b3_move' value
+        if b3_travel == 1 or b3_travel == 2:
+            game_board.blit(box_image, (self.b3x, b3_move))
 
-            # Else
-            # - Blit position of box3
-            else:
-                game_board.blit(self.box[2][1], (self.b3x, self.b3y))
+        # Else if movement is Left or Right
+        # - Blit box3 in direction of x corresponding of b3_move' value
+        elif b3_travel == 3 or b3_travel == 4:
+            game_board.blit(box_image, (b3_move, self.b3y))
+
+        # Else
+        # - Blit position of box3
+        else:
+            game_board.blit(box_image, (self.b3x, self.b3y))
 
 
     # Blit box4
     def blit_box_4(self, game_board, b4_travel, b4_move):
         '''blit_box4'''
         # If box4 is active
-        if self.box4:
-            # If movement is Up or Down
-            # - Blit box4 in direction of y corresponding of b4_move' value
-            if b4_travel == 1 or b4_travel == 2:
-                game_board.blit(self.box[3][1], (self.b4x, b4_move))
+        if self.box4 and not self.in_pit4:
+            # Set active box
+            box_image = self.box[3][1]
+        elif self.in_pit4:
+            # Set box in pit
+            box_image = self.pit_box[3][1]
+        else:
+            return False
 
-            # Else if movement is Left or Right
-            # - Blit box4 in direction of x corresponding of b4_move' value
-            elif b4_travel == 3 or b4_travel == 4:
-                game_board.blit(self.box[3][1], (b4_move, self.b4y))
+        # If movement is Up or Down
+        # - Blit box4 in direction of y corresponding of b4_move' value
+        if b4_travel == 1 or b4_travel == 2:
+            game_board.blit(box_image, (self.b4x, b4_move))
 
-            # Else
-            # - Blit position of box4
-            else:
-                game_board.blit(self.box[3][1], (self.b4x, self.b4y))
+        # Else if movement is Left or Right
+        # - Blit box4 in direction of x corresponding of b4_move' value
+        elif b4_travel == 3 or b4_travel == 4:
+            game_board.blit(box_image, (b4_move, self.b4y))
+
+        # Else
+        # - Blit position of box4
+        else:
+            game_board.blit(box_image, (self.b4x, self.b4y))
 
 
     # Blit player

@@ -7,13 +7,13 @@ TILE_SIZE = 100
 # Tile type enumeration
 class TileType:
     START = 0
-    FLOOR = 1
-    WALL = 2
-    PIT1 = 3
-    PIT2 = 4
-    PIT3 = 5
-    PIT4 = 6
-    PIT_WALL = 7
+    PIT1 = 1
+    PIT2 = 2
+    PIT3 = 3
+    PIT4 = 4
+    PIT_WALL = 5  # Pit as Wall - not able to put box in it
+    FLOOR = 6
+    WALL = 7
     EXIT = 8
 
 __all__ = ['BoardElements', 'TileType', 'TILE_SIZE', 'debug']
