@@ -113,7 +113,7 @@ class HighScores:
             score_center = score_text.get_rect(center=(screen.get_width() // 2, 120 + i * 50))
             screen.blit(score_text, score_center)
 
-        # Back button to return to the start screen
+        # Only show Back button if comming from start screen
         if self.from_start_screen:
             back_button = pygame.Rect(200, 540, 200, 40)  # Adjusted back button position
             pygame.draw.rect(screen, (255, 255, 255), back_button, 2)
@@ -133,9 +133,6 @@ class HighScores:
         text = ''
         done = False
 
-        prompt_text = font.render('Enter your initials:', True, (255, 255, 255))
-        prompt_center = prompt_text.get_rect(center=(screen.get_width() // 2, 90))
-
         while not done:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -152,13 +149,20 @@ class HighScores:
                                 text += event.unicode.upper()
 
             screen.fill((30, 30, 30))
+            # Show celebration text
             celebration_text = font.render('Congratulations!', True, (255, 255, 255))
             celebration_center = celebration_text.get_rect(center=(screen.get_width() // 2, 30))
             screen.blit(celebration_text, celebration_center)
             three_text = font.render('You made it to the top three!', True, (255, 255, 255))
             three_center = three_text.get_rect(center=(screen.get_width() // 2, 60))
             screen.blit(three_text, three_center)
+
+            # Show prompt text
+            prompt_text = font.render('Enter your initials:', True, (255, 255, 255))
+            prompt_center = prompt_text.get_rect(center=(screen.get_width() // 2, 90))
             screen.blit(prompt_text, prompt_center)
+
+            # Blit input text
             txt_surface = font.render(text, True, color)
             text_center = txt_surface.get_rect(center=input_box.center)
             screen.blit(txt_surface, text_center)
@@ -714,7 +718,8 @@ def main():
             if action == 'start_game':
                 show_start_screen = False
             elif action == 'show_high_scores':
-                high_scores.from_start_screen = True  # Set the flag to True
+                # Set to True to enable Back buttonn
+                high_scores.from_start_screen = True
                 high_scores.display_scores(screen)
                 while start_screen.show_high_scores:
                     for event in pygame.event.get():
