@@ -530,7 +530,7 @@ def check_box_in_pit(board, box_num, x, y):
         if position == (x, y) and pit_type in pit_mapping:
             pit_attr, in_pit_attr = pit_mapping[pit_type]
 
-            # Check if the pit is active
+            # Only proceed if the pit is active
             if getattr(board, pit_attr):
                 # Deactivate the pit and set the box number in the pit
                 setattr(board, pit_attr, False)
