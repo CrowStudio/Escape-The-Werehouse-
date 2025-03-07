@@ -38,6 +38,12 @@ class BoardElements():
 
     def __init__(self):
         '''__init__'''
+        print("BoardElements instance created")  # Debug statement
+
+        if not hasattr(self, 'initialized'):
+            # Initialization code...
+            self.initialized = True
+
         # Initialize game board size to default values
         self.game_board_x = 600
         self.game_board_y = 600
@@ -114,7 +120,7 @@ class BoardElements():
         # Else
         # - Blit box_n's box_in_pit
         else:
-            game_board.blit(gfx.boxes[box], (pos))
+            game_board.blit(gfx.boxes[self.pit_box[box - 1]], (pos))
 
 
     # Blit pit2 tile
@@ -128,7 +134,7 @@ class BoardElements():
         # Else
         # - Blit box_n's box_in_pit
         else:
-            game_board.blit(gfx.boxes[box], (pos))
+            game_board.blit(gfx.boxes[self.pit_box[box - 1]], (pos))
 
 
     # Blit pit3 tile
@@ -142,7 +148,7 @@ class BoardElements():
         # Else
         # - Blit box_n's box_in_pit
         else:
-            game_board.blit(gfx.boxes[box], (pos))
+            game_board.blit(gfx.boxes[self.pit_box[box - 1]], (pos))
 
     # Blit pit4 tile
     def __pit_4__(self, game_board, pos, box, i):
@@ -155,7 +161,7 @@ class BoardElements():
         # Else
         # - Blit box_n's box_in_pit
         else:
-            game_board.blit(gfx.boxes[box], (pos))
+            game_board.blit(gfx.boxes[self.pit_box[box - 1]], (pos))
 
 
     # Blit pit_as_wall tile
@@ -237,34 +243,24 @@ class BoardElements():
         # Set counter to 1
         r = 1
 
-        # If gfx.debug = True
-        # - Set create Boxes with index numbers 1-4
-        if gfx.debug:
-            self.pit_box = [0, 2, 4, 6]
-            self.box = [[0, level_boxes[8]], [1, level_boxes[9]], [2, level_boxes[10]], [3, level_boxes[11]]]
+        # While counter is less than 4
+        while r < 4:
+            # Generate new random Box
+            rand = randrange(1, 8, 2)
+            # Set graphic for random Box
+            rand_box = [rand, level_boxes[rand]]
+            # Set box_in_pit to coorespond to Box graphic
+            rand_pit_box = (rand - 1)
 
-        # Else
-        # - Setup random Boxes
-        else:
-            # While counter is less than 4
-            while r < 4:
-                # Generate new random Box
-                rand = randrange(1, 8, 2)
-                # Set graphic for random Box
-                rand_box = [rand, level_boxes[rand]]
-                # Set box_in_pit to coorespond to Box graphic
-                rand_pit_box = (rand - 1)
+            # If Box not in list of Boxes
+            # - Set graphics for Box to list of Boxes
+            if rand_box not in self.box:
+                self.pit_box.append(rand_pit_box)
+                self.box.append(rand_box)
 
-                # If Box not in list of Boxes
-                # - Set graphics for Box to list of Boxes
-                if rand_box not in self.box:
-                    self.pit_box.append(rand_pit_box)
-                    self.box.append(rand_box)
-
-                    # Increase counter
-                    r += 1
+                # Increase counter
+                r += 1
         
-
     # Place Boxes, Player, and reset Pits
     def __place_boxes_player_and_reset_pits_and_exit__(self, active_boxes, positions, player_start, active_exit):
         '''__place_boxes_player_and_reset_pits__'''
@@ -272,21 +268,25 @@ class BoardElements():
         self.box1 = active_boxes[0]
         # Set startpoint for box1
         self.b1x, self.b1y = positions[0]
+        print(f"Box 1: Active={self.box1}, Position={(self.b1x, self.b1y)}")  # Debug statement
 
         # Activate/inactivate box2
         self.box2 = active_boxes[1]
         # Set startpoint for box2
         self.b2x, self.b2y = positions[1]
+        print(f"Box 2: Active={self.box2}, Position={(self.b2x, self.b2y)}")  # Debug statement
 
         # Activate/inactivate box3
         self.box3 = active_boxes[2]
         # Set startpoint for box3
         self.b3x, self.b3y = positions[2]
+        print(f"Box 3: Active={self.box3}, Position={(self.b3x, self.b3y)}")  # Debug statement
 
         # Activate/inactivate box4
         self.box4 = active_boxes[3]
         # Set startpoint for box4
         self.b4x, self.b4y = positions[3]
+        print(f"Box 4: Active={self.box4}, Position={(self.b4x, self.b4y)}")  # Debug statement
 
         # Set startpoint for Player
         self.px, self.py = player_start
@@ -312,25 +312,25 @@ class BoardElements():
                 self.__start__(game_board, el[1])
 
             elif el[0] == 1:
-                self.__floor__(game_board, el[1], el[2])
-
-            elif el[0] == 2:
-                self.__wall__(game_board, el[1])
-
-            elif el[0] == 3:
                 self.__pit_1__(game_board, el[1], self.in_pit1)
 
-            elif el[0] == 4:
+            elif el[0] == 2:
                 self.__pit_2__(game_board, el[1], self.in_pit2)
 
-            elif el[0] == 5:
+            elif el[0] == 3:
                 self.__pit_3__(game_board, el[1], self.in_pit3, el[3])
 
-            elif el[0] == 6:
+            elif el[0] == 4:
                 self.__pit_4__(game_board, el[1], self.in_pit4, el[3])
 
-            elif el[0] == 7:
+            elif el[0] == 5:
                 self.__pit_as_wall__(game_board, el[1])
+
+            elif el[0] == 6:
+                self.__floor__(game_board, el[1], el[2])
+
+            elif el[0] == 7:
+                self.__wall__(game_board, el[1])
 
             elif el[0] == 8:
                 self.__exit___(game_board, el[1])

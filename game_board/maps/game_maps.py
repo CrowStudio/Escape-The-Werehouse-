@@ -69,31 +69,30 @@ tiles = (
 )
 
 
-# Value of Game Board elements 
-S = 0  # Start
-F = 1  # Floor
-W = 2  # Wall
-P1 = 3  # Pit1
-P2 = 4  # Pit2
-P3 = 5  # Pit3
-P4 = 6  # Pit4
-PW = 7  # Pit as Wall - not able to put box in it
-E = 8  # Exit
-
+# Value of Game Board elements
+START = 0
+PIT1 = 1
+PIT2 = 2
+PIT3 = 3
+PIT4 = 4
+PIT_WALL = 5  # Pit as Wall - not able to put box in it
+FLOOR = 6
+WALL = 7
+EXIT = 8
 
 # LEVEL 1
 # Map layout for tiles
-level_map = [[F, F, F, W, E, F,\
-            P1, W, W, W, W, F,\
-            F, F ,F, F, F, P2,\
-            F, W ,F, F, F, W,\
-            F, W, F, F, W, W,
-            S, W, W, F, W, W]]
+level_map = [[FLOOR, FLOOR, FLOOR, WALL, EXIT, FLOOR,
+              PIT1, WALL, WALL, WALL, WALL, FLOOR,
+              FLOOR, FLOOR ,FLOOR, FLOOR, FLOOR, PIT4,
+              FLOOR, WALL ,FLOOR, FLOOR, FLOOR, WALL,
+              FLOOR, WALL, FLOOR, FLOOR, WALL, WALL,
+              START, WALL, WALL, FLOOR, WALL, WALL]]
 
 # Setup for active Boxes
 active_boxes = [[True, True, True, True]]
 # Setup of Boxes startpoints
-positions = [[t1r4, t4r3, t5r3, t4r5]]
+positions = [[t1r4, t4r5, t4r3, t5r3]]
 
 # Set startpoint for Player
 player_start = [t1r6]
@@ -104,17 +103,17 @@ active_exit = [1]
 
 # LEVEL 2
 # Map layout for tiles
-level_map.append([E, F, F, F, F, PW,
-                 F, F, F, W, F, PW,
-                 PW, PW ,PW, P4, P3, W,
-                 W, F ,F, F, F, F,
-                 PW, F, W, F, F, F,
-                 PW, S, PW, W, W, W])
+level_map.append([EXIT, FLOOR, FLOOR, FLOOR, FLOOR, PIT_WALL,
+                  FLOOR, FLOOR, FLOOR, WALL, FLOOR, PIT_WALL,
+                  PIT_WALL, PIT_WALL ,PIT_WALL, PIT2, PIT1, WALL,
+                  WALL, FLOOR ,FLOOR, FLOOR, FLOOR, FLOOR,
+                  PIT_WALL, FLOOR, WALL, FLOOR, FLOOR, FLOOR,
+                  PIT_WALL, START, PIT_WALL, WALL, WALL, WALL])
 
 # Setup for active Boxes
 active_boxes.append([True, True, True, False])
 # Setup of Boxes startpoints
-positions.append([t6r4, t5r2, t4r1, t3r4])
+positions.append([t6r4, t5r2, t4r1, t6r6])
 
 # Set startpoint for Player
 player_start.append(t2r6)
@@ -125,17 +124,17 @@ active_exit.append(1)
 
 # LEVEL 3
 # Map layout for tiles
-level_map.append([F, F, W, W, W, E,
-                 F, F, F, F, P1, F,
-                 F, F ,W, P2, W, W,
-                 P3, W ,F, F, F, S,
-                 F, F, F, F, W, PW,
-                 F, F, F, F, W, W])
+level_map.append([FLOOR, FLOOR, WALL, WALL, WALL, EXIT,
+                  FLOOR, FLOOR, FLOOR, FLOOR, PIT2, FLOOR,
+                  FLOOR, FLOOR ,WALL, PIT3, WALL, WALL,
+                  PIT1, WALL ,FLOOR, FLOOR, FLOOR, START,
+                  FLOOR, FLOOR, FLOOR, FLOOR, WALL, PIT_WALL,
+                  FLOOR, FLOOR, FLOOR, FLOOR, WALL, WALL])
 
 # Setup for active Boxes
 active_boxes.append([True, True, True, True])
 # Setup of Boxes startpoints
-positions.append([t1r1, t2r1, t6r2, t3r6])
+positions.append([t3r6, t2r1, t6r2, t1r1])
 
 # Set startpoint for Player
 player_start.append(t6r4)
@@ -147,43 +146,42 @@ active_exit.append(1)
 # LEVEL 4
 # Map layout for tiles
 level_map.append([
-    F, F, F, F, F, F,
-    W, W, P1, W, W, F,
-    F, F, F, F, F, F,
-    F, W, F, F, F, P2,
-    F, W, W, W, W, F,
-    S, W, E, F, F, P3,])
+    START, WALL, EXIT, PIT3, FLOOR, FLOOR,
+    FLOOR, WALL, WALL, FLOOR, FLOOR, FLOOR,
+    FLOOR, FLOOR, FLOOR, WALL, PIT2, WALL,
+    FLOOR, FLOOR, FLOOR, PIT1, FLOOR, FLOOR,
+    WALL, FLOOR, FLOOR, WALL, FLOOR, FLOOR,
+    WALL, WALL, WALL, WALL, FLOOR, FLOOR,])
 
 # Setup for active Boxes
 active_boxes.append([True, True, True, False])
-positions.append([t5r3, t2r1, t1r1, t1r2])
-
+positions.append([t2r4, t5r5, t6r4, t2r1])
 
 # Set startpoint for Player
-player_start.append(t1r6)
+player_start.append(t1r1)
 
 # Set exit to active
 active_exit.append(1)
 
 
-# # LEVEL Test 10x10
-# # Map layout for tiles
+# LEVEL Test 10x10
+# Map layout for tiles
 # level_map.append([
-#     E, PW, F, P4, F, F, F, F, F, F,
-#     F, PW, F, W, F, F, F, W, W, S,
-#     F, PW, F, W, F, F, W, W, W, W,
-#     P1, PW, F, W, F, F, F, W, W, F,
-#     F, PW, F, W, W, W, W, W, F, F,
-#     P2, F, F, F, P3, F, F, F, F, F,
-#     F, F, F, F, W, W, F, F, F, PW,
-#     PW, F, F, W, W, F, F, F, F, F,
-#     F, F, F, W, F, F, PW, F, F, F,
-#     PW, F, F, W, F, F, F, F, F, F,])
+#     EXIT, PIT_WALL, FLOOR, PIT4, FLOOR, FLOOR, FLOOR, FLOOR, FLOOR, FLOOR,
+#     FLOOR, PIT_WALL, FLOOR, WALL, FLOOR, FLOOR, FLOOR, WALL, WALL, START,
+#     FLOOR, PIT_WALL, FLOOR, WALL, FLOOR, FLOOR, WALL, WALL, WALL, WALL,
+#     PIT1, PIT_WALL, FLOOR, WALL, FLOOR, FLOOR, FLOOR, WALL, WALL, FLOOR,
+#     FLOOR, PIT_WALL, FLOOR, WALL, WALL, WALL, WALL, WALL, FLOOR, FLOOR,
+#     PIT2, FLOOR, FLOOR, FLOOR, PIT3, FLOOR, FLOOR, FLOOR, FLOOR, FLOOR,
+#     FLOOR, FLOOR, FLOOR, FLOOR, WALL, WALL, FLOOR, FLOOR, FLOOR, PIT_WALL,
+#     PIT_WALL, FLOOR, FLOOR, WALL, WALL, FLOOR, FLOOR, FLOOR, FLOOR, FLOOR,
+#     FLOOR, FLOOR, FLOOR, WALL, FLOOR, FLOOR, PIT_WALL, FLOOR, FLOOR, FLOOR,
+#     PIT_WALL, FLOOR, FLOOR, WALL, FLOOR, FLOOR, FLOOR, FLOOR, FLOOR, FLOOR,
+# ])
 
 # # Setup for active Boxes
 # active_boxes.append([True, True, True, True])
 # positions.append([t7r4, t1r9, t7r8, t10r4])
-
 
 # # Set startpoint for Player
 # player_start.append(t10r2)
@@ -195,20 +193,19 @@ active_exit.append(1)
 # LEVEL 5
 # Map layout for tiles
 level_map.append([
-    S, W, E, P3, F, F,
-    F, W, W, F, F, F,
-    F, F, F, W, P2, W,
-    F, F, F, P1, F, F,
-    W, F, F, W, F, F,
-    W, W, W, W, F, F,])
+    FLOOR, FLOOR, FLOOR, FLOOR, FLOOR, FLOOR,
+    WALL, WALL, PIT1, WALL, WALL, FLOOR,
+    FLOOR, FLOOR, FLOOR, FLOOR, FLOOR, FLOOR,
+    FLOOR, WALL, FLOOR, FLOOR, FLOOR, PIT2,
+    FLOOR, WALL, WALL, WALL, WALL, FLOOR,
+    START, WALL, EXIT, FLOOR, FLOOR, PIT3,])
 
 # Setup for active Boxes
 active_boxes.append([True, True, True, False])
-positions.append([t2r4, t5r5, t6r4, t2r1])
-
+positions.append([t5r3, t2r1, t1r1, t1r2])
 
 # Set startpoint for Player
-player_start.append(t1r1)
+player_start.append(t1r6)
 
 # Set exit to active
 active_exit.append(1)
