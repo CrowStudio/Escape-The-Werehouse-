@@ -83,7 +83,7 @@ class BoardElements():
         self.lv = 0
 
         # Variable to toggle blackout effect
-        self.blackout = True
+        self.blackout = False
 
         # Default initial beam angle
         self.current_beam_angle = -1.5
@@ -586,7 +586,7 @@ class BoardElements():
             elif game_state.travel == 4:  # RIGHT
                 target_angle = math.atan2(0, 1)
 
-            smoothing_factor = 0.3  # lower is slower rotation.
+            smoothing_factor = 0.2  # lower is slower rotation.
             if target_angle is not None:
                 self.current_beam_angle = self.__lerp_angle__(self.current_beam_angle, target_angle, smoothing_factor)
             direction_angle = self.current_beam_angle

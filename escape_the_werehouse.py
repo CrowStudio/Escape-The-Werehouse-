@@ -115,10 +115,10 @@ class HighScores:
 
         # Only show Back button if comming from start screen
         if self.from_start_screen:
-            back_button = pygame.Rect(200, 540, 200, 40)  # Adjusted back button position
+            back_button = pygame.Rect(200, 500, 200, 40)  # Adjusted back button position
             pygame.draw.rect(screen, (255, 255, 255), back_button, 2)
             back_text = font.render('Back', True, (255, 255, 255))
-            back_text_center = back_text.get_rect(center=(screen.get_width() // 2, 560))
+            back_text_center = back_text.get_rect(center=(screen.get_width() // 2, 520))
             screen.blit(back_text, back_text_center)
 
         pygame.display.flip()
@@ -212,11 +212,13 @@ class GameState:
         self.ctrl_pressed = False  # To keep track of left CTRL if searching
 
 class StartScreen:
-    def __init__(self, screen, game_state, high_scores):
+    def __init__(self, screen, game_state, high_scores, board):
         self.screen = screen
         self.game_state = game_state
         self.high_scores = high_scores
+        self.board = board
         self.tutorial_checked = False
+        self.lights_checked = False  # New attribute for lights checkbox
         self.selected_level = 0
         self.show_high_scores = False
         self.dropdown_open = False
@@ -247,7 +249,47 @@ class StartScreen:
         dropdown_button = pygame.Rect(200, 190, 200, 40)  # Adjusted dropdown button position
         pygame.draw.rect(self.screen, (255, 255, 255), dropdown_button, 2)
 
-        # Draw the dropdown menu as a single frame/box
+        # Display the selected level
+        if self.tutorial_checked:
+            selected_level_text = dropdown_font.render(f'Tutorial {self.selected_level + 1}', True, (255, 255, 255))
+        else:
+            selected_level_text = dropdown_font.render(f'Level {self.selected_level + 1}', True, (255, 255, 255))
+        selected_level_text_center = selected_level_text.get_rect(center=(self.screen.get_width() // 2, 210))
+        self.screen.blit(selected_level_text, selected_level_text_center)
+
+        # Lights checkbox
+        lights_text = font.render('Lights OFF', True, (255, 255, 255))
+        lights_check = pygame.Rect(self.screen.get_width() // 2 + 65, 356, 25, 25)  # Centered position
+        pygame.draw.rect(self.screen, (255, 255, 255), lights_check, 2)
+        if self.lights_checked:
+            # Draw the "X" mark inside the checkbox
+            pygame.draw.line(self.screen, (255, 255, 255), (self.screen.get_width() // 2 + 70, 360), (self.screen.get_width() // 2 + 84, 375), 2)
+            pygame.draw.line(self.screen, (255, 255, 255), (self.screen.get_width() // 2 + 84, 360), (self.screen.get_width() // 2 + 70, 375), 2)
+        lights_text_center = lights_text.get_rect(center=(278, 370))
+        self.screen.blit(lights_text, lights_text_center)
+
+        # Start Game button
+        start_button = pygame.Rect(200, 400, 200, 40)  # Adjusted start button position
+        pygame.draw.rect(self.screen, (255, 255, 255), start_button, 2)
+        start_text = font.render('Start Game', True, (255, 255, 255))
+        start_text_center = start_text.get_rect(center=(self.screen.get_width() // 2, 420))
+        self.screen.blit(start_text, start_text_center)
+
+        # High Scores button
+        high_scores_button = pygame.Rect(200, 450, 200, 40)  # Adjusted high scores button position
+        pygame.draw.rect(self.screen, (255, 255, 255), high_scores_button, 2)
+        high_scores_text = font.render('High Scores', True, (255, 255, 255))
+        high_scores_text_center = high_scores_text.get_rect(center=(self.screen.get_width() // 2, 470))
+        self.screen.blit(high_scores_text, high_scores_text_center)
+
+        # Quit button
+        quit_button = pygame.Rect(200, 500, 200, 40)  # Adjusted quit button position
+        pygame.draw.rect(self.screen, (255, 255, 255), quit_button, 2)
+        quit_text = font.render('Quit', True, (255, 255, 255))
+        quit_text_center = quit_text.get_rect(center=(self.screen.get_width() // 2, 520))
+        self.screen.blit(quit_text, quit_text_center)
+
+        # Draw the dropdown menu last if it is open
         if self.dropdown_open:
             levels = ['Tutorial 1', 'Tutorial 2', 'Tutorial 3', 'Tutorial 4'] if self.tutorial_checked else ['Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5']
             dropdown_box = pygame.Rect(200, 250, 200, len(levels) * 32)
@@ -256,39 +298,8 @@ class StartScreen:
                 level_text = dropdown_font.render(level, True, (255, 255, 255))
                 self.screen.blit(level_text, (210, 260 + i * 30))
 
-        # Display the selected level when dropdown is closed
-        if not self.dropdown_open:
-            if self.tutorial_checked:
-                selected_level_text = dropdown_font.render(f'Tutorial {self.selected_level + 1}', True, (255, 255, 255))
-                selected_level_text_center = selected_level_text.get_rect(center=(self.screen.get_width() // 2, 210))
-                self.screen.blit(selected_level_text, selected_level_text_center)
-            else:
-                selected_level_text = dropdown_font.render(f'Level {self.selected_level + 1}', True, (255, 255, 255))
-                selected_level_text_center = selected_level_text.get_rect(center=(self.screen.get_width() // 2, 210))
-                self.screen.blit(selected_level_text, selected_level_text_center)
-
-        # Start Game button
-        start_button = pygame.Rect(200, 440, 200, 40)  # Adjusted start button position
-        pygame.draw.rect(self.screen, (255, 255, 255), start_button, 2)
-        start_text = font.render('Start Game', True, (255, 255, 255))
-        start_text_center = start_text.get_rect(center=(self.screen.get_width() // 2, 460))
-        self.screen.blit(start_text, start_text_center)
-
-        # High Scores button
-        high_scores_button = pygame.Rect(200, 490, 200, 40)  # Adjusted high scores button position
-        pygame.draw.rect(self.screen, (255, 255, 255), high_scores_button, 2)
-        high_scores_text = font.render('High Scores', True, (255, 255, 255))
-        high_scores_text_center = high_scores_text.get_rect(center=(self.screen.get_width() // 2, 510))
-        self.screen.blit(high_scores_text, high_scores_text_center)
-
-        # Quit button
-        quit_button = pygame.Rect(200, 540, 200, 40)  # Adjusted quit button position
-        pygame.draw.rect(self.screen, (255, 255, 255), quit_button, 2)
-        quit_text = font.render('Quit', True, (255, 255, 255))
-        quit_text_center = quit_text.get_rect(center=(self.screen.get_width() // 2, 560))
-        self.screen.blit(quit_text, quit_text_center)
-
         pygame.display.flip()
+
 
     def handle_events(self):
         # Handle user interactions on the start screen
@@ -312,8 +323,14 @@ class StartScreen:
                     if level_index < levels:
                         self.selected_level = level_index
                         self.dropdown_open = False
+               # Toggle lights checkbox
+                elif self.screen.get_width() // 2 + 65 <= mouse_pos[0] <= self.screen.get_width() // 2 + 90 and 356 <= mouse_pos[1] <= 381:
+                    self.lights_checked = not self.lights_checked
+                    self.board.blackout = not self.board.blackout
+                    print(f"Light toggled: {'OFF' if self.board.blackout else 'ON'}")  # Debug statement
+                    self.draw()  # Redraw to update checkbox
                 # Start the game
-                elif 200 <= mouse_pos[0] <= 400 and 450 <= mouse_pos[1] <= 490:
+                elif 200 <= mouse_pos[0] <= 400 and 410 <= mouse_pos[1] <= 450:
                     self.game_state.game = not self.tutorial_checked
                     self.game_state.current_level = self.selected_level
                     self.game_state.is_playing = True
@@ -323,14 +340,15 @@ class StartScreen:
                     self.game_state.lives = 3
                     return 'start_game'
                 # Show high scores
-                elif 200 <= mouse_pos[0] <= 400 and 500 <= mouse_pos[1] <= 540:
+                elif 200 <= mouse_pos[0] <= 400 and 460 <= mouse_pos[1] <= 500:
                     self.show_high_scores = True
                     return 'show_high_scores'
                 # Quit the game
-                elif 200 <= mouse_pos[0] <= 400 and 550 <= mouse_pos[1] <= 590:
+                elif 200 <= mouse_pos[0] <= 400 and 510 <= mouse_pos[1] <= 550:
                     pygame.quit()
                     sys.exit()
         return None
+
 
 def check_level_complete(board, game_state):
     # Check if the current level is complete
@@ -710,7 +728,7 @@ def main():
     audio = AudioManager()
     high_scores = HighScores()
     screen = pygame.display.set_mode((600, 600))
-    start_screen = StartScreen(screen, game_state, high_scores)
+    start_screen = StartScreen(screen, game_state, high_scores, board)
 
     clock = pygame.time.Clock()
     show_start_screen = True
@@ -737,7 +755,7 @@ def main():
                         # Back to start screen
                         elif event.type == pygame.MOUSEBUTTONDOWN:
                             mouse_pos = pygame.mouse.get_pos()
-                            if 150 <= mouse_pos[0] <= 350 and 550 <= mouse_pos[1] <= 590:
+                            if 150 <= mouse_pos[0] <= 350 and 510 <= mouse_pos[1] <= 550:
                                 start_screen.show_high_scores = False
                                 start_screen.draw()
         else:
