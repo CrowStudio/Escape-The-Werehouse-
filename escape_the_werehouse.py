@@ -448,16 +448,20 @@ def handle_level_complete(board, game_state, high_scores):
 
     # Handle mode transitions
     if game_state.game == False and game_state.current_level >= 4:
-        game_state.game = True
-        game_state.current_level = 0
         # Debug statement
         print('Well done, you finished the Tutorials! Now try to Escape the Werehouse!')
+        # Set game states
+        game_state.game = True
+        game_state.current_level = 0
+        game_state.moves = 0
+        game_state.total_moves = 0
+        game_state.lives = 3
     elif game_state.game == True and game_state.current_level >= 5:
-        game_state.is_playing = False
         # Debug statements
         print('Congratulations! You finished the last level!')
         print(f'Your have made a total of {game_state.total_moves} successful moves!')
-
+        # End game
+        game_state.is_playing = False
         if high_scores.is_high_score(game_state.total_moves):
             initials = high_scores.get_initials(pygame.display.get_surface())
             high_scores.add_score(game_state.total_moves, initials)
@@ -830,24 +834,25 @@ def main():
                 bar_rect = pygame.Rect(0, board.offset_y - board.offset_y, screen.get_width(), board.offset_y)
                 pygame.draw.rect(screen, (50, 50, 50), bar_rect)  # Dark gray color for the bar
 
-                # Render the text inside the bar
+                # Set caption and render the text inside the status bar
                 if game_state.game:
+                    # Set window caption
+                    pygame.display.set_caption(f'Escape the Werehouse! - {board.map_title[1][game_state.current_level]}')
+                    # Set status bar
                     moves_text = font.render(f'Moves: {game_state.moves}', True, (255, 255, 255))
                     total_moves_text = font.render(f'Total Moves: {game_state.total_moves}', True, (255, 255, 255))
                     lives_text = font.render(f'Lives: {game_state.lives}', True, (255, 255, 255))
-
+                    # Render status bar
                     game_board.blit(moves_text, (10, 10))
                     game_board.blit(total_moves_text, (200, 10))
                     game_board.blit(lives_text, (480, 10))
                 else:
-                    tutorial_text = tutorial_font.render(f'{board.map_title[0][game_state.current_level]}', True, (255, 255, 255))
-
-                    game_board.blit(tutorial_text, (15, 15))
-
-                if game_state.game:
-                    pygame.display.set_caption(f'Escape the Werehouse! - {board.map_title[1][game_state.current_level]}')
-                else:
+                    # Set window caption
                     pygame.display.set_caption(f'Escape the Werehouse! - Tutorial {game_state.current_level + 1}')
+                    # Set status bar
+                    tutorial_text = tutorial_font.render(f'{board.map_title[0][game_state.current_level]}', True, (255, 255, 255))
+                    # Render status bar
+                    game_board.blit(tutorial_text, (15, 15))
 
                 pygame.display.flip()
                 # Cap frame rate
