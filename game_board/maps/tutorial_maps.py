@@ -78,7 +78,7 @@ EXIT = 8
 if gfx.debug:
     # DEBUG LEVEL
     # Tutorial title
-    titel = [' Debugging Mode']
+    title = [' Debugging Mode']
 
     # Map layout for tiles
     tutorial_map = [[FLOOR, FLOOR, FLOOR, FLOOR, FLOOR, EXIT,
@@ -104,7 +104,7 @@ if gfx.debug:
 else:
     # TUTORIAL 1
     # Tutorial title
-    titel = [' Tutorial: Push Box to reach Exit']
+    title = ['Push the Box to reach Exit']
 
     # Map layout for tiles
     tutorial_map = [[WALL, WALL, WALL, WALL, WALL, WALL,
@@ -128,13 +128,13 @@ else:
 
     # TUTORIAL 2
     # Tutorial title
-    titel.append('Tutorial: Pits are DANGEROUS! Push Box into the Pit to be able to cross')
+    title.append('Pits are DANGEROUS! Push the Box into the Pit to be able to cross')
 
     # Map layout for tiles
     tutorial_map.append([WALL, WALL, WALL, WALL, WALL, WALL,
-                         WALL, PIT_WALL, PIT1, EXIT, WALL, WALL,
-                         WALL, PIT_WALL, FLOOR, WALL, WALL, WALL,
-                         WALL, PIT_WALL, FLOOR, WALL, WALL, WALL,
+                         WALL, PIT4, PIT1, EXIT, WALL, WALL,
+                         WALL, PIT3, FLOOR, WALL, WALL, WALL,
+                         WALL, PIT2, FLOOR, WALL, WALL, WALL,
                          WALL, WALL, START, WALL, WALL, WALL,
                          WALL, WALL, WALL, WALL, WALL, WALL])
 
@@ -152,7 +152,7 @@ else:
 
     # TUTORIAL 3
     # Tutorial title
-    titel.append('Tutorial: Two Boxes in a row cannot be pushed')
+    title.append('Two Boxes in a row cannot be pushed')
 
     # Map layout for tiles
     tutorial_map.append([WALL, WALL, FLOOR, WALL, WALL, WALL,
@@ -176,7 +176,7 @@ else:
 
     # TUTORIAL 4
     # Tutorial title
-    titel.append('Tutorial: To drag Box stand close to it, hold space bar while moving away from Box')
+    title.append('To pull a Box stand close to it, hold space bar while moving away from the Box')
 
     # Map layout for tiles
     tutorial_map.append([WALL, WALL, WALL, EXIT, WALL, WALL,
