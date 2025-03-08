@@ -223,3 +223,26 @@ player_start.append(t1r6)
 
 # Set exit to active
 active_exit.append(1)
+
+
+# LEVEL 6
+# Level Title
+title.append('Trick or Treat')
+
+# Map layout for tiles
+level_map.append([FLOOR,FLOOR,FLOOR,FLOOR,FLOOR,FLOOR,
+                  FLOOR,FLOOR,WALL,FLOOR,PIT4,FLOOR,
+                  FLOOR,FLOOR,WALL,FLOOR,FLOOR,FLOOR,
+                  FLOOR,PIT1,WALL,WALL,WALL,FLOOR,
+                  WALL,PIT2,WALL,START,FLOOR,FLOOR,
+                  EXIT,PIT3,WALL,WALL,WALL,WALL])
+
+# Setup for active Boxes
+active_boxes.append([True, True, True, True])
+positions.append([t2r3, t6r1, t6r2, t1r4])
+
+# Set startpoint for Player
+player_start.append(t4r5)
+
+# Set exit to active
+active_exit.append(1)

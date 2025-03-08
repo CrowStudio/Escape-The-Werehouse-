@@ -292,7 +292,7 @@ class StartScreen:
 
         # Draw the dropdown menu last if it is open
         if self.dropdown_open:
-            levels = ['Tutorial 1', 'Tutorial 2', 'Tutorial 3', 'Tutorial 4'] if self.tutorial_checked else ['Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5']
+            levels = ['Tutorial 1', 'Tutorial 2', 'Tutorial 3', 'Tutorial 4'] if self.tutorial_checked else ['Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5', 'Level 6']
             dropdown_box = pygame.Rect(200, 250, 200, len(levels) * 32)
             pygame.draw.rect(self.screen, (50, 50, 50), dropdown_box)  # Darker background for dropdown
             for i, level in enumerate(levels):
@@ -319,7 +319,7 @@ class StartScreen:
                 # Select a level from the dropdown
                 elif self.dropdown_open and 200 <= mouse_pos[0] <= 400 and 250 <= mouse_pos[1] <= 490:
                     level_index = (mouse_pos[1] - 250) // 30
-                    levels = 4 if self.tutorial_checked else 5
+                    levels = 4 if self.tutorial_checked else 6
                     if level_index < levels:
                         self.selected_level = level_index
                         self.dropdown_open = False
@@ -846,7 +846,7 @@ def main():
                     game_board.blit(moves_text, (10, 10))
                     game_board.blit(total_moves_text, (200, 10))
                     game_board.blit(lives_text, (480, 10))
-                else:
+                elif game_state.is_playing:
                     # Set window caption
                     pygame.display.set_caption(f'Escape the Werehouse! - Tutorial {game_state.current_level + 1}')
                     # Set status bar

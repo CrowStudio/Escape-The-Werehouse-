@@ -220,7 +220,8 @@ class LevelEditor:
                         'BOX4': any(tile == 'BOX4' for row in self.level_map for tile in row)}
 
                     # Create the active_boxes list in the correct order
-                    active_boxes = [str(active_status['BOX1']).lower(), str(active_status['BOX2']).lower(), str(active_status['BOX3']).lower(), str(active_status['BOX4']).lower()]
+                    active_boxes = [str(active_status['BOX1']), str(active_status['BOX2']), str(active_status['BOX3']), str(active_status['BOX4'])]
+
 
                     file.write("active_boxes.append([{}])\n".format(', '.join(active_boxes)))
 
