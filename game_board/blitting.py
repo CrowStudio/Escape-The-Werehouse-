@@ -612,16 +612,26 @@ class BoardElements():
             player_center_y = self.py + (TILE_SIZE // 2) + self.offset_y  # Add the offset here
             player_center = (player_center_x, player_center_y)
 
-            # Determine the new target angle based on game_state.travel.
             target_angle = None
-            if game_state.travel == 1:  # UP
-                target_angle = math.atan2(-1, 0)
-            elif game_state.travel == 2:  # DOWN
-                target_angle = math.atan2(1, 0)
-            elif game_state.travel == 3:  # LEFT
-                target_angle = math.atan2(0, -1)
-            elif game_state.travel == 4:  # RIGHT
-                target_angle = math.atan2(0, 1)
+
+            if game_state.is_pulling:
+                if game_state.travel == 1:  # UP + SPACE -> DOWN
+                    target_angle = math.atan2(1, 0)
+                elif game_state.travel == 2:  # DOWN + SPACE -> UP
+                    target_angle = math.atan2(-1, 0)
+                elif game_state.travel == 3:  # LEFT + SPACE -> RIGHT
+                    target_angle = math.atan2(0, 1)
+                elif game_state.travel == 4:  # RIGHT + SPACE -> LEFT
+                    target_angle = math.atan2(0, -1)
+            else:
+                if game_state.travel == 1:  # UP
+                    target_angle = math.atan2(-1, 0)
+                elif game_state.travel == 2:  # DOWN
+                    target_angle = math.atan2(1, 0)
+                elif game_state.travel == 3:  # LEFT
+                    target_angle = math.atan2(0, -1)
+                elif game_state.travel == 4:  # RIGHT
+                    target_angle = math.atan2(0, 1)
 
             smoothing_factor = 0.2  # Lower is slower rotation.
             if target_angle is not None:

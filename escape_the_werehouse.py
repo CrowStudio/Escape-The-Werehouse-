@@ -210,6 +210,8 @@ class GameState:
         self.debounce_timer = 0  # To avoid unwanted movements
         self.reset_cooldown = 0  # Cooldown timer after level reset
         self.travel = 0  # Only keep track of direction
+        self.direction = 0
+        self.is_pulling = False
         self.ctrl_pressed = False  # To keep track of left CTRL if searching
 
 class StartScreen:
@@ -403,8 +405,8 @@ def handle_input(keys, board, game_state, audio):
         game_state.reset_cooldown -= 1
         return False
 
-    direction = None
-    is_dragging = keys[pygame.K_SPACE]
+    game_state.direction = None
+    game_state.is_pulling = keys[pygame.K_SPACE]
 
     # Check if left CTRL key is pressed when searching
     game_state.ctrl_pressed = keys[pygame.K_LCTRL]
@@ -414,22 +416,22 @@ def handle_input(keys, board, game_state, audio):
     prev_y = board.py
 
     if keys[pygame.K_UP]:
-        direction = 'up'
+        game_state.direction = 'up'
         game_state.travel = 1
     elif keys[pygame.K_DOWN]:
-        direction = 'down'
+        game_state.direction = 'down'
         game_state.travel = 2
     elif keys[pygame.K_LEFT]:
-        direction = 'left'
+        game_state.direction = 'left'
         game_state.travel = 3
     elif keys[pygame.K_RIGHT]:
-        direction = 'right'
+        game_state.direction = 'right'
         game_state.travel = 4
     else:
         game_state.travel = 0
 
-    if direction:
-        if move_player_and_boxes(board, direction, game_state.travel, is_dragging, audio, game_state):
+    if game_state.direction:
+        if move_player_and_boxes(board, audio, game_state):
             game_state.moves += 1
             return True
         else:
@@ -470,24 +472,24 @@ def handle_level_complete(board, game_state, high_scores):
         high_scores.display_scores(pygame.display.get_surface())
 
 # Handle movement of player and associated boxes
-def move_player_and_boxes(board, direction, travel, is_dragging, audio, game_state):
+def move_player_and_boxes(board, audio, game_state):
     # Get current position
     x = board.px
     y = board.py
     new_x, new_y = x, y
 
     # Calculate target position (exactly one tile)
-    if direction == 'up':
+    if game_state.direction == 'up':
         new_y = y - 100  # Move exactly one tile up
-    elif direction == 'down':
+    elif game_state.direction == 'down':
         new_y = y + 100  # Move exactly one tile down
-    elif direction == 'left':
+    elif game_state.direction == 'left':
         new_x = x - 100  # Move exactly one tile left
-    elif direction == 'right':
+    elif game_state.direction == 'right':
         new_x = x + 100  # Move exactly one tile right
 
     # First check if the move is valid
-    if not is_valid_move(board, new_x, new_y, direction, is_dragging, game_state):
+    if not is_valid_move(board, new_x, new_y, game_state):
         return False  # Don't move if invalid
 
     # Check if player falls into pit
@@ -495,7 +497,7 @@ def move_player_and_boxes(board, direction, travel, is_dragging, audio, game_sta
         return False  # Movement was valid but player fell
 
     # Handle box movement
-    if is_dragging:
+    if game_state.is_pulling:
         # Calculate position behind player
         behind_x = x + (x - new_x)
         behind_y = y + (y - new_y)
@@ -592,7 +594,7 @@ def check_box_in_pit(board, box_num, x, y):
             return False
 
 # Check if move is valid
-def is_valid_move(board, new_x, new_y, direction, is_dragging, game_state):
+def is_valid_move(board, new_x, new_y, game_state):
     if new_x < 0 or new_x >= 600 or new_y < 0 or new_y >= 600:
         return False
 
@@ -611,16 +613,16 @@ def is_valid_move(board, new_x, new_y, direction, is_dragging, game_state):
             elif element[0] == TileType.START or element[0] == TileType.FLOOR:
                 valid_move = True
                 break
-            elif element[0] == TileType.PIT1 and (not board.pit1 or not is_dragging):
+            elif element[0] == TileType.PIT1 and (not board.pit1 or not game_state.is_pulling):
                 valid_move = True  # Allow movement onto pit if not dragging or pit is filled
                 break
-            elif element[0] == TileType.PIT2 and (not board.pit2 or not is_dragging):
+            elif element[0] == TileType.PIT2 and (not board.pit2 or not game_state.is_pulling):
                 valid_move = True
                 break
-            elif element[0] == TileType.PIT3 and (not board.pit3 or not is_dragging):
+            elif element[0] == TileType.PIT3 and (not board.pit3 or not game_state.is_pulling):
                 valid_move = True
                 break
-            elif element[0] == TileType.PIT4 and (not board.pit4 or not is_dragging):
+            elif element[0] == TileType.PIT4 and (not board.pit4 or not game_state.is_pulling):
                 valid_move = True
                 break
             elif element[0] in [TileType.WALL, TileType.PIT_WALL]:
@@ -640,7 +642,7 @@ def is_valid_move(board, new_x, new_y, direction, is_dragging, game_state):
     behind_x = board.px + (board.px - new_x)
     behind_y = board.py + (board.py - new_y)
 
-    if is_dragging:
+    if game_state.is_pulling:
         # Check for box behind player
         box_behind = False
         for box_pos in box_positions:
