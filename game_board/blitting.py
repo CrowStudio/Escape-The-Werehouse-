@@ -523,6 +523,20 @@ class BoardElements():
 
         # Blit score for LEVEL 4 depending on number of moves
         elif self.lv == 4:
+            if moves <= 38:
+                # Blit 3 highlighted Stars
+                game_board.blit(gfx.stars[3], (186, 115))
+
+            elif moves > 38 and moves <= 40:
+                # Blit 2 highlighted Stars
+                game_board.blit(gfx.stars[2], (186, 115))
+
+            else:
+                # Blit 1 highlighted Star
+                game_board.blit(gfx.stars[1], (186, 115))
+
+        # Blit score for LEVEL 5 depending on number of moves
+        elif self.lv == 5:
             if moves <= 92:
                 # Blit 3 highlighted Stars
                 game_board.blit(gfx.stars[3], (186, 115))
