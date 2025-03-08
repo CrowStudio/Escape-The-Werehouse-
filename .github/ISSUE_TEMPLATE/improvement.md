@@ -2,7 +2,7 @@
 name: Improvement
 about: Create a report to help me improve
 title: ''
-labels: improvement
+labels: enhancement
 assignees: ''
 
 ---
