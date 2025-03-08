@@ -209,6 +209,7 @@ class GameState:
         self.debounce_timer = 0  # To avoid unwanted movements
         self.reset_cooldown = 0  # Cooldown timer after level reset
         self.travel = 0  # Only keep track of direction
+        self.ctrl_pressed = False  # To keep track of left CTRL if searching
 
 class StartScreen:
     def __init__(self, screen, game_state, high_scores):
@@ -374,6 +375,9 @@ def handle_input(keys, board, game_state, audio):
     direction = None
     is_dragging = keys[pygame.K_SPACE]
 
+    # Check if left CTRL key is pressed when searching
+    game_state.ctrl_pressed = keys[pygame.K_LCTRL]
+
     # Store previous position for validation
     prev_x = board.px
     prev_y = board.py
@@ -448,7 +452,7 @@ def move_player_and_boxes(board, direction, travel, is_dragging, audio, game_sta
         new_x = x + 100  # Move exactly one tile right
 
     # First check if the move is valid
-    if not is_valid_move(board, new_x, new_y, direction, is_dragging):
+    if not is_valid_move(board, new_x, new_y, direction, is_dragging, game_state):
         return False  # Don't move if invalid
 
      # Check if player falls into pit
@@ -554,8 +558,12 @@ def check_box_in_pit(board, box_num, x, y):
             return False
 
 # Check if move is valid
-def is_valid_move(board, new_x, new_y, direction, is_dragging):
+def is_valid_move(board, new_x, new_y, direction, is_dragging, game_state):
     if new_x < 0 or new_x >= 600 or new_y < 0 or new_y >= 600:
+        return False
+
+    # If left CTRL is pressed, invalidate the move
+    if game_state.ctrl_pressed:
         return False
 
     # Check if the target position contains a valid tile
