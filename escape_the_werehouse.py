@@ -788,6 +788,9 @@ def main():
                 else:
                     board.blit_player(game_board, 0, 0)
 
+                # Apply blackout effect
+                board.apply_blackout(game_board, game_state)
+
                 if game_state.game:
                     pygame.display.set_caption(f'Escape the Werehouse!          Moves: {game_state.moves}          Total Moves: {game_state.total_moves}          Lives: {game_state.lives}     ')
                 else:
