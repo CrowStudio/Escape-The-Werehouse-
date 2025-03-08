@@ -86,7 +86,7 @@ class BoardElements():
         self.blackout = True
 
         # Default initial beam angle
-        self.current_beam_angle = 0
+        self.current_beam_angle = -1.5
 
 
     def update_game_board_size(self, level_map):
@@ -564,7 +564,7 @@ class BoardElements():
             # Create a mask for the game board with per-pixel alpha.
             mask = pygame.Surface((self.game_board_x, self.game_board_y), pygame.SRCALPHA)
             # start with nearly full opacity
-            mask.fill((0, 0, 0, 247))  # Semi-transparent black overlay.
+            mask.fill((0, 0, 0, 249))  # Semi-transparent black overlay.
 
             # Flashlight parameters.
             beam_length = int(2 * TILE_SIZE)        # How far the beam extends.
@@ -595,7 +595,7 @@ class BoardElements():
             # build up a series of translucent slices for a gradient edge.
             # The inner slices will be fully transparent out to some fraction of the beam_length,
             # and the outer slices will gradually blend.
-            slices = 30  # Number of slices for transitioning the gradient.
+            slices = 50  # Number of slices for transitioning the gradient.
             inner_ratio = 0.2  # Fraction of the beam that is fully transparent (hard cutout).
             # Loop over slices from inner to outer edge.
             for i in range(slices):
