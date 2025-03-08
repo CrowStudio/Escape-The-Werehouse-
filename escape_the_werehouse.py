@@ -835,7 +835,7 @@ def main():
                 pygame.draw.rect(screen, (50, 50, 50), bar_rect)  # Dark gray color for the bar
 
                 # Set caption and render the text inside the status bar
-                if game_state.game:
+                if game_state.game and game_state.is_playing:
                     # Set window caption
                     pygame.display.set_caption(f'Escape the Werehouse! - {board.map_title[1][game_state.current_level]}')
                     # Set status bar
