@@ -13,6 +13,10 @@ tiles = game_maps.tiles
 level_map = [tutorial_maps.tutorial_map]
 level_map.append(game_maps.level_map)
 
+# Creates a list of maps titles from tutorial_maps and game_maps
+map_title = [tutorial_maps.title]
+map_title.append(game_maps.title)
+
 # Creates a list of active boxes from tutorial_maps and game_maps
 active_boxes = [tutorial_maps.active_boxes]
 active_boxes.append(game_maps.active_boxes)
@@ -49,8 +53,8 @@ class BoardElements():
         self.game_board_x = 600
         self.game_board_y = 600
 
-        # List of Tutorial map titles
-        self.titel = tutorial_maps.titel
+        # List of map titles
+        self.map_title = map_title
 
         # Variable to keep track of numbers of Levels
         self.no_of_levels = [sum(type(i) == type([]) for i in level_map[0])]
@@ -87,6 +91,8 @@ class BoardElements():
 
         # Default initial beam angle
         self.current_beam_angle = -1.5
+
+        self.offset_y = 40
 
 
     def update_game_board_size(self, level_map):
@@ -314,33 +320,33 @@ class BoardElements():
         # For each element in list of Level elements
         # - Blit tiles depending on value of Game Board element
         for el in self.elements:
-            # Blit tile cooresponding to value of Game Board element
+            # Blit tile corresponding to value of Game Board element
             if el[0] == 0:
-                self.__start__(game_board, el[1])
+                self.__start__(game_board, (el[1][0], el[1][1] + self.offset_y))
 
             elif el[0] == 1:
-                self.__pit_1__(game_board, el[1], self.in_pit1)
+                self.__pit_1__(game_board, (el[1][0], el[1][1] + self.offset_y), self.in_pit1)
 
             elif el[0] == 2:
-                self.__pit_2__(game_board, el[1], self.in_pit2)
+                self.__pit_2__(game_board, (el[1][0], el[1][1] + self.offset_y), self.in_pit2)
 
             elif el[0] == 3:
-                self.__pit_3__(game_board, el[1], self.in_pit3, el[3])
+                self.__pit_3__(game_board, (el[1][0], el[1][1] + self.offset_y), self.in_pit3, el[3])
 
             elif el[0] == 4:
-                self.__pit_4__(game_board, el[1], self.in_pit4, el[3])
+                self.__pit_4__(game_board, (el[1][0], el[1][1] + self.offset_y), self.in_pit4, el[3])
 
             elif el[0] == 5:
-                self.__pit_as_wall__(game_board, el[1])
+                self.__pit_as_wall__(game_board, (el[1][0], el[1][1] + self.offset_y))
 
             elif el[0] == 6:
-                self.__floor__(game_board, el[1], el[2])
+                self.__floor__(game_board, (el[1][0], el[1][1] + self.offset_y), el[2])
 
             elif el[0] == 7:
-                self.__wall__(game_board, el[1])
+                self.__wall__(game_board, (el[1][0], el[1][1] + self.offset_y))
 
             elif el[0] == 8:
-                self.__exit___(game_board, el[1])
+                self.__exit___(game_board, (el[1][0], el[1][1] + self.offset_y))
 
 
     # Setup of new Level
@@ -376,17 +382,17 @@ class BoardElements():
             # If movement is Up or Down
             # - Blit box1 in direction of y corresponding of b1_move' value
             if b1_travel == 1 or b1_travel == 2:
-                game_board.blit(self.box[0][1], (self.b1x, b1_move))
+                game_board.blit(self.box[0][1], (self.b1x, b1_move + self.offset_y))
 
             # Else if movement is Left or Right
             # - Blit box1 in direction of x corresponding of b1_move' value
             elif b1_travel == 3 or b1_travel == 4:
-                game_board.blit(self.box[0][1], (b1_move, self.b1y))
+                game_board.blit(self.box[0][1], (b1_move, self.b1y + self.offset_y))
 
             # Else
             # - Blit position of box1
             else:
-                game_board.blit(self.box[0][1], (self.b1x, self.b1y))
+                game_board.blit(self.box[0][1], (self.b1x, self.b1y + self.offset_y))
 
 
     # Blit box2
@@ -397,17 +403,18 @@ class BoardElements():
             # If movement is Up or Down
             # - Blit box2 in direction of y corresponding of b2_move' value
             if b2_travel == 1 or b2_travel == 2:
-                game_board.blit(self.box[1][1], (self.b2x, b2_move))
+                game_board.blit(self.box[1][1], (self.b2x, b2_move + self.offset_y))
 
             # Else if movement is Left or Right
             # - Blit box2 in direction of x corresponding of b2_move' value
             elif b2_travel == 3 or b2_travel == 4:
-                game_board.blit(self.box[1][1], (b2_move, self.b2y))
+                game_board.blit(self.box[1][1], (b2_move, self.b2y + self.offset_y))
 
             # Else
             # - Blit position of box2
             else:
-                game_board.blit(self.box[1][1], (self.b2x, self.b2y))
+                game_board.blit(self.box[1][1], (self.b2x, self.b2y + self.offset_y))
+
 
 
     # Blit box3
@@ -418,17 +425,18 @@ class BoardElements():
             # If movement is Up or Down
             # - Blit box3 in direction of y corresponding of b3_move' value
             if b3_travel == 1 or b3_travel == 2:
-                game_board.blit(self.box[2][1], (self.b3x, b3_move))
+                game_board.blit(self.box[2][1], (self.b3x, b3_move + self.offset_y))
 
             # Else if movement is Left or Right
             # - Blit box3 in direction of x corresponding of b3_move' value
             elif b3_travel == 3 or b3_travel == 4:
-                game_board.blit(self.box[2][1], (b3_move, self.b3y))
+                game_board.blit(self.box[2][1], (b3_move, self.b3y + self.offset_y))
 
             # Else
             # - Blit position of box3
             else:
-                game_board.blit(self.box[2][1], (self.b3x, self.b3y))
+                game_board.blit(self.box[2][1], (self.b3x, self.b3y + self.offset_y))
+
 
 
     # Blit box4
@@ -439,48 +447,48 @@ class BoardElements():
             # If movement is Up or Down
             # - Blit box4 in direction of y corresponding of b4_move' value
             if b4_travel == 1 or b4_travel == 2:
-                game_board.blit(self.box[3][1], (self.b4x, b4_move))
+                game_board.blit(self.box[3][1], (self.b4x, b4_move + self.offset_y))
 
             # Else if movement is Left or Right
             # - Blit box4 in direction of x corresponding of b4_move' value
             elif b4_travel == 3 or b4_travel == 4:
-                game_board.blit(self.box[3][1], (b4_move, self.b4y))
+                game_board.blit(self.box[3][1], (b4_move, self.b4y + self.offset_y))
 
             # Else
             # - Blit position of box4
             else:
-                game_board.blit(self.box[3][1], (self.b4x, self.b4y))
+                game_board.blit(self.box[3][1], (self.b4x, self.b4y + self.offset_y))
 
 
     # Blit player
     def blit_player(self, game_board, p_travel, p_move):
         '''blit_player'''
-        # If play eqauls True
+        # If play equals True
         if self.play:
             # If movement is Up
             # - Blit player in direction of y corresponding of p_move' value
             if p_travel == 1:
-                game_board.blit(gfx.player_up, (self.px, p_move))
+                game_board.blit(gfx.player_up, (self.px, p_move + self.offset_y))
 
             # Else iff movement is Down
             # - Blit player in direction of y corresponding of p_move' value
             elif p_travel == 2:
-                game_board.blit(gfx.player_down, (self.px, p_move))
+                game_board.blit(gfx.player_down, (self.px, p_move + self.offset_y))
 
             # Else iff movement is Left
             # - Blit player in direction of x corresponding of p_move' value
             elif p_travel == 3:
-                game_board.blit(gfx.player_left, (p_move, self.py))
+                game_board.blit(gfx.player_left, (p_move, self.py + self.offset_y))
 
             # Else iff movement is Right
             # - Blit player in direction of x corresponding of p_move' value
             elif p_travel == 4:
-                game_board.blit(gfx.player_right, (p_move, self.py))
+                game_board.blit(gfx.player_right, (p_move, self.py + self.offset_y))
 
             # Else
             # - Blit position of player
             else:
-                game_board.blit(gfx.player, (self.px, self.py))
+                game_board.blit(gfx.player, (self.px, self.py + self.offset_y))
 
 
     # Blit Game Level score
@@ -490,62 +498,63 @@ class BoardElements():
         if self.lv == 1:
             if moves <= 19:
                 # Blit 3 highlighted Stars
-                game_board.blit(gfx.stars[3], (186, 115))
-    
+                game_board.blit(gfx.stars[3], (186, 155 - self.offset_y))
+
             elif moves > 19 and moves <= 21:
                 # Blit 2 highlighted Stars
-                game_board.blit(gfx.stars[2], (186, 115))
+                game_board.blit(gfx.stars[2], (186, 155 - self.offset_y))
 
             else:
                 # Blit 1 highlighted Star
-                game_board.blit(gfx.stars[1], (186, 115))
+                game_board.blit(gfx.stars[1], (186, 155 - self.offset_y))
 
         # Blit score for LEVEL 2 depending on number of moves
         elif self.lv == 2:
             if moves <= 24:
                 # Blit 3 highlighted Stars
-                game_board.blit(gfx.stars[3], (186, 115))
+                game_board.blit(gfx.stars[3], (186, 155 - self.offset_y))
 
             elif moves > 24 and moves <= 26:
                 # Blit 2 highlighted Stars
-                game_board.blit(gfx.stars[2], (186, 115))
+                game_board.blit(gfx.stars[2], (186, 155 - self.offset_y))
 
             else:
                 # Blit 1 highlighted Star
-                game_board.blit(gfx.stars[1], (186, 115))
+                game_board.blit(gfx.stars[1], (186, 155 - self.offset_y))
 
         # Blit score for LEVEL 3 depending on number of moves
         elif self.lv == 3:
             if moves <= 35:
                 # Blit 3 highlighted Stars
-                game_board.blit(gfx.stars[3], (186, 115))
+                game_board.blit(gfx.stars[3], (186, 155 - self.offset_y))
 
             elif moves > 35 and moves <= 37:
                 # Blit 2 highlighted Stars
-                game_board.blit(gfx.stars[2], (186, 115))
+                game_board.blit(gfx.stars[2], (186, 155 - self.offset_y))
 
             else:
                 # Blit 1 highlighted Star
-                game_board.blit(gfx.stars[1], (186, 115))
+                game_board.blit(gfx.stars[1], (186, 155 - self.offset_y))
 
         # Blit score for LEVEL 4 depending on number of moves
         elif self.lv == 4:
             if moves <= 92:
                 # Blit 3 highlighted Stars
-                game_board.blit(gfx.stars[3], (186, 115))
+                game_board.blit(gfx.stars[3], (186, 155 - self.offset_y))
 
             elif moves > 92 and moves <= 94:
                 # Blit 2 highlighted Stars
-                game_board.blit(gfx.stars[2], (186, 115))
+                game_board.blit(gfx.stars[2], (186, 155 - self.offset_y))
 
             else:
                 # Blit 1 highlighted Star
-                game_board.blit(gfx.stars[1], (186, 115))
+                game_board.blit(gfx.stars[1], (186, 155 - self.offset_y))
 
         # Update all changes to display
         pygame.display.update()
         # Pause for 3 seconds to show Stars
         time.sleep(3)
+
 
     def __lerp_angle__(self, current, target, factor):
         """
@@ -562,17 +571,17 @@ class BoardElements():
         '''
         if self.blackout:
             # Create a mask for the game board with per-pixel alpha.
-            mask = pygame.Surface((self.game_board_x, self.game_board_y), pygame.SRCALPHA)
-            # start with nearly full opacity
+            mask = pygame.Surface((self.game_board_x, self.game_board_y + self.offset_y), pygame.SRCALPHA)
+            # Start with nearly full opacity
             mask.fill((0, 0, 0, 249))  # Semi-transparent black overlay.
 
             # Flashlight parameters.
             beam_length = int(2 * TILE_SIZE)        # How far the beam extends.
-            beam_angle = math.radians(60)              # Total angular width of the beam (60°)
+            beam_angle = math.radians(60)           # Total angular width of the beam (60°)
 
             # Determine the player's center.
             player_center_x = self.px + (TILE_SIZE // 2)
-            player_center_y = self.py + (TILE_SIZE // 2)
+            player_center_y = self.py + (TILE_SIZE // 2) + self.offset_y  # Add the offset here
             player_center = (player_center_x, player_center_y)
 
             # Determine the new target angle based on game_state.travel.
@@ -586,7 +595,7 @@ class BoardElements():
             elif game_state.travel == 4:  # RIGHT
                 target_angle = math.atan2(0, 1)
 
-            smoothing_factor = 0.2  # lower is slower rotation.
+            smoothing_factor = 0.2  # Lower is slower rotation.
             if target_angle is not None:
                 self.current_beam_angle = self.__lerp_angle__(self.current_beam_angle, target_angle, smoothing_factor)
             direction_angle = self.current_beam_angle

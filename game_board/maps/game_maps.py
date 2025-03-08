@@ -81,6 +81,9 @@ WALL = 7
 EXIT = 8
 
 # LEVEL 1
+# Level Title
+title = ['Blocked!']
+
 # Map layout for tiles
 level_map = [[FLOOR, FLOOR, FLOOR, WALL, EXIT, FLOOR,
               PIT1, WALL, WALL, WALL, WALL, FLOOR,
@@ -102,6 +105,9 @@ active_exit = [1]
 
 
 # LEVEL 2
+# Level Title
+title.append('Deceiving Pits')
+
 # Map layout for tiles
 level_map.append([EXIT, FLOOR, FLOOR, FLOOR, FLOOR, PIT_WALL,
                   FLOOR, FLOOR, FLOOR, WALL, FLOOR, PIT_WALL,
@@ -123,6 +129,9 @@ active_exit.append(1)
 
 
 # LEVEL 3
+# Level Title
+title.append('One too Many!')
+
 # Map layout for tiles
 level_map.append([FLOOR, FLOOR, WALL, WALL, WALL, EXIT,
                   FLOOR, FLOOR, FLOOR, FLOOR, PIT2, FLOOR,
@@ -144,6 +153,9 @@ active_exit.append(1)
 
 
 # LEVEL 4
+# Level Title
+title.append('Back and Forth')
+
 # Map layout for tiles
 level_map.append([
     START, WALL, EXIT, PIT3, FLOOR, FLOOR,
@@ -165,6 +177,9 @@ active_exit.append(1)
 
 
 # LEVEL Test 10x10
+# Level Title
+# title.append('Deceiving Pits')
+
 # Map layout for tiles
 # level_map.append([
 #     EXIT, PIT_WALL, FLOOR, PIT4, FLOOR, FLOOR, FLOOR, FLOOR, FLOOR, FLOOR,
@@ -191,6 +206,9 @@ active_exit.append(1)
 
 
 # LEVEL 5
+# Level Title
+title.append('The Circles of Life')
+
 # Map layout for tiles
 level_map.append([
     FLOOR, FLOOR, FLOOR, FLOOR, FLOOR, FLOOR,
