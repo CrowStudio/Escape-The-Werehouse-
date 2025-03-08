@@ -564,6 +564,20 @@ class BoardElements():
                 # Blit 1 highlighted Star
                 game_board.blit(gfx.stars[1], (186, 155 - self.offset_y))
 
+        # Blit score for LEVEL 6 depending on number of moves
+        elif self.lv == 6:
+            if moves <= 58:
+                # Blit 3 highlighted Stars
+                game_board.blit(gfx.stars[3], (186, 155 - self.offset_y))
+
+            elif moves > 58 and moves <= 60:
+                # Blit 2 highlighted Stars
+                game_board.blit(gfx.stars[2], (186, 155 - self.offset_y))
+
+            else:
+                # Blit 1 highlighted Star
+                game_board.blit(gfx.stars[1], (186, 155 - self.offset_y))
+
         # Update all changes to display
         pygame.display.update()
         # Pause for 3 seconds to show Stars
