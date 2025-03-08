@@ -157,13 +157,12 @@ active_exit.append(1)
 title.append('Back and Forth')
 
 # Map layout for tiles
-level_map.append([
-    START, WALL, EXIT, PIT3, FLOOR, FLOOR,
-    FLOOR, WALL, WALL, FLOOR, FLOOR, FLOOR,
-    FLOOR, FLOOR, FLOOR, WALL, PIT2, WALL,
-    FLOOR, FLOOR, FLOOR, PIT1, FLOOR, FLOOR,
-    WALL, FLOOR, FLOOR, WALL, FLOOR, FLOOR,
-    WALL, WALL, WALL, WALL, FLOOR, FLOOR,])
+level_map.append([START, WALL, EXIT, PIT3, FLOOR, FLOOR,
+                  FLOOR, WALL, WALL, FLOOR, FLOOR, FLOOR,
+                  FLOOR, FLOOR, FLOOR, WALL, PIT2, WALL,
+                  FLOOR, FLOOR, FLOOR, PIT1, FLOOR, FLOOR,
+                  WALL, FLOOR, FLOOR, WALL, FLOOR, FLOOR,
+                  WALL, WALL, WALL, WALL, FLOOR, FLOOR])
 
 # Setup for active Boxes
 active_boxes.append([True, True, True, False])
@@ -181,18 +180,16 @@ active_exit.append(1)
 # title.append('Deceiving Pits')
 
 # Map layout for tiles
-# level_map.append([
-#     EXIT, PIT_WALL, FLOOR, PIT4, FLOOR, FLOOR, FLOOR, FLOOR, FLOOR, FLOOR,
-#     FLOOR, PIT_WALL, FLOOR, WALL, FLOOR, FLOOR, FLOOR, WALL, WALL, START,
-#     FLOOR, PIT_WALL, FLOOR, WALL, FLOOR, FLOOR, WALL, WALL, WALL, WALL,
-#     PIT1, PIT_WALL, FLOOR, WALL, FLOOR, FLOOR, FLOOR, WALL, WALL, FLOOR,
-#     FLOOR, PIT_WALL, FLOOR, WALL, WALL, WALL, WALL, WALL, FLOOR, FLOOR,
-#     PIT2, FLOOR, FLOOR, FLOOR, PIT3, FLOOR, FLOOR, FLOOR, FLOOR, FLOOR,
-#     FLOOR, FLOOR, FLOOR, FLOOR, WALL, WALL, FLOOR, FLOOR, FLOOR, PIT_WALL,
-#     PIT_WALL, FLOOR, FLOOR, WALL, WALL, FLOOR, FLOOR, FLOOR, FLOOR, FLOOR,
-#     FLOOR, FLOOR, FLOOR, WALL, FLOOR, FLOOR, PIT_WALL, FLOOR, FLOOR, FLOOR,
-#     PIT_WALL, FLOOR, FLOOR, WALL, FLOOR, FLOOR, FLOOR, FLOOR, FLOOR, FLOOR,
-# ])
+# level_map.append([EXIT, PIT_WALL, FLOOR, PIT4, FLOOR, FLOOR, FLOOR, FLOOR, FLOOR, FLOOR,
+#                  FLOOR, PIT_WALL, FLOOR, WALL, FLOOR, FLOOR, FLOOR, WALL, WALL, START,
+#                  FLOOR, PIT_WALL, FLOOR, WALL, FLOOR, FLOOR, WALL, WALL, WALL, WALL,
+#                  PIT1, PIT_WALL, FLOOR, WALL, FLOOR, FLOOR, FLOOR, WALL, WALL, FLOOR,
+#                  FLOOR, PIT_WALL, FLOOR, WALL, WALL, WALL, WALL, WALL, FLOOR, FLOOR,
+#                  PIT2, FLOOR, FLOOR, FLOOR, PIT3, FLOOR, FLOOR, FLOOR, FLOOR, FLOOR,
+#                  FLOOR, FLOOR, FLOOR, FLOOR, WALL, WALL, FLOOR, FLOOR, FLOOR, PIT_WALL,
+#                  PIT_WALL, FLOOR, FLOOR, WALL, WALL, FLOOR, FLOOR, FLOOR, FLOOR, FLOOR,
+#                  FLOOR, FLOOR, FLOOR, WALL, FLOOR, FLOOR, PIT_WALL, FLOOR, FLOOR, FLOOR,
+#                  PIT_WALL, FLOOR, FLOOR, WALL, FLOOR, FLOOR, FLOOR, FLOOR, FLOOR, FLOOR])
 
 # # Setup for active Boxes
 # active_boxes.append([True, True, True, True])
@@ -210,13 +207,12 @@ active_exit.append(1)
 title.append('The Circles of Life')
 
 # Map layout for tiles
-level_map.append([
-    FLOOR, FLOOR, FLOOR, FLOOR, FLOOR, FLOOR,
-    WALL, WALL, PIT1, WALL, WALL, FLOOR,
-    FLOOR, FLOOR, FLOOR, FLOOR, FLOOR, FLOOR,
-    FLOOR, WALL, FLOOR, FLOOR, FLOOR, PIT2,
-    FLOOR, WALL, WALL, WALL, WALL, FLOOR,
-    START, WALL, EXIT, FLOOR, FLOOR, PIT3,])
+level_map.append([FLOOR, FLOOR, FLOOR, FLOOR, FLOOR, FLOOR,
+                  WALL, WALL, PIT1, WALL, WALL, FLOOR,
+                  FLOOR, FLOOR, FLOOR, FLOOR, FLOOR, FLOOR,
+                  FLOOR, WALL, FLOOR, FLOOR, FLOOR, PIT2,
+                  FLOOR, WALL, WALL, WALL, WALL, FLOOR,
+                  START, WALL, EXIT, FLOOR, FLOOR, PIT3])
 
 # Setup for active Boxes
 active_boxes.append([True, True, True, False])
