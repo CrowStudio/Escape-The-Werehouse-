@@ -492,10 +492,6 @@ def move_player_and_boxes(board, audio, game_state):
     if not is_valid_move(board, new_x, new_y, game_state):
         return False  # Don't move if invalid
 
-    # Check if player falls into pit
-    if check_player_in_pit(board, game_state, new_x, new_y, audio):
-        return False  # Movement was valid but player fell
-
     # Handle box movement
     if game_state.is_pulling:
         # Calculate position behind player
@@ -549,6 +545,10 @@ def move_player_and_boxes(board, audio, game_state):
                 audio.play_sound('fall')
             else:
                 audio.play_sound('move')
+
+    # Check if player falls into pit
+    if check_player_in_pit(board, game_state, new_x, new_y, audio):
+        return False  # Movement was valid but player fell
 
     # Move player to new position
     board.px = new_x
@@ -614,7 +614,7 @@ def is_valid_move(board, new_x, new_y, game_state):
                 valid_move = True
                 break
             elif element[0] == TileType.PIT1 and (not board.pit1 or not game_state.is_pulling):
-                valid_move = True  # Allow movement onto pit if not dragging or pit is filled
+                valid_move = True  # Allow movement onto pit if not pulling  or pit is filled
                 break
             elif element[0] == TileType.PIT2 and (not board.pit2 or not game_state.is_pulling):
                 valid_move = True
@@ -650,7 +650,7 @@ def is_valid_move(board, new_x, new_y, game_state):
                 box_behind = True
                 break
 
-        # If no box behind to drag, check if we're trying to walk over a box
+        # If no box behind when pulling, check if we're trying to walk over a box
         if not box_behind:
             for box_pos in box_positions:
                 if box_pos == (new_x, new_y):
@@ -694,7 +694,7 @@ def is_valid_move(board, new_x, new_y, game_state):
 
     return True
 
-# Check if player has fallen into a pit
+
 def check_player_in_pit(board, game_state, x, y, audio):
     for element in board.elements:
         if element[1] == (x, y):
@@ -707,11 +707,30 @@ def check_player_in_pit(board, game_state, x, y, audio):
                     # Player fell in pit
                     audio.play_sound('fall')
                     game_state.lives -= 1
+
+                    # Update player position to the pit
+                    board.px, board.py = x, y
+
+                    # Blit the player on the pit tile
+                    screen = pygame.display.get_surface()
+                    screen.fill((30, 30, 30))
+                    board.blit_level(screen)
+                    board.blit_box_1(screen, 0, 0)
+                    board.blit_box_2(screen, 0, 0)
+                    board.blit_box_3(screen, 0, 0)
+                    board.blit_box_4(screen, 0, 0)
+
+                    # Debug statement to check player position
+                    print(f"Blitting player at pit position: ({board.px}, {board.py})")
+
+                    board.blit_player(screen, 0, 0)
+                    pygame.display.flip()
+                    pygame.time.wait(500)  # Wait briefly to show the player falling
+
                     if game_state.lives <= 0:
                         display_game_over(game_state)
                         game_state.is_playing = False
                         return True
-
                     else:
                         # Reset level
                         game_state.new_level = True
@@ -720,6 +739,7 @@ def check_player_in_pit(board, game_state, x, y, audio):
                         game_state.reset_cooldown = 30  # Set cooldown period (e.g. 30 = 0.5 seconds at 60 FPS)
                     return True
     return False
+
 
 # Show GAME OVER screen when out of lives
 def display_game_over(game_state):

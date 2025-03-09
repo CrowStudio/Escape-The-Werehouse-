@@ -613,7 +613,6 @@ class BoardElements():
             player_center = (player_center_x, player_center_y)
 
             target_angle = None
-
             if game_state.is_pulling:
                 if game_state.travel == 1:  # UP + SPACE -> DOWN
                     target_angle = math.atan2(1, 0)
