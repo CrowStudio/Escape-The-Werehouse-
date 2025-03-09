@@ -29,6 +29,12 @@ except pygame.error as e:
 ANIMATION_SPEED = 17
 DISTANCE = TILE_SIZE
 MOVEMENT_DELAY = 10  # Controls movement speed (higher = slower)
+ARROW_KEYS = {
+    pygame.K_UP:    {'direction': 'up',    'travel': 1, 'search': 1},
+    pygame.K_DOWN:  {'direction': 'down',  'travel': 2, 'search': 2},
+    pygame.K_LEFT:  {'direction': 'left',  'travel': 3, 'search': 3},
+    pygame.K_RIGHT: {'direction': 'right', 'travel': 4, 'search': 4},
+}
 
 # # Creates a list of maps from tutorial_maps and game_maps
 # level_map = [tutorial_maps.tutorial_map]
@@ -209,12 +215,16 @@ class GameState:
 
         self.debounce_timer = 0  # To avoid unwanted movements
         self.reset_cooldown = 0  # Cooldown timer after level reset
+        self.a_key_pressed = False
+
         self.travel = 0  # Only keep track of direction
-        self.direction = 0
+        self.direction = None
+        self.facing_direction = 'up'  # New attribute to track facing direction
         self.is_pulling = False
 
         self.is_searching = False
         self.search = 0
+        self.search_speed = 0.1
 
 class StartScreen:
     def __init__(self, screen, game_state, high_scores, board):
@@ -407,28 +417,15 @@ def handle_input(keys, board, game_state, audio):
         game_state.reset_cooldown -= 1
         return False
 
+    # Reset movement variables for this frame
     game_state.direction = None
+    game_state.travel = 0
+    game_state.search_speed = 0.1  # Default rotation speed for searchlight, 1 == fastest
+
+    # Handle pulling first. This is instantaneous.
     game_state.is_pulling = keys[pygame.K_SPACE]
 
-    # Store previous position for validation
-    prev_x = board.px
-    prev_y = board.py
-
-    if keys[pygame.K_UP]:
-        game_state.direction = 'up'
-        game_state.travel = 1
-    elif keys[pygame.K_DOWN]:
-        game_state.direction = 'down'
-        game_state.travel = 2
-    elif keys[pygame.K_LEFT]:
-        game_state.direction = 'left'
-        game_state.travel = 3
-    elif keys[pygame.K_RIGHT]:
-        game_state.direction = 'right'
-        game_state.travel = 4
-    else:
-        game_state.travel = 0
-
+    # Handle searching with WASD keys. This is separate from arrow inputs.
     if keys[pygame.K_w]:
         game_state.search = 1
         game_state.is_searching = True
@@ -442,17 +439,51 @@ def handle_input(keys, board, game_state, audio):
         game_state.search = 4
         game_state.is_searching = True
     else:
-        game_state.search = game_state.search
         game_state.is_searching = False
 
+    # Store current position for potential rollback
+    prev_x = board.px
+    prev_y = board.py
+
+    # Process arrow keys using the mapping.
+    for key, movement in ARROW_KEYS.items():
+        if keys[key]:
+            # If the arrow key is pressed and key_locked isn't active...
+            if not game_state.key_locked:
+                # If pulling (space held), ignore facing direction checks and always move
+                if game_state.is_pulling:
+                    game_state.direction = movement['direction']
+                    game_state.travel = movement['travel']
+                    game_state.search_speed = 1  # 1 == direct change to new direction, lower rotates slower and not full rotation at once - hold key to scan to the end point.
+                else:
+                    # Normal logic: if you're already facing the direction, move.
+                    if game_state.facing_direction == movement['direction']:
+                        game_state.direction = movement['direction']
+                        game_state.travel = movement['travel']
+                    else:
+                        # Update the facing direction and set search properties
+                        game_state.facing_direction = movement['direction']
+                        game_state.search = movement['search']
+                        game_state.is_searching = True
+                        game_state.search_speed = 1
+                # Lock the key press so it only triggers once per physical keypress.
+                game_state.key_locked = True
+                break  # Only process one arrow key per frame
+
+    # Unlock the key if no arrow key is pressed this frame.
+    if not any(keys[k] for k in ARROW_KEYS):
+        game_state.key_locked = False
+
+    # If a movement command has been issued, attempt to move the player.
     if game_state.direction:
         if move_player_and_boxes(board, audio, game_state):
             game_state.moves += 1
             return True
         else:
-            # Reset position if move was invalid or player fell
+            # Reset player position if move was invalid or player fell into pit
             board.px = prev_x
             board.py = prev_y
+
     return False
 
 # Handle actions when a level is completed
