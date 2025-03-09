@@ -552,11 +552,11 @@ class BoardElements():
 
         # Blit score for LEVEL 5 depending on number of moves
         elif self.lv == 5:
-            if moves <= 92:
+            if moves <= 88:
                 # Blit 3 highlighted Stars
                 game_board.blit(gfx.stars[3], (186, 155 - self.offset_y))
 
-            elif moves > 92 and moves <= 94:
+            elif moves > 88 and moves <= 90:
                 # Blit 2 highlighted Stars
                 game_board.blit(gfx.stars[2], (186, 155 - self.offset_y))
 
@@ -622,6 +622,15 @@ class BoardElements():
                     target_angle = math.atan2(0, 1)
                 elif game_state.travel == 4:  # RIGHT + SPACE -> LEFT
                     target_angle = math.atan2(0, -1)
+            elif game_state.is_searching:
+                if game_state.search == 1:  # UP
+                    target_angle = math.atan2(-1, 0)
+                elif game_state.search == 2:  # DOWN
+                    target_angle = math.atan2(1, 0)
+                elif game_state.search == 3:  # LEFT
+                    target_angle = math.atan2(0, -1)
+                elif game_state.search == 4:  # RIGHT
+                    target_angle = math.atan2(0, 1)
             else:
                 if game_state.travel == 1:  # UP
                     target_angle = math.atan2(-1, 0)
@@ -632,7 +641,7 @@ class BoardElements():
                 elif game_state.travel == 4:  # RIGHT
                     target_angle = math.atan2(0, 1)
 
-            smoothing_factor = 0.2  # Lower is slower rotation.
+            smoothing_factor = 0.1  # Lower is slower rotation.
             if target_angle is not None:
                 self.current_beam_angle = self.__lerp_angle__(self.current_beam_angle, target_angle, smoothing_factor)
             direction_angle = self.current_beam_angle
@@ -641,7 +650,7 @@ class BoardElements():
             # build up a series of translucent slices for a gradient edge.
             # The inner slices will be fully transparent out to some fraction of the beam_length,
             # and the outer slices will gradually blend.
-            slices = 50  # Number of slices for transitioning the gradient.
+            slices = 60  # Number of slices for transitioning the gradient.
             inner_ratio = 0.2  # Fraction of the beam that is fully transparent (hard cutout).
             # Loop over slices from inner to outer edge.
             for i in range(slices):
@@ -657,7 +666,7 @@ class BoardElements():
                 alpha = int(255 * slice_norm)
                 # Create a polygon for this slice. Its angular width is the same as the beam_angle,
                 # but we draw an annular arc from slice_start to slice_end.
-                steps = 30  # Smoother curve for this slice.
+                steps = 60  # Smoother curve for this slice.
                 arc_points = []
                 left_edge_angle = direction_angle - (beam_angle / 2)
                 right_edge_angle = direction_angle + (beam_angle / 2)
