@@ -846,7 +846,7 @@ def main():
                     board.blit_player(game_board, game_state.travel, board.py)
                 elif game_state.travel in [3, 4]:
                     board.blit_player(game_board, game_state.travel, board.px)
-                else:
+                elif game_state.reset_cooldown == 0:
                     board.blit_player(game_board, 0, 0)
 
                 # Apply blackout effect
