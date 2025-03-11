@@ -26,15 +26,13 @@ except pygame.error as e:
     sys.exit(1)
 
 # Game constants
-ANIMATION_SPEED = 17
+FPS = 70
 DISTANCE = TILE_SIZE
 MOVEMENT_DELAY = 10  # Controls movement speed (higher = slower)
-ARROW_KEYS = {
-    pygame.K_UP:    {'direction': 'up',    'travel': 1, 'search': 1},
-    pygame.K_DOWN:  {'direction': 'down',  'travel': 2, 'search': 2},
-    pygame.K_LEFT:  {'direction': 'left',  'travel': 3, 'search': 3},
-    pygame.K_RIGHT: {'direction': 'right', 'travel': 4, 'search': 4},
-}
+ARROW_KEYS = {pygame.K_UP:    {'direction': 'up',    'travel': 1, 'search': 1},
+              pygame.K_DOWN:  {'direction': 'down',  'travel': 2, 'search': 2},
+              pygame.K_LEFT:  {'direction': 'left',  'travel': 3, 'search': 3},
+              pygame.K_RIGHT: {'direction': 'right', 'travel': 4, 'search': 4}}
 
 # # Creates a list of maps from tutorial_maps and game_maps
 # level_map = [tutorial_maps.tutorial_map]
@@ -222,6 +220,7 @@ class GameState:
         self.facing_direction = 'up'  # New attribute to track facing direction
         self.is_pulling = False
 
+        self.lights_out = False  # New attribute for lights checkbox
         self.is_searching = False
         self.search = 0
         self.search_speed = 0.1
@@ -233,7 +232,6 @@ class StartScreen:
         self.high_scores = high_scores
         self.board = board
         self.tutorial_checked = False
-        self.lights_checked = False  # New attribute for lights checkbox
         self.selected_level = 0
         self.show_high_scores = False
         self.dropdown_open = False
@@ -276,7 +274,7 @@ class StartScreen:
         lights_text = font.render('Lights OFF', True, (255, 255, 255))
         lights_check = pygame.Rect(self.screen.get_width() // 2 + 65, 356, 25, 25)  # Centered position
         pygame.draw.rect(self.screen, (255, 255, 255), lights_check, 2)
-        if self.lights_checked:
+        if self.game_state.lights_out:
             # Draw the "X" mark inside the checkbox
             pygame.draw.line(self.screen, (255, 255, 255), (self.screen.get_width() // 2 + 70, 360), (self.screen.get_width() // 2 + 84, 375), 2)
             pygame.draw.line(self.screen, (255, 255, 255), (self.screen.get_width() // 2 + 84, 360), (self.screen.get_width() // 2 + 70, 375), 2)
@@ -339,7 +337,7 @@ class StartScreen:
                         self.dropdown_open = False
                 # Toggle lights checkbox
                 elif self.screen.get_width() // 2 + 65 <= mouse_pos[0] <= self.screen.get_width() // 2 + 90 and 356 <= mouse_pos[1] <= 381:
-                    self.lights_checked = not self.lights_checked
+                    self.game_state.lights_out = not self.game_state.lights_out
                     self.board.blackout = not self.board.blackout
                     print(f"Light toggled: {'OFF' if self.board.blackout else 'ON'}")  # Debug statement
                     self.draw()  # Redraw to update checkbox
@@ -379,7 +377,7 @@ def check_level_complete(board, game_state, screen, game_board):
                 board.blit_box_2(pygame.display.get_surface(), 0, 0)
                 board.blit_box_3(pygame.display.get_surface(), 0, 0)
                 board.blit_box_4(pygame.display.get_surface(), 0, 0)
-                board.blit_player(pygame.display.get_surface(), 0, 0)
+                board.blit_player(pygame.display.get_surface(), game_state, 0)
 
                 # Show score for completed level
                 if game_state.game:
@@ -456,16 +454,20 @@ def handle_input(keys, board, game_state, audio):
                     game_state.travel = movement['travel']
                     game_state.search_speed = 1  # 1 == direct change to new direction, lower rotates slower and not full rotation at once - hold key to scan to the end point.
                 else:
-                    # Normal logic: if you're already facing the direction, move.
-                    if game_state.facing_direction == movement['direction']:
+                    if game_state.lights_out:
+                        # Normal logic: if you're already facing the direction, move.
+                        if game_state.facing_direction == movement['direction']:
+                            game_state.direction = movement['direction']
+                            game_state.travel = movement['travel']
+                        else:
+                            # Update the facing direction and set search properties
+                            game_state.facing_direction = movement['direction']
+                            game_state.search = movement['search']
+                            game_state.is_searching = True
+                            game_state.search_speed = 1
+                    else:
                         game_state.direction = movement['direction']
                         game_state.travel = movement['travel']
-                    else:
-                        # Update the facing direction and set search properties
-                        game_state.facing_direction = movement['direction']
-                        game_state.search = movement['search']
-                        game_state.is_searching = True
-                        game_state.search_speed = 1
                 # Lock the key press so it only triggers once per physical keypress.
                 game_state.key_locked = True
                 break  # Only process one arrow key per frame
@@ -765,7 +767,7 @@ def check_player_in_pit(board, game_state, x, y, audio):
                     # Debug statement to check player position
                     print(f"Blitting player at pit position: ({board.px}, {board.py})")
 
-                    board.blit_player(screen, 0, 0)
+                    board.blit_player(screen, game_state, 0)
                     pygame.display.flip()
                     pygame.time.wait(500)  # Wait briefly to show the player falling
 
@@ -778,7 +780,7 @@ def check_player_in_pit(board, game_state, x, y, audio):
                         game_state.new_level = True
                         game_state.total_moves += game_state.moves
                         game_state.moves = 0
-                        game_state.reset_cooldown = 30  # Set cooldown period (e.g. 30 = 0.5 seconds at 60 FPS)
+                        game_state.reset_cooldown = 35  # Set cooldown period (e.g. 35 = 0.5 seconds at 70 FPS)
                     return True
     return False
 
@@ -885,11 +887,11 @@ def main():
 
                 # Render player with direction
                 if game_state.travel in [1, 2]:
-                    board.blit_player(game_board, game_state.travel, board.py)
+                    board.blit_player(game_board, game_state, board.py)
                 elif game_state.travel in [3, 4]:
-                    board.blit_player(game_board, game_state.travel, board.px)
+                    board.blit_player(game_board, game_state, board.px)
                 elif game_state.reset_cooldown == 0:
-                    board.blit_player(game_board, 0, 0)
+                    board.blit_player(game_board, game_state, 0)
 
                 # Apply blackout effect
                 board.apply_blackout(game_board, game_state)
@@ -920,7 +922,7 @@ def main():
 
                 pygame.display.flip()
                 # Cap frame rate
-                clock.tick(60)
+                clock.tick(FPS)
 
             # Ensure the start screen is shown after game over
             show_start_screen = True

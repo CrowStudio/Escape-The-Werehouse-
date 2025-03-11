@@ -461,34 +461,45 @@ class BoardElements():
 
 
     # Blit player
-    def blit_player(self, game_board, p_travel, p_move):
+    def blit_player(self, game_board, game_state, p_move):
         '''blit_player'''
         # If play equals True
         if self.play:
             # If movement is Up
             # - Blit player in direction of y corresponding of p_move' value
-            if p_travel == 1:
+            if game_state.travel == 1:
                 game_board.blit(gfx.player_up, (self.px, p_move + self.offset_y))
 
             # Else iff movement is Down
             # - Blit player in direction of y corresponding of p_move' value
-            elif p_travel == 2:
+            elif game_state.travel == 2:
                 game_board.blit(gfx.player_down, (self.px, p_move + self.offset_y))
 
             # Else iff movement is Left
             # - Blit player in direction of x corresponding of p_move' value
-            elif p_travel == 3:
+            elif game_state.travel == 3:
                 game_board.blit(gfx.player_left, (p_move, self.py + self.offset_y))
 
             # Else iff movement is Right
             # - Blit player in direction of x corresponding of p_move' value
-            elif p_travel == 4:
+            elif game_state.travel == 4:
                 game_board.blit(gfx.player_right, (p_move, self.py + self.offset_y))
 
             # Else
             # - Blit position of player
             else:
-                game_board.blit(gfx.player, (self.px, self.py + self.offset_y))
+                if game_state.lights_out:
+                    if game_state.facing_direction == 'up':
+                        game_board.blit(gfx.player_up, (self.px, self.py + self.offset_y))
+                    elif game_state.facing_direction == 'down':
+                        game_board.blit(gfx.player_down, (self.px, self.py + self.offset_y))
+                    elif game_state.facing_direction == 'left':
+                        game_board.blit(gfx.player_left, (self.px, self.py + self.offset_y))
+                    elif game_state.facing_direction == 'right':
+                        game_board.blit(gfx.player_right, (self.px, self.py + self.offset_y))
+                else:game_board.blit(gfx.player, (self.px, self.py + self.offset_y))
+
+
 
 
     # Blit Game Level score
