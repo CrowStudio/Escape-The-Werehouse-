@@ -506,7 +506,7 @@ def handle_level_complete(board, game_state, high_scores):
         game_state.moves = 0
         game_state.total_moves = 0
         game_state.lives = 3
-    elif game_state.game == True and game_state.current_level >= 5:
+    elif game_state.game == True and game_state.current_level >= 6:
         # Debug statements
         print('Congratulations! You finished the last level!')
         print(f'Your have made a total of {game_state.total_moves} successful moves!')
