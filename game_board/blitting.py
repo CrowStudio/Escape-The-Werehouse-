@@ -28,6 +28,8 @@ positions.append(game_maps.positions)
 # Creates a list of start positions from tutorial_maps and game_maps
 player_start = [tutorial_maps.player_start]
 player_start.append(game_maps.player_start)
+player_direction = [tutorial_maps.player_direction]
+player_direction.append(game_maps.player_direction)
 
 # Creates a list of active/inactive exits from tutorial_maps and game_maps
 active_exit = [tutorial_maps.active_exit]
@@ -90,7 +92,7 @@ class BoardElements():
         self.blackout = False
 
         # Default initial beam angle
-        self.current_beam_angle = -1.5
+        self.current_beam_angle = -1.55
 
         self.offset_y = 40
 
@@ -350,7 +352,7 @@ class BoardElements():
 
 
     # Setup of new Level
-    def generate_level(self, game_board, new_level, option):
+    def generate_level(self, game_board, game_state, new_level, option):
         '''generate_level'''
         # If new_level equals True
         # - Reset elements list and setup tiles,
@@ -368,6 +370,18 @@ class BoardElements():
                                                                 positions[option][self.lv],\
                                                                 player_start[option][self.lv],\
                                                                 active_exit[option][self.lv])
+
+            game_state.facing_direction = player_direction[option][self.lv]
+            print(f"Player Directions: {player_direction[option][self.lv]}")
+
+            if game_state.facing_direction == 'up':
+                self.current_beam_angle = math.atan2(-1, 0)
+            elif game_state.facing_direction == 'down':
+                self.current_beam_angle = math.atan2(1, 0)
+            elif game_state.facing_direction == 'left':
+                self.current_beam_angle = math.atan2(0, -1)
+            elif game_state.facing_direction == 'right':
+                self.current_beam_angle = math.atan2(0, 1)
 
             self.lv += 1
 
@@ -461,34 +475,46 @@ class BoardElements():
 
 
     # Blit player
-    def blit_player(self, game_board, p_travel, p_move):
+    def blit_player(self, game_board, game_state, p_move):
         '''blit_player'''
         # If play equals True
         if self.play:
             # If movement is Up
             # - Blit player in direction of y corresponding of p_move' value
-            if p_travel == 1:
+            if game_state.travel == 1 and not game_state.is_pulling:
                 game_board.blit(gfx.player_up, (self.px, p_move + self.offset_y))
 
             # Else iff movement is Down
             # - Blit player in direction of y corresponding of p_move' value
-            elif p_travel == 2:
+            elif game_state.travel == 2 and not game_state.is_pulling:
                 game_board.blit(gfx.player_down, (self.px, p_move + self.offset_y))
 
             # Else iff movement is Left
             # - Blit player in direction of x corresponding of p_move' value
-            elif p_travel == 3:
+            elif game_state.travel == 3 and not game_state.is_pulling:
                 game_board.blit(gfx.player_left, (p_move, self.py + self.offset_y))
 
             # Else iff movement is Right
             # - Blit player in direction of x corresponding of p_move' value
-            elif p_travel == 4:
+            elif game_state.travel == 4 and not game_state.is_pulling:
                 game_board.blit(gfx.player_right, (p_move, self.py + self.offset_y))
 
             # Else
             # - Blit position of player
             else:
-                game_board.blit(gfx.player, (self.px, self.py + self.offset_y))
+                if game_state.lights_out:
+                    if game_state.facing_direction == 'up':
+                        game_board.blit(gfx.player_up, (self.px, self.py + self.offset_y))
+                    elif game_state.facing_direction == 'down':
+                        game_board.blit(gfx.player_down, (self.px, self.py + self.offset_y))
+                    elif game_state.facing_direction == 'left':
+                        game_board.blit(gfx.player_left, (self.px, self.py + self.offset_y))
+                    elif game_state.facing_direction == 'right':
+                        game_board.blit(gfx.player_right, (self.px, self.py + self.offset_y))
+                else:
+                    game_board.blit(gfx.player, (self.px, self.py + self.offset_y))
+
+
 
 
     # Blit Game Level score
@@ -641,7 +667,7 @@ class BoardElements():
                 elif game_state.travel == 4:  # RIGHT
                     target_angle = math.atan2(0, 1)
 
-            smoothing_factor = 0.1  # Lower is slower rotation.
+            smoothing_factor = game_state.search_speed  # 1 is fastes, lower is slower rotation/not full rotation in one go.
             if target_angle is not None:
                 self.current_beam_angle = self.__lerp_angle__(self.current_beam_angle, target_angle, smoothing_factor)
             direction_angle = self.current_beam_angle
