@@ -497,7 +497,8 @@ class BoardElements():
                         game_board.blit(gfx.player_left, (self.px, self.py + self.offset_y))
                     elif game_state.facing_direction == 'right':
                         game_board.blit(gfx.player_right, (self.px, self.py + self.offset_y))
-                else:game_board.blit(gfx.player, (self.px, self.py + self.offset_y))
+                else:
+                    game_board.blit(gfx.player, (self.px, self.py + self.offset_y))
 
 
 

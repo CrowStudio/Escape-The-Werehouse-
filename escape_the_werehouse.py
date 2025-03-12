@@ -390,14 +390,14 @@ def check_level_complete(board, game_state, screen, game_board):
     for element in board.elements:
         if element[0] == TileType.EXIT:
             if (board.px, board.py) == element[1]:  # Player position matches exit position
+                game_state.travel = 0
                 # Render one last frame with player on exit
-                pygame.display.get_surface().fill((30, 30, 30))
-                board.blit_level(pygame.display.get_surface())
-                board.blit_box_1(pygame.display.get_surface(), 0, 0)
-                board.blit_box_2(pygame.display.get_surface(), 0, 0)
-                board.blit_box_3(pygame.display.get_surface(), 0, 0)
-                board.blit_box_4(pygame.display.get_surface(), 0, 0)
-                board.blit_player(pygame.display.get_surface(), game_state, 0)
+                board.blit_level(screen)
+                board.blit_box_1(screen, 0, 0)
+                board.blit_box_2(screen, 0, 0)
+                board.blit_box_3(screen, 0, 0)
+                board.blit_box_4(screen, 0, 0)
+                board.blit_player(screen, game_state, 0)
 
                 # Show score for completed level
                 if game_state.game:
@@ -419,7 +419,7 @@ def check_level_complete(board, game_state, screen, game_board):
                     game_board.blit(lives_text, (480, 10))
 
                     # Blit stars
-                    board.blit_stars(pygame.display.get_surface(), game_state.moves)
+                    board.blit_stars(screen, game_state.moves)
 
                 pygame.display.flip()
                 pygame.time.wait(500)
@@ -775,9 +775,8 @@ def check_player_in_pit(board, game_state, x, y, audio):
                     # Update player position to the pit
                     board.px, board.py = x, y
 
-                    # Blit the player on the pit tile
-                    screen = pygame.display.get_surface()
-                    screen.fill((30, 30, 30))
+                    # Blit the game board and boxes
+                    screen = pygame.display.get_surface().fill((30, 30, 30))
                     board.blit_level(screen)
                     board.blit_box_1(screen, 0, 0)
                     board.blit_box_2(screen, 0, 0)
@@ -787,6 +786,7 @@ def check_player_in_pit(board, game_state, x, y, audio):
                     # Debug statement to check player position
                     print(f"Blitting player at pit position: ({board.px}, {board.py})")
 
+                    # Blit the player on the pit tile
                     board.blit_player(screen, game_state, 0)
                     pygame.display.flip()
                     pygame.time.wait(500)  # Wait briefly to show the player falling
