@@ -99,6 +99,7 @@ positions = [[t1r4, t4r5, t4r3, t5r3]]
 
 # Set startpoint for Player
 player_start = [t1r6]
+player_direction = ["up"]
 
 # Set exit to active
 active_exit = [1]
@@ -123,6 +124,7 @@ positions.append([t6r4, t5r2, t4r1, t6r6])
 
 # Set startpoint for Player
 player_start.append(t2r6)
+player_direction.append("up")
 
 # Set exit to active
 active_exit.append(1)
@@ -147,6 +149,7 @@ positions.append([t3r6, t2r1, t6r2, t1r1])
 
 # Set startpoint for Player
 player_start.append(t6r4)
+player_direction.append("left")
 
 # Set exit to active
 active_exit.append(1)
@@ -170,6 +173,7 @@ positions.append([t2r4, t5r5, t6r4, t2r1])
 
 # Set startpoint for Player
 player_start.append(t1r1)
+player_direction.append("down")
 
 # Set exit to active
 active_exit.append(1)
@@ -197,6 +201,7 @@ active_exit.append(1)
 
 # # Set startpoint for Player
 # player_start.append(t10r2)
+# player_direction.append("left")
 
 # # Set exit to active
 # active_exit.append(1)
@@ -220,6 +225,7 @@ positions.append([t5r3, t2r1, t1r1, t1r2])
 
 # Set startpoint for Player
 player_start.append(t1r6)
+player_direction.append("up")
 
 # Set exit to active
 active_exit.append(1)
@@ -243,6 +249,7 @@ positions.append([t2r3, t6r1, t6r2, t1r4])
 
 # Set startpoint for Player
 player_start.append(t4r5)
+player_direction.append("right")
 
 # Set exit to active
 active_exit.append(1)

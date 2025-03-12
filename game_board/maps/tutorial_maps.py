@@ -95,6 +95,7 @@ if gfx.debug:
 
     # Set startpoint for Player
     player_start = [t3r4]
+    player_direction = ["up"]
 
     # Set exit to active
     active_exit = [1]
@@ -121,6 +122,7 @@ else:
 
     # Set startpoint for Player
     player_start = [t3r5]
+    player_direction = ["up"]
 
     # Set exit to active
     active_exit = [1]
@@ -145,6 +147,7 @@ else:
 
     # Set startpoint for Player
     player_start.append(t3r5)
+    player_direction.append("up")
 
     # Set exit to active
     active_exit.append(1)
@@ -169,6 +172,7 @@ else:
 
     # Set startpoint for Player
     player_start.append(t3r6)
+    player_direction.append("up")
 
     # Set exit to active
     active_exit.append(1)
@@ -193,6 +197,7 @@ else:
 
     # Set startpoint for Player
     player_start.append(t3r6)
+    player_direction.append("up")
 
     # Set exit to active
     active_exit.append(1)

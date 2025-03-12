@@ -28,6 +28,8 @@ positions.append(game_maps.positions)
 # Creates a list of start positions from tutorial_maps and game_maps
 player_start = [tutorial_maps.player_start]
 player_start.append(game_maps.player_start)
+player_direction = [tutorial_maps.player_direction]
+player_direction.append(game_maps.player_direction)
 
 # Creates a list of active/inactive exits from tutorial_maps and game_maps
 active_exit = [tutorial_maps.active_exit]
@@ -90,7 +92,7 @@ class BoardElements():
         self.blackout = False
 
         # Default initial beam angle
-        self.current_beam_angle = -1.5
+        self.current_beam_angle = -1.55
 
         self.offset_y = 40
 
@@ -350,7 +352,7 @@ class BoardElements():
 
 
     # Setup of new Level
-    def generate_level(self, game_board, new_level, option):
+    def generate_level(self, game_board, game_state, new_level, option):
         '''generate_level'''
         # If new_level equals True
         # - Reset elements list and setup tiles,
@@ -368,6 +370,18 @@ class BoardElements():
                                                                 positions[option][self.lv],\
                                                                 player_start[option][self.lv],\
                                                                 active_exit[option][self.lv])
+
+            game_state.facing_direction = player_direction[option][self.lv]
+            print(f"Player Directions: {player_direction[option][self.lv]}")
+
+            if game_state.facing_direction == 'up':
+                self.current_beam_angle = math.atan2(-1, 0)
+            elif game_state.facing_direction == 'down':
+                self.current_beam_angle = math.atan2(1, 0)
+            elif game_state.facing_direction == 'left':
+                self.current_beam_angle = math.atan2(0, -1)
+            elif game_state.facing_direction == 'right':
+                self.current_beam_angle = math.atan2(0, 1)
 
             self.lv += 1
 

@@ -875,7 +875,7 @@ def main():
                 if game_state.new_level:
                     board.lv = game_state.current_level
                     mode_index = 0 if game_state.game == False else 1
-                    game_state.new_level = board.generate_level(game_board, True, mode_index)
+                    game_state.new_level = board.generate_level(game_board, game_state, True, mode_index)
 
                 # Handle input only if not in movement cooldown
                 if game_state.debounce_timer == 0:
