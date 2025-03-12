@@ -481,22 +481,22 @@ class BoardElements():
         if self.play:
             # If movement is Up
             # - Blit player in direction of y corresponding of p_move' value
-            if game_state.travel == 1:
+            if game_state.travel == 1 and not game_state.is_pulling:
                 game_board.blit(gfx.player_up, (self.px, p_move + self.offset_y))
 
             # Else iff movement is Down
             # - Blit player in direction of y corresponding of p_move' value
-            elif game_state.travel == 2:
+            elif game_state.travel == 2 and not game_state.is_pulling:
                 game_board.blit(gfx.player_down, (self.px, p_move + self.offset_y))
 
             # Else iff movement is Left
             # - Blit player in direction of x corresponding of p_move' value
-            elif game_state.travel == 3:
+            elif game_state.travel == 3 and not game_state.is_pulling:
                 game_board.blit(gfx.player_left, (p_move, self.py + self.offset_y))
 
             # Else iff movement is Right
             # - Blit player in direction of x corresponding of p_move' value
-            elif game_state.travel == 4:
+            elif game_state.travel == 4 and not game_state.is_pulling:
                 game_board.blit(gfx.player_right, (p_move, self.py + self.offset_y))
 
             # Else
