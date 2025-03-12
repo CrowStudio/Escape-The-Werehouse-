@@ -90,7 +90,27 @@ class HighScores:
 
     # Check if the score is a high score
     def is_high_score(self, score):
-        return score <= max(self.scores)[0]
+        # If there are fewer than 3 high scores, the score qualifies automatically
+        if len(self.scores) < 3:
+            return True
+
+        # The list is sorted in ascending order (lower is better)
+        third_place = self.scores[-1][0]
+
+        # If the new score is strictly better than (i.e. less than) the third place, it's a high score.
+        if score < third_place:
+            return True
+
+        # If the new score equals the third place score, only allow it if
+        # it also matches one of the top two scores that are strictly better.
+        # In other words, at least one of the top two scores must be strictly less than the new score.
+        elif score == third_place:
+            # Check for at least one score among the top two that's strictly less than the new score
+            if self.scores[0][0] < score or self.scores[1][0] < score:
+                return True
+
+        # Otherwise, it doesn't qualify as a high score.
+        return False
 
     # Display the high scores on the screen
     def display_scores(self, screen):
