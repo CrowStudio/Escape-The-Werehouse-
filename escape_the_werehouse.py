@@ -232,7 +232,6 @@ class GameState:
         self.total_moves = 0
 
         self.debounce_timer = 0  # To avoid unwanted movements
-        self.reset_cooldown = 0  # Cooldown timer after level reset
         self.a_key_pressed = False
 
         self.travel = 0  # Only keep track of direction
@@ -392,6 +391,7 @@ def check_level_complete(board, game_state, screen, game_board):
             if (board.px, board.py) == element[1]:  # Player position matches exit position
                 game_state.travel = 0
                 # Render one last frame with player on exit
+                screen.fill((30, 30, 30))
                 board.blit_level(screen)
                 board.blit_box_1(screen, 0, 0)
                 board.blit_box_2(screen, 0, 0)
@@ -430,10 +430,6 @@ def check_level_complete(board, game_state, screen, game_board):
 
 # Handle keyboard input for player movement
 def handle_input(keys, board, game_state, audio):
-    # Check for cooldown period
-    if game_state.reset_cooldown > 0:
-        game_state.reset_cooldown -= 1
-        return False
 
     # Reset movement variables for this frame
     game_state.direction = None
@@ -776,7 +772,7 @@ def check_player_in_pit(board, game_state, x, y, audio):
                     board.px, board.py = x, y
 
                     # Blit the game board and boxes
-                    screen = pygame.display.get_surface().fill((30, 30, 30))
+                    screen = pygame.display.get_surface()
                     board.blit_level(screen)
                     board.blit_box_1(screen, 0, 0)
                     board.blit_box_2(screen, 0, 0)
@@ -785,6 +781,9 @@ def check_player_in_pit(board, game_state, x, y, audio):
 
                     # Debug statement to check player position
                     print(f"Blitting player at pit position: ({board.px}, {board.py})")
+
+                    # Reset player movement
+                    game_state.travel = 0
 
                     # Blit the player on the pit tile
                     board.blit_player(screen, game_state, 0)
@@ -800,7 +799,6 @@ def check_player_in_pit(board, game_state, x, y, audio):
                         game_state.new_level = True
                         game_state.total_moves += game_state.moves
                         game_state.moves = 0
-                        game_state.reset_cooldown = 35  # Set cooldown period (e.g. 35 = 0.5 seconds at 70 FPS)
                     return True
     return False
 
@@ -910,7 +908,7 @@ def main():
                     board.blit_player(game_board, game_state, board.py)
                 elif game_state.travel in [3, 4]:
                     board.blit_player(game_board, game_state, board.px)
-                elif game_state.reset_cooldown == 0:
+                else:
                     board.blit_player(game_board, game_state, 0)
 
                 # Apply blackout effect
