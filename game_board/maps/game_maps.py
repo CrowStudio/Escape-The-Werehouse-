@@ -104,6 +104,9 @@ player_direction = ["up"]
 # Set exit to active
 active_exit = [1]
 
+# Level score 3 stars
+level_score = [19]
+
 
 # LEVEL 2
 # Level Title
@@ -128,6 +131,9 @@ player_direction.append("up")
 
 # Set exit to active
 active_exit.append(1)
+
+# Level score 3 stars
+level_score.append(24)
 
 
 # LEVEL 3
@@ -154,6 +160,9 @@ player_direction.append("left")
 # Set exit to active
 active_exit.append(1)
 
+# Level score 3 stars
+level_score.append(35)
+
 
 # LEVEL 4
 # Level Title
@@ -177,6 +186,9 @@ player_direction.append("down")
 
 # Set exit to active
 active_exit.append(1)
+
+# Level score 3 stars
+level_score.append(38)
 
 
 # LEVEL Test 10x10
@@ -206,6 +218,9 @@ active_exit.append(1)
 # # Set exit to active
 # active_exit.append(1)
 
+# # Level score 3 stars
+# level_score.append(100)
+
 
 # LEVEL 5
 # Level Title
@@ -230,6 +245,9 @@ player_direction.append("up")
 # Set exit to active
 active_exit.append(1)
 
+# Level score 3 stars
+level_score.append(78)
+
 
 # LEVEL 6
 # Level Title
@@ -253,3 +271,6 @@ player_direction.append("right")
 
 # Set exit to active
 active_exit.append(1)
+
+# Level score 3 stars
+level_score.append(58)
