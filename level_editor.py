@@ -258,7 +258,8 @@ class LevelEditor:
                                 player_start_point = f"t{col_idx+1}r{row_idx+1}"
                                 break
                     if player_start_point:
-                        file.write("player_start.append({})\n\n".format(player_start_point))
+                        file.write("player_start.append({})\n".format(player_start_point))
+                        file.write("player_direction.append(\"up\")\n\n")
 
                     # Write the active exit setup
                     file.write("# Set exit to active\n")
