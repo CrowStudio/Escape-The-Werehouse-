@@ -419,7 +419,7 @@ def check_level_complete(board, game_state, screen, game_board):
                     game_board.blit(lives_text, (480, 10))
 
                     # Blit stars
-                    board.blit_stars(screen, game_state.moves)
+                    board.blit_stars(screen, game_state)
 
                 pygame.display.flip()
                 pygame.time.wait(500)

@@ -35,6 +35,9 @@ player_direction.append(game_maps.player_direction)
 active_exit = [tutorial_maps.active_exit]
 active_exit.append(game_maps.active_exit)
 
+# Create a list of level scores
+level_score = [game_maps.level_score]
+
 # Define TILE_SIZE at the beginning of your file or in a constants section
 TILE_SIZE = 100  # Adjust this value to match the size of your tiles
 
@@ -518,91 +521,23 @@ class BoardElements():
 
 
     # Blit Game Level score
-    def blit_stars(self, game_board, moves):
+    def blit_stars(self, game_board, game_state):
         '''blit_stars'''
-        # Blit score for LEVEL 1 depending on number of moves
-        if self.lv == 1:
-            if moves <= 19:
-                # Blit 3 highlighted Stars
-                game_board.blit(gfx.stars[3], (186, 155 - self.offset_y))
+        # Set least movements for three stars
+        self.top_score = level_score[0][game_state.current_level]
 
-            elif moves > 19 and moves <= 21:
-                # Blit 2 highlighted Stars
-                game_board.blit(gfx.stars[2], (186, 155 - self.offset_y))
+        # Blit stars depending on number of moves
+        if game_state.moves <= self.top_score:
+            # Blit 3 highlighted Stars
+            game_board.blit(gfx.stars[3], (186, 155 - self.offset_y))
 
-            else:
-                # Blit 1 highlighted Star
-                game_board.blit(gfx.stars[1], (186, 155 - self.offset_y))
+        elif game_state.moves > self.top_score and game_state.moves <= (self.top_score + 2):
+            # Blit 2 highlighted Stars
+            game_board.blit(gfx.stars[2], (186, 155 - self.offset_y))
 
-        # Blit score for LEVEL 2 depending on number of moves
-        elif self.lv == 2:
-            if moves <= 24:
-                # Blit 3 highlighted Stars
-                game_board.blit(gfx.stars[3], (186, 155 - self.offset_y))
-
-            elif moves > 24 and moves <= 26:
-                # Blit 2 highlighted Stars
-                game_board.blit(gfx.stars[2], (186, 155 - self.offset_y))
-
-            else:
-                # Blit 1 highlighted Star
-                game_board.blit(gfx.stars[1], (186, 155 - self.offset_y))
-
-        # Blit score for LEVEL 3 depending on number of moves
-        elif self.lv == 3:
-            if moves <= 35:
-                # Blit 3 highlighted Stars
-                game_board.blit(gfx.stars[3], (186, 155 - self.offset_y))
-
-            elif moves > 35 and moves <= 37:
-                # Blit 2 highlighted Stars
-                game_board.blit(gfx.stars[2], (186, 155 - self.offset_y))
-
-            else:
-                # Blit 1 highlighted Star
-                game_board.blit(gfx.stars[1], (186, 155 - self.offset_y))
-
-        # Blit score for LEVEL 4 depending on number of moves
-        elif self.lv == 4:
-            if moves <= 38:
-                # Blit 3 highlighted Stars
-                game_board.blit(gfx.stars[3], (186, 115))
-
-            elif moves > 38 and moves <= 40:
-                # Blit 2 highlighted Stars
-                game_board.blit(gfx.stars[2], (186, 115))
-
-            else:
-                # Blit 1 highlighted Star
-                game_board.blit(gfx.stars[1], (186, 115))
-
-        # Blit score for LEVEL 5 depending on number of moves
-        elif self.lv == 5:
-            if moves <= 78:
-                # Blit 3 highlighted Stars
-                game_board.blit(gfx.stars[3], (186, 155 - self.offset_y))
-
-            elif moves > 78 and moves <= 88:
-                # Blit 2 highlighted Stars
-                game_board.blit(gfx.stars[2], (186, 155 - self.offset_y))
-
-            else:
-                # Blit 1 highlighted Star
-                game_board.blit(gfx.stars[1], (186, 155 - self.offset_y))
-
-        # Blit score for LEVEL 6 depending on number of moves
-        elif self.lv == 6:
-            if moves <= 58:
-                # Blit 3 highlighted Stars
-                game_board.blit(gfx.stars[3], (186, 155 - self.offset_y))
-
-            elif moves > 58 and moves <= 60:
-                # Blit 2 highlighted Stars
-                game_board.blit(gfx.stars[2], (186, 155 - self.offset_y))
-
-            else:
-                # Blit 1 highlighted Star
-                game_board.blit(gfx.stars[1], (186, 155 - self.offset_y))
+        else:
+            # Blit 1 highlighted Star
+            game_board.blit(gfx.stars[1], (186, 155 - self.offset_y))
 
         # Update all changes to display
         pygame.display.update()
