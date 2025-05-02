@@ -1,0 +1,435 @@
+{
+  "game_board_elements": {
+    "START": 0,
+    "PIT1": 1,
+    "PIT2": 2,
+    "PIT3": 3,
+    "PIT4": 4,
+    "PIT_WALL": 5,
+    "FLOOR": 6,
+    "WALL": 7,
+    "EXIT": 8
+  },
+  "debug_level": {
+    "level": 0,
+    "title": " Debugging Mode",
+    "map": [
+      [
+        "FLOOR",
+        "FLOOR",
+        "FLOOR",
+        "FLOOR",
+        "FLOOR",
+        "EXIT"
+      ],
+      [
+        "FLOOR",
+        "FLOOR",
+        "WALL",
+        "WALL",
+        "FLOOR",
+        "FLOOR"
+      ],
+      [
+        "FLOOR",
+        "FLOOR",
+        "FLOOR",
+        "FLOOR",
+        "FLOOR",
+        "FLOOR"
+      ],
+      [
+        "FLOOR",
+        "FLOOR",
+        "START",
+        "FLOOR",
+        "FLOOR",
+        "FLOOR"
+      ],
+      [
+        "FLOOR",
+        "FLOOR",
+        "FLOOR",
+        "FLOOR",
+        "FLOOR",
+        "FLOOR"
+      ],
+      [
+        "FLOOR",
+        "FLOOR",
+        "FLOOR",
+        "FLOOR",
+        "FLOOR",
+        "FLOOR"
+      ]
+    ],
+    "active_boxes": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "box_positions": [
+      [
+        2,
+        2
+      ],
+      [
+        2,
+        5
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        3,
+        4
+      ]
+    ],
+    "player_start": [
+      2,
+      3
+    ],
+    "player_direction": "up",
+    "exit_active": true
+  },
+  "levels": [
+    {
+      "level": 1,
+      "title": "Push the Box to reach Exit",
+      "map": [
+        [
+          "WALL",
+          "WALL",
+          "WALL",
+          "WALL",
+          "WALL",
+          "WALL"
+        ],
+        [
+          "WALL",
+          "WALL",
+          "FLOOR",
+          "WALL",
+          "WALL",
+          "WALL"
+        ],
+        [
+          "WALL",
+          "WALL",
+          "FLOOR",
+          "EXIT",
+          "WALL",
+          "WALL"
+        ],
+        [
+          "WALL",
+          "WALL",
+          "FLOOR",
+          "WALL",
+          "WALL",
+          "WALL"
+        ],
+        [
+          "WALL",
+          "WALL",
+          "START",
+          "WALL",
+          "WALL",
+          "WALL"
+        ],
+        [
+          "WALL",
+          "WALL",
+          "WALL",
+          "WALL",
+          "WALL",
+          "WALL"
+        ]
+      ],
+      "active_boxes": [
+        true,
+        false,
+        false,
+        false
+      ],
+      "box_positions": [
+        [
+          2,
+          2
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "player_start": [
+        2,
+        4
+      ],
+      "player_direction": "up",
+      "exit_active": true
+    },
+    {
+      "level": 2,
+      "title": "Pits are DANGEROUS! Push the Box into the Pit to be able to cross",
+      "map": [
+        [
+          "WALL",
+          "WALL",
+          "WALL",
+          "WALL",
+          "WALL",
+          "WALL"
+        ],
+        [
+          "WALL",
+          "PIT4",
+          "PIT1",
+          "EXIT",
+          "WALL",
+          "WALL"
+        ],
+        [
+          "WALL",
+          "PIT3",
+          "FLOOR",
+          "WALL",
+          "WALL",
+          "WALL"
+        ],
+        [
+          "WALL",
+          "PIT2",
+          "FLOOR",
+          "WALL",
+          "WALL",
+          "WALL"
+        ],
+        [
+          "WALL",
+          "WALL",
+          "START",
+          "WALL",
+          "WALL",
+          "WALL"
+        ],
+        [
+          "WALL",
+          "WALL",
+          "WALL",
+          "WALL",
+          "WALL",
+          "WALL"
+        ]
+      ],
+      "active_boxes": [
+        true,
+        false,
+        false,
+        false
+      ],
+      "box_positions": [
+        [
+          2,
+          3
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "player_start": [
+        2,
+        4
+      ],
+      "player_direction": "up",
+      "exit_active": true
+    },
+    {
+      "level": 3,
+      "title": "Two Boxes in a row cannot be pushed",
+      "map": [
+        [
+          "WALL",
+          "WALL",
+          "FLOOR",
+          "WALL",
+          "WALL",
+          "WALL"
+        ],
+        [
+          "WALL",
+          "EXIT",
+          "FLOOR",
+          "WALL",
+          "WALL",
+          "WALL"
+        ],
+        [
+          "WALL",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "WALL",
+          "WALL"
+        ],
+        [
+          "WALL",
+          "WALL",
+          "FLOOR",
+          "FLOOR",
+          "WALL",
+          "WALL"
+        ],
+        [
+          "WALL",
+          "WALL",
+          "FLOOR",
+          "WALL",
+          "WALL",
+          "WALL"
+        ],
+        [
+          "WALL",
+          "WALL",
+          "START",
+          "WALL",
+          "WALL",
+          "WALL"
+        ]
+      ],
+      "active_boxes": [
+        true,
+        true,
+        false,
+        false
+      ],
+      "box_positions": [
+        [
+          2,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "player_start": [
+        2,
+        5
+      ],
+      "player_direction": "up",
+      "exit_active": true
+    },
+    {
+      "level": 4,
+      "title": "To pull a Box stand close to it, hold space bar while moving away from the Box",
+      "map": [
+        [
+          "WALL",
+          "WALL",
+          "WALL",
+          "EXIT",
+          "WALL",
+          "WALL"
+        ],
+        [
+          "WALL",
+          "WALL",
+          "WALL",
+          "FLOOR",
+          "FLOOR",
+          "WALL"
+        ],
+        [
+          "WALL",
+          "WALL",
+          "WALL",
+          "FLOOR",
+          "FLOOR",
+          "WALL"
+        ],
+        [
+          "WALL",
+          "WALL",
+          "WALL",
+          "FLOOR",
+          "FLOOR",
+          "WALL"
+        ],
+        [
+          "WALL",
+          "WALL",
+          "FLOOR",
+          "FLOOR",
+          "WALL",
+          "WALL"
+        ],
+        [
+          "WALL",
+          "WALL",
+          "START",
+          "WALL",
+          "WALL",
+          "WALL"
+        ]
+      ],
+      "active_boxes": [
+        true,
+        false,
+        false,
+        false
+      ],
+      "box_positions": [
+        [
+          3,
+          1
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "player_start": [
+        2,
+        5
+      ],
+      "player_direction": "up",
+      "exit_active": true
+    }
+  ]
+}
