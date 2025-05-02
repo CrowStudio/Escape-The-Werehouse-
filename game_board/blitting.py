@@ -2,44 +2,200 @@ import pygame
 import math
 from random import randrange
 import time
-from game_board.maps import game_maps, tutorial_maps
 from game_board.elements import gfx
+import json
+import os
 
+TILE_SIZE = 100
 
-# Rename variable for imported tiles (tiles are the same in tutorial_maps)
-tiles = game_maps.tiles
+# Set tile coordinate for X
+x1 = 0
+x2 = 100
+x3 = 200
+x4 = 300
+x5 = 400
+x6 = 500
+# x7 = 600
+# x8 = 700
+# x9 = 800
+# x10 = 900
+# x11 = 1000
+# x12 = 1100
 
-# Creates a list of maps from tutorial_maps and game_maps
-level_map = [tutorial_maps.tutorial_map]
-level_map.append(game_maps.level_map)
+# Set tile coordinate for Y
+y1 = 0
+y2 = 100
+y3 = 200
+y4 = 300
+y5 = 400
+y6 = 500
+# y7 = 600
+# y8 = 700
+# y9 = 800
+# y10 = 900
+# y11 = 1000
+# y12 = 1100
 
-# Creates a list of maps titles from tutorial_maps and game_maps
-map_title = [tutorial_maps.title]
-map_title.append(game_maps.title)
+# Tile coordinates
+t1r1 = (x1, y1); t2r1 = (x2, y1); t3r1 = (x3, y1); t4r1 = (x4, y1); t5r1 = (x5, y1); t6r1 = (x6, y1)
+# t7r1 = (x7, y1); t8r1 = (x8, y1); t9r1 = (x9, y1); t10r1 = (x10, y1); t11r1 = (x11, y1); t12r1 = (x12, y1)
+t1r2 = (x1, y2); t2r2 = (x2, y2); t3r2 = (x3, y2); t4r2 = (x4, y2); t5r2 = (x5, y2); t6r2 = (x6, y2)
+# t7r2 = (x7, y2); t8r2 = (x8, y2); t9r2 = (x9, y2); t10r2 = (x10, y2); t11r2 = (x11, y2); t12r2 = (x12, y2)
+t1r3 = (x1, y3); t2r3 = (x2, y3); t3r3 = (x3, y3); t4r3 = (x4, y3); t5r3 = (x5, y3); t6r3 = (x6, y3)
+# t7r3 = (x7, y3); t8r3 = (x8, y3); t9r3 = (x9, y3); t10r3 = (x10, y3); t11r3 = (x11, y3); t12r3 = (x12, y3)
+t1r4 = (x1, y4); t2r4 = (x2, y4); t3r4 = (x3, y4); t4r4 = (x4, y4); t5r4 = (x5, y4); t6r4 = (x6, y4)
+# t7r4 = (x7, y4); t8r4 = (x8, y4); t9r4 = (x9, y4); t10r4 = (x10, y4); t11r4 = (x11, y4); t12r4 = (x12, y4)
+t1r5 = (x1, y5); t2r5 = (x2, y5); t3r5 = (x3, y5); t4r5 = (x4, y5); t5r5 = (x5, y5); t6r5 = (x6, y5)
+# t7r5 = (x7, y5); t8r5 = (x8, y5); t9r5 = (x9, y5); t10r5 = (x10, y5); t11r5 = (x11, y5); t12r5 = (x12, y5)
+t1r6 = (x1, y6); t2r6 = (x2, y6); t3r6 = (x3, y6); t4r6 = (x4, y6); t5r6 = (x5, y6); t6r6 = (x6, y6)
+# t7r6 = (x7, y6); t8r6 = (x8, y6); t9r6 = (x9, y6); t10r6 = (x10, y6); t11r6 = (x11, y6); t12r6 = (x12, y6)
+# t1r7 = (x1, y7); t2r7 = (x2, y7); t3r7 = (x3, y7); t4r7 = (x4, y7); t5r7 = (x5, y7); t6r7 = (x6, y7)
+# t7r7 = (x7, y7); t8r7 = (x8, y7); t9r7 = (x9, y7); t10r7 = (x10, y7); t11r7 = (x11, y7); t12r7 = (x12, y7)
+# t1r8 = (x1, y8); t2r8 = (x2, y8); t3r8 = (x3, y8); t4r8 = (x4, y8); t5r8 = (x5, y8); t6r8 = (x6, y8)
+# t7r8 = (x7, y8); t8r8 = (x8, y8); t9r8 = (x9, y8); t10r8 = (x10, y8); t11r8 = (x11, y8); t12r8 = (x12, y8)
+# t1r9 = (x1, y9); t2r9 = (x2, y9); t3r9 = (x3, y9); t4r9 = (x4, y9); t5r9 = (x5, y9); t6r9 = (x6, y9)
+# t7r9 = (x7, y9); t8r9 = (x8, y9); t9r9 = (x9, y9); t10r9 = (x10, y9); t11r9 = (x11, y9); t12r9 = (x12, y9)
+# t1r10 = (x1, y10); t2r10 = (x2, y10); t3r10 = (x3, y10); t4r10 = (x4, y10); t5r10 = (x5, y10); t6r10 = (x6, y10)
+# t7r10 = (x7, y10); t8r10 = (x8, y10); t9r10 = (x9, y10); t10r10 = (x10, y10); t11r10 = (x11, y10); t12r10 = (x12, y10)
+# t1r11 = (x1, y11); t2r11 = (x2, y11); t3r11 = (x3, y11); t4r11 = (x4, y11); t5r11 = (x5, y11); t6r11 = (x6, y11)
+# t7r11 = (x7, y11); t8r11 = (x8, y11); t9r11 = (x9, y11); t10r11 = (x10, y11); t11r11 = (x11, y11); t12r11 = (x12, y11)
+# t1r12 = (x1, y12); t2r12 = (x2, y12); t3r12 = (x3, y12); t4r12 = (x4, y12); t5r12 = (x5, y12); t6r12 = (x6, y12)
+# t7r12 = (x7, y12); t8r12 = (x8, y12); t9r12 = (x9, y12); t10r12 = (x10, y12); t11r12 = (x11, y12); t12r12 = (x12, y12)
 
-# Creates a list of active boxes from tutorial_maps and game_maps
-active_boxes = [tutorial_maps.active_boxes]
-active_boxes.append(game_maps.active_boxes)
+# Game Board coordinates
+tiles = (
+    t1r1, t2r1, t3r1, t4r1, t5r1, t6r1, # t7r1, t8r1, t9r1, t10r1, t11r1, t12r1,
+    t1r2, t2r2, t3r2, t4r2, t5r2, t6r2, # t7r2, t8r2, t9r2, t10r2, t11r2, t12r2,
+    t1r3, t2r3, t3r3, t4r3, t5r3, t6r3, # t7r3, t8r3, t9r3, t10r3, t11r3, t12r3,
+    t1r4, t2r4, t3r4, t4r4, t5r4, t6r4, # t7r4, t8r4, t9r4, t10r4, t11r4, t12r4,
+    t1r5, t2r5, t3r5, t4r5, t5r5, t6r5, # t7r5, t8r5, t9r5, t10r5, t11r5, t12r5,
+    t1r6, t2r6, t3r6, t4r6, t5r6, t6r6#, t7r6, t8r6, t9r6, t10r6, t11r6, t12r6,
+    # t1r7, t2r7, t3r7, t4r7, t5r7, t6r7, t7r7, t8r7, t9r7, t10r7, t11r7, t12r7,
+    # t1r8, t2r8, t3r8, t4r8, t5r8, t6r8, t7r8, t8r8, t9r8, t10r8, t11r8, t12r8,
+    # t1r9, t2r9, t3r9, t4r9, t5r9, t6r9, t7r9, t8r9, t9r9, t10r9, t11r9, t12r9,
+    # t1r10, t2r10, t3r10, t4r10, t5r10, t6r10, t7r10, t8r10, t9r10, t10r10, t11r10, t12r10,
+    # t1r11, t2r11, t3r11, t4r11, t5r11, t6r11, t7r11, t8r11, t9r11, t10r11, t11r11, t12r11,
+    # t1r12, t2r12, t3r12, t4r12, t5r12, t6r12, t7r12, t8r12, t9r12, t10r12, t11r12, t12r12
+)
 
-# Creates a list of box positions from tutorial_maps and game_maps
-positions = [tutorial_maps.positions]
-positions.append(game_maps.positions)
+# Set paths for level data
+script_dir = os.path.dirname(os.path.abspath(__file__))
+tutorial_path = os.path.join(script_dir, 'maps/tutorial_maps.json')
+game_path = os.path.join(script_dir, 'maps/game_maps.json')
 
-# Creates a list of start positions from tutorial_maps and game_maps
-player_start = [tutorial_maps.player_start]
-player_start.append(game_maps.player_start)
-player_direction = [tutorial_maps.player_direction]
-player_direction.append(game_maps.player_direction)
+# Load the tutorial maps
+with open(tutorial_path, 'r') as file:
+    tutorial_data = json.load(file)
 
-# Creates a list of active/inactive exits from tutorial_maps and game_maps
-active_exit = [tutorial_maps.active_exit]
-active_exit.append(game_maps.active_exit)
+# Load the game maps
+with open(game_path, 'r') as file:
+    game_data = json.load(file)
 
-# Create a list of level scores
-level_score = [game_maps.level_score]
+# Initiate variables to store levels from the JSON data
+tutorial_map = []
+game_map =[]
+level_map = []
 
-# Define TILE_SIZE at the beginning of your file or in a constants section
-TILE_SIZE = 100  # Adjust this value to match the size of your tiles
+tutorial_title = []
+game_title =[]
+map_title = []
+
+tutorial_active_boxes = []
+game_active_boxes = []
+active_boxes = []
+
+tutorial_positions = []
+game_positions = []
+positions = []
+
+tutorial_player_start = []
+game_player_start = []
+player_start = []
+
+tutorial_player_direction = []
+game_player_direction = []
+player_direction = []
+
+tutorial_active_exit = []
+game_active_exit = []
+active_exit = []
+
+game_score = []
+level_score = []
+
+# Add the tutorial maps
+for level in tutorial_data['levels']:
+    # Create the level map
+    tutorial_map.append([tutorial_data['game_board_elements'][item] for row in level['map'] for item in row])
+    # Extract other level data
+    tutorial_title.append(level['title'])
+    tutorial_active_boxes.append(level['active_boxes'])
+
+    # Convert box positions
+    box_positions = []
+    for pos in level['box_positions']:
+            box_positions.append(tuple(int(x * 100) for x in pos))
+    tutorial_positions.append(box_positions)
+
+    # Convert player start position
+    tutorial_player_start.append(tuple(int(x * 100) for x in level['player_start']))
+
+    tutorial_player_direction.append(level['player_direction'])
+    tutorial_active_exit.append(level['exit_active'])
+
+# Add the game maps
+for level in game_data['levels']:
+    # Create the level map
+    game_map.append([game_data['game_board_elements'][item] for row in level['map'] for item in row])
+
+    # Extract other level data
+    game_title.append(level['title'])
+    game_active_boxes.append(level['active_boxes'])
+
+    # Convert box positions
+    box_positions = []
+    for pos in level['box_positions']:
+            box_positions.append(tuple(int(x * 100) for x in pos))
+    game_positions.append(box_positions)
+
+    # Convert player start position
+    game_player_start.append(tuple(int(x * 100) for x in level['player_start']))
+
+    game_player_direction.append(level['player_direction'])
+    game_active_exit.append(level['exit_active'])
+    game_score.append(level['score'])
+
+# Update the level variables
+level_map.append(tutorial_map)
+level_map.append(game_map)
+print(f'level_map: {level_map}')
+
+map_title.append(tutorial_title)
+map_title.append(game_title)
+print(f'\nmap_title: {map_title}')
+
+active_boxes.append(tutorial_active_boxes)
+active_boxes.append(game_active_boxes)
+print(f'\nactive_boxes: {active_boxes}')
+
+positions.append(tutorial_positions)
+positions.append(game_positions)
+print(f'\npositions: {positions}')
+
+player_start.append(tutorial_player_start)
+player_start.append(game_player_start)
+print(f'\nplayer_start: {player_start}')
+
+player_direction.append(tutorial_player_direction)
+player_direction.append(game_player_direction)
+print(f'\nplayer_direction: {player_direction}')
+
+active_exit.append(tutorial_active_exit)
+active_exit.append(game_active_exit)
+print(f'\nactive_exit: {active_exit}')
+
+level_score.append(game_score)
+print(f'\nlevel_score: {level_score}')
 
 
 # CLASS for setup of levels and blitting of game elements
@@ -353,25 +509,30 @@ class BoardElements():
             elif el[0] == 8:
                 self.__exit___(game_board, (el[1][0], el[1][1] + self.offset_y))
 
-
     # Setup of new Level
     def generate_level(self, game_board, game_state, new_level, option):
         '''generate_level'''
         # If new_level equals True
         # - Reset elements list and setup tiles,
-        #   reset box and pit_box list and Pits then place Boxes and Player, 
+        #   reset box and pit_box list and Pits then place Boxes and Player,
         #   increase level counter, and set new_level to False
         if new_level:
             self.elements = []
+            print(f'Length of Level Map: {len(level_map)}')
             self.__create_level__(game_board, level_map[option][self.lv])
             # self.update_game_board_size(level_map[option][self.lv])
             self.box = []
             self.pit_box = []
             self.__create_boxes__(gfx.boxes)
 
-            self.__place_boxes_player_and_reset_pits_and_exit__(active_boxes[option][self.lv],\
-                                                                positions[option][self.lv],\
-                                                                player_start[option][self.lv],\
+            # Debug statements to check the values of option, self.lv, and positions
+            print(f'Option: {option}, Level: {self.lv}')
+            print(f'Length of positions: {len(positions)}')
+            print(f'Length of positions[option]: {len(positions[option]) if option < len(positions) else "Option out of range"}')
+
+            self.__place_boxes_player_and_reset_pits_and_exit__(active_boxes[option][self.lv],
+                                                                positions[option][self.lv],
+                                                                player_start[option][self.lv],
                                                                 active_exit[option][self.lv])
 
             game_state.facing_direction = player_direction[option][self.lv]
