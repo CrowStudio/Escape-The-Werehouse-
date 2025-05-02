@@ -332,8 +332,15 @@ class StartScreen:
             max_line_width = self.screen.get_width() - 50
 
             for i, title in enumerate(titles, start=1):
-                # Trim the title at '!' or ','
-                trimmed_title = title.split('!')[0].split(',')[0]
+                # Trim the title after '!' but keep the '!'
+                if '!' in title:
+                    trimmed_title = title.split('!')[0] + '!'
+                else:
+                    trimmed_title = title
+
+                # Trim the title at ','
+                trimmed_title = trimmed_title.split(',')[0]
+
                 title_text = f"{i}: {trimmed_title}"
                 words = title_text.split()
                 current_line = ""
