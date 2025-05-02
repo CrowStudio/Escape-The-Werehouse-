@@ -221,7 +221,7 @@ class HighScores:
 
 class GameState:
     def __init__(self):
-        self.game = False  # False == 4 initial tutorial levels, True == 5 game levels
+        self.game = False  # False == no of initial tutorial levels, True == no of game levels
 
         self.current_level = 0
         self.moves = 0
@@ -323,12 +323,56 @@ class StartScreen:
 
         # Draw the dropdown menu last if it is open
         if self.dropdown_open:
-            levels = ['Tutorial 1', 'Tutorial 2', 'Tutorial 3', 'Tutorial 4'] if self.tutorial_checked else ['Level 1', 'Level 2', 'Level 3', 'Level 4', 'Level 5', 'Level 6']
-            dropdown_box = pygame.Rect(200, 250, 200, len(levels) * 32)
-            pygame.draw.rect(self.screen, (50, 50, 50), dropdown_box)  # Darker background for dropdown
-            for i, level in enumerate(levels):
-                level_text = dropdown_font.render(level, True, (255, 255, 255))
-                self.screen.blit(level_text, (210, 260 + i * 30))
+            if self.tutorial_checked:
+                titles = self.board.map_title[0]
+            else:
+                titles = self.board.map_title[1]
+
+            lines = []
+            max_line_width = self.screen.get_width() - 50
+
+            for i, title in enumerate(titles, start=1):
+                # Trim the title at '!' or ','
+                trimmed_title = title.split('!')[0].split(',')[0]
+                title_text = f"{i}: {trimmed_title}"
+                words = title_text.split()
+                current_line = ""
+
+                for word in words:
+                    test_line = current_line + word + " "
+                    if dropdown_font.size(test_line)[0] > max_line_width:
+                        lines.append(current_line)
+                        current_line = word + " "
+                    else:
+                        current_line = test_line
+
+                if current_line:
+                    lines.append(current_line.strip())
+
+            # Calculate the width and height of the dropdown box
+            dropdown_width = max(dropdown_font.size(line)[0] for line in lines) + 40
+            text_height = len(lines) * 32  # Height of the text lines
+
+            # Set the y coordinate to 235 pixels from the top of the screen
+            dropdown_y = 235
+
+            # Calculate padding to add space below the text
+            bottom_padding = 16  # You can adjust this value as needed
+            dropdown_height = text_height + bottom_padding
+
+            # Calculate the x coordinate to center the dropdown
+            dropdown_x = self.screen.get_width() // 2 - dropdown_width // 2
+
+            # Draw the dropdown box with bottom padding
+            dropdown_box = pygame.Rect(dropdown_x, dropdown_y, dropdown_width, dropdown_height)
+            pygame.draw.rect(self.screen, (50, 50, 50), dropdown_box)
+
+            # Draw the level titles
+            for i, line in enumerate(lines):
+                level_text = dropdown_font.render(line, True, (255, 255, 255))
+                level_text_rect = level_text.get_rect()
+                level_text_rect.topleft = (dropdown_x + 20, dropdown_y + 16 + i * 32)
+                self.screen.blit(level_text, level_text_rect)
 
         pygame.display.flip()
 
@@ -350,7 +394,7 @@ class StartScreen:
                 # Select a level from the dropdown
                 elif self.dropdown_open and 200 <= mouse_pos[0] <= 400 and 250 <= mouse_pos[1] <= 490:
                     level_index = (mouse_pos[1] - 250) // 30
-                    levels = 4 if self.tutorial_checked else 6
+                    levels = self.board.no_of_levels[0] if self.tutorial_checked else self.board.no_of_levels[1]
                     if level_index < levels:
                         self.selected_level = level_index
                         self.dropdown_open = False
@@ -522,7 +566,7 @@ def handle_level_complete(board, game_state, high_scores):
         game_state.moves = 0
         game_state.total_moves = 0
         game_state.lives = 3
-    elif game_state.game == True and game_state.current_level >= 6:
+    elif game_state.game == True and game_state.current_level >= board.no_of_levels[1]:
         # Debug statements
         print('Congratulations! You finished the last level!')
         print(f'Your have made a total of {game_state.total_moves} successful moves!')

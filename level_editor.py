@@ -704,7 +704,7 @@ class LevelEditor:
              for col_idx, tile in enumerate(row)]
             for row_idx, row in enumerate(self.level_map)
         ]
-        
+
         return {
             "level_number": int(level_number),
             "level_name": level_name,
