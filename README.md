@@ -12,8 +12,8 @@ A random map of floor and wall tiles are generated each time the editor is start
 <img src="docs/WerehouseLevelEditor.png" width="300"><br>
 You simply add your start and exit tile, then you try to figur out a tricky way to place your pits and boxes in a way that is solvable,<br>
 add extra floor tiles or wall tiles if needed. When Saving the level it will be appended to the end of game_maps.json.<br>
-You can update the level path via the Edit menu, if you do not want to save to game_maps.json.<br>
 <img src="docs/SaveANewlyMadeMap.png" width="300">
+You can update the level path via the Edit menu, if you do not want to save to game_maps.json.<br>
 
 ### Install the game
 Please read the [INSTALL](https://github.com/CrowStudio/Escape-The-Werehouse-/blob/master/docs/INSTALL.md) document.
