@@ -234,6 +234,7 @@ class GameState:
         self.debounce_timer = 0  # To avoid unwanted movements
         self.a_key_pressed = False
 
+        self.move_up = True
         self.travel = 0  # Only keep track of direction
         self.direction = None
         self.facing_direction = 'up'  # New attribute to track facing direction
@@ -471,12 +472,14 @@ class StartScreen:
                     elif dropdown_x <= mouse_pos[0] <= dropdown_x + max(dropdown_font.size(line)[0] for line in ["Lights OFF", "Arrow Up = Move Up", "Arrow Up = Move Facing Direction"]) + 80 and dropdown_y + 43 <= mouse_pos[1] <= dropdown_y + 68:
                         self.arrow_up_up_checked = True
                         self.arrow_up_facing_checked = False
+                        self.game_state.move_up = True
                         self.draw()
 
                     # Check if the "Arrow Up = Move Facing Direction" option is clicked
                     elif dropdown_x <= mouse_pos[0] <= dropdown_x + max(dropdown_font.size(line)[0] for line in ["Lights OFF", "Arrow Up = Move Up", "Arrow Up = Move Facing Direction"]) + 80 and dropdown_y + 73 <= mouse_pos[1] <= dropdown_y + 98:
                         self.arrow_up_up_checked = False
                         self.arrow_up_facing_checked = True
+                        self.game_state.move_up = False
                         self.draw()
 
                 # Check if the "Start Game" button is clicked
@@ -570,7 +573,6 @@ def check_level_complete(board, game_state, screen, game_board):
 
 # Handle keyboard input for player movement
 def handle_input(keys, board, game_state, audio):
-
     # Reset movement variables for this frame
     game_state.direction = None
     game_state.travel = 0
@@ -604,26 +606,72 @@ def handle_input(keys, board, game_state, audio):
         if keys[key]:
             # If the arrow key is pressed and key_locked isn't active...
             if not game_state.key_locked:
-                # If pulling (space held), ignore facing direction checks and always move
-                if game_state.is_pulling:
-                    game_state.direction = movement['direction']
-                    game_state.travel = movement['travel']
-                    game_state.search_speed = 1  # 1 == direct change to new direction, lower rotates slower and not full rotation at once - hold key to scan to the end point.
-                else:
-                    if game_state.lights_out:
-                        # Normal logic: if you're already facing the direction, move.
-                        if game_state.facing_direction == movement['direction']:
-                            game_state.direction = movement['direction']
-                            game_state.travel = movement['travel']
-                        else:
-                            # Update the facing direction and set search properties
-                            game_state.facing_direction = movement['direction']
-                            game_state.search = movement['search']
-                            game_state.is_searching = True
-                            game_state.search_speed = 1
-                    else:
+                if game_state.move_up:
+                    # Normal movement style
+                    if game_state.is_pulling:
                         game_state.direction = movement['direction']
                         game_state.travel = movement['travel']
+                        game_state.search_speed = 1  # 1 == direct change to new direction, lower rotates slower and not full rotation at once - hold key to scan to the end point.
+                    else:
+                        if game_state.lights_out:
+                            # Normal logic: if you're already facing the direction, move.
+                            if game_state.facing_direction == movement['direction']:
+                                game_state.direction = movement['direction']
+                                game_state.travel = movement['travel']
+                            else:
+                                # Update the facing direction and set search properties
+                                game_state.facing_direction = movement['direction']
+                                game_state.search = movement['search']
+                                game_state.is_searching = True
+                                game_state.search_speed = 1
+                        else:
+                            game_state.direction = movement['direction']
+                            game_state.travel = movement['travel']
+                else:
+                    # Alternative movement style
+                    if movement['direction'] == 'left':
+                        # Rotate facing direction 90 degrees counter-clockwise
+                        if game_state.facing_direction == 'up':
+                            game_state.facing_direction = 'left'
+                        elif game_state.facing_direction == 'left':
+                            game_state.facing_direction = 'down'
+                        elif game_state.facing_direction == 'down':
+                            game_state.facing_direction = 'right'
+                        elif game_state.facing_direction == 'right':
+                            game_state.facing_direction = 'up'
+                    elif movement['direction'] == 'right':
+                        # Rotate facing direction 90 degrees clockwise
+                        if game_state.facing_direction == 'up':
+                            game_state.facing_direction = 'right'
+                        elif game_state.facing_direction == 'right':
+                            game_state.facing_direction = 'down'
+                        elif game_state.facing_direction == 'down':
+                            game_state.facing_direction = 'left'
+                        elif game_state.facing_direction == 'left':
+                            game_state.facing_direction = 'up'
+                    elif movement['direction'] == 'up':
+                        # Move forward in the current facing direction
+                        if game_state.facing_direction == 'up':
+                            game_state.direction = 'up'
+                        elif game_state.facing_direction == 'down':
+                            game_state.direction = 'down'
+                        elif game_state.facing_direction == 'left':
+                            game_state.direction = 'left'
+                        elif game_state.facing_direction == 'right':
+                            game_state.direction = 'right'
+                        game_state.travel = movement['travel']
+                    elif movement['direction'] == 'down':
+                        # Move backward in the current facing direction
+                        if game_state.facing_direction == 'up':
+                            game_state.direction = 'down'
+                        elif game_state.facing_direction == 'down':
+                            game_state.direction = 'up'
+                        elif game_state.facing_direction == 'left':
+                            game_state.direction = 'right'
+                        elif game_state.facing_direction == 'right':
+                            game_state.direction = 'left'
+                        game_state.travel = movement['travel']
+
                 # Lock the key press so it only triggers once per physical keypress.
                 game_state.key_locked = True
                 break  # Only process one arrow key per frame

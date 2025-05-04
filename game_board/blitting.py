@@ -638,11 +638,12 @@ class BoardElements():
                 game_board.blit(self.box[3][1], (self.b4x, self.b4y + self.offset_y))
 
 
+
     # Blit player
     def blit_player(self, game_board, game_state, p_move):
         '''blit_player'''
         # If play equals True
-        if self.play:
+        if self.play and game_state.move_up:
             # If movement is Up
             # - Blit player in direction of y corresponding of p_move' value
             if game_state.travel == 1 and not game_state.is_pulling:
@@ -677,7 +678,15 @@ class BoardElements():
                         game_board.blit(gfx.player_right, (self.px, self.py + self.offset_y))
                 else:
                     game_board.blit(gfx.player, (self.px, self.py + self.offset_y))
-
+        else:
+            if game_state.facing_direction == 'up':
+                game_board.blit(gfx.player_up, (self.px, self.py + self.offset_y))
+            elif game_state.facing_direction == 'down':
+                game_board.blit(gfx.player_down, (self.px, self.py + self.offset_y))
+            elif game_state.facing_direction == 'left':
+                game_board.blit(gfx.player_left, (self.px, self.py + self.offset_y))
+            elif game_state.facing_direction == 'right':
+                game_board.blit(gfx.player_right, (self.px, self.py + self.offset_y))
 
 
 
@@ -754,14 +763,24 @@ class BoardElements():
                 elif game_state.search == 4:  # RIGHT
                     target_angle = math.atan2(0, 1)
             else:
-                if game_state.travel == 1:  # UP
-                    target_angle = math.atan2(-1, 0)
-                elif game_state.travel == 2:  # DOWN
-                    target_angle = math.atan2(1, 0)
-                elif game_state.travel == 3:  # LEFT
-                    target_angle = math.atan2(0, -1)
-                elif game_state.travel == 4:  # RIGHT
-                    target_angle = math.atan2(0, 1)
+                if game_state.move_up == True:
+                    if game_state.travel == 1 :  # UP
+                        target_angle = math.atan2(-1, 0)
+                    elif game_state.travel == 2:  # DOWN
+                        target_angle = math.atan2(1, 0)
+                    elif game_state.travel == 3:  # LEFT
+                        target_angle = math.atan2(0, -1)
+                    elif game_state.travel == 4:  # RIGHT
+                        target_angle = math.atan2(0, 1)
+                else:
+                    if game_state.facing_direction == 'up':  # UP
+                        target_angle = math.atan2(-1, 0)
+                    elif game_state.facing_direction == 'down':  # DOWN
+                        target_angle = math.atan2(1, 0)
+                    elif game_state.facing_direction == 'left':  # LEFT
+                        target_angle = math.atan2(0, -1)
+                    elif game_state.facing_direction == 'right':  # RIGHT
+                        target_angle = math.atan2(0, 1)
 
             smoothing_factor = game_state.search_speed  # 1 is fastes, lower is slower rotation/not full rotation in one go.
             if target_angle is not None:
