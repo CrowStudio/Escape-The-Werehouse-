@@ -10,516 +10,598 @@
         "WALL": 7,
         "EXIT": 8
     },
-    "levels": [
-        {
-            "level": 1,
-            "title": "Blocked!",
-            "map": [
-                [
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "WALL",
-                    "EXIT",
-                    "FLOOR"
-                ],
-                [
-                    "PIT1",
-                    "WALL",
-                    "WALL",
-                    "WALL",
-                    "WALL",
-                    "FLOOR"
-                ],
-                [
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "PIT4"
-                ],
-                [
-                    "FLOOR",
-                    "WALL",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "WALL"
-                ],
-                [
-                    "FLOOR",
-                    "WALL",
-                    "FLOOR",
-                    "FLOOR",
-                    "WALL",
-                    "WALL"
-                ],
-                [
-                    "START",
-                    "WALL",
-                    "WALL",
-                    "FLOOR",
-                    "WALL",
-                    "WALL"
-                ]
-            ],
-            "active_boxes": [
-                true,
-                true,
-                true,
-                true
-            ],
-            "box_positions": [
-                [
-                    0,
-                    3
-                ],
-                [
-                    3,
-                    4
-                ],
-                [
-                    3,
-                    2
-                ],
-                [
-                    4,
-                    2
-                ]
-            ],
-            "player_start": [
-                0,
-                5
-            ],
-            "player_direction": "up",
-            "exit_active": true,
-            "score": 19
-        },
-        {
-            "level": 2,
-            "title": "Deceiving Pits",
-            "map": [
-                [
-                    "EXIT",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "PIT_WALL"
-                ],
-                [
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "WALL",
-                    "FLOOR",
-                    "PIT_WALL"
-                ],
-                [
-                    "PIT_WALL",
-                    "PIT_WALL",
-                    "PIT_WALL",
-                    "PIT2",
-                    "PIT1",
-                    "WALL"
-                ],
-                [
-                    "WALL",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR"
-                ],
-                [
-                    "PIT_WALL",
-                    "FLOOR",
-                    "WALL",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR"
-                ],
-                [
-                    "PIT_WALL",
-                    "START",
-                    "PIT_WALL",
-                    "WALL",
-                    "WALL",
-                    "WALL"
-                ]
-            ],
-            "active_boxes": [
-                true,
-                true,
-                true,
-                false
-            ],
-            "box_positions": [
-                [
-                    5,
-                    3
-                ],
-                [
-                    4,
-                    1
-                ],
-                [
-                    3,
-                    0
-                ],
-                [
-                    5,
-                    5
-                ]
-            ],
-            "player_start": [
-                1,
-                5
-            ],
-            "player_direction": "up",
-            "exit_active": true,
-            "score": 24
-        },
-        {
-            "level": 3,
-            "title": "One too Many!",
-            "map": [
-                [
-                    "FLOOR",
-                    "FLOOR",
-                    "WALL",
-                    "WALL",
-                    "WALL",
-                    "EXIT"
-                ],
-                [
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "PIT2",
-                    "FLOOR"
-                ],
-                [
-                    "FLOOR",
-                    "FLOOR",
-                    "WALL",
-                    "PIT3",
-                    "WALL",
-                    "WALL"
-                ],
-                [
-                    "PIT1",
-                    "WALL",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "START"
-                ],
-                [
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "WALL",
-                    "PIT_WALL"
-                ],
-                [
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "WALL",
-                    "WALL"
-                ]
-            ],
-            "active_boxes": [
-                true,
-                true,
-                true,
-                true
-            ],
-            "box_positions": [
-                [
-                    2,
-                    5
-                ],
-                [
-                    1,
-                    0
-                ],
-                [
-                    5,
-                    1
-                ],
-                [
-                    0,
-                    0
-                ]
-            ],
-            "player_start": [
-                5,
-                3
-            ],
-            "player_direction": "left",
-            "exit_active": true,
-            "score": 35
-        },
-        {
-            "level": 4,
-            "title": "Back and Forth",
-            "map": [
-                [
-                    "START",
-                    "WALL",
-                    "EXIT",
-                    "PIT3",
-                    "FLOOR",
-                    "FLOOR"
-                ],
-                [
-                    "FLOOR",
-                    "WALL",
-                    "WALL",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR"
-                ],
-                [
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "WALL",
-                    "PIT2",
-                    "WALL"
-                ],
-                [
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "PIT1",
-                    "FLOOR",
-                    "FLOOR"
-                ],
-                [
-                    "WALL",
-                    "FLOOR",
-                    "FLOOR",
-                    "WALL",
-                    "FLOOR",
-                    "FLOOR"
-                ],
-                [
-                    "WALL",
-                    "WALL",
-                    "WALL",
-                    "WALL",
-                    "FLOOR",
-                    "FLOOR"
-                ]
-            ],
-            "active_boxes": [
-                true,
-                true,
-                true,
-                false
-            ],
-            "box_positions": [
-                [
-                    0,
-                    3
-                ],
-                [
-                    4,
-                    4
-                ],
-                [
-                    5,
-                    3
-                ],
-                [
-                    1,
-                    0
-                ]
-            ],
-            "player_start": [
-                0,
-                0
-            ],
-            "player_direction": "down",
-            "exit_active": true,
-            "score": 38
-        },
-        {
-            "level": 5,
-            "title": "The Circles of Life",
-            "map": [
-                [
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR"
-                ],
-                [
-                    "WALL",
-                    "WALL",
-                    "PIT1",
-                    "WALL",
-                    "WALL",
-                    "FLOOR"
-                ],
-                [
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR"
-                ],
-                [
-                    "FLOOR",
-                    "WALL",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "PIT2"
-                ],
-                [
-                    "FLOOR",
-                    "WALL",
-                    "WALL",
-                    "WALL",
-                    "WALL",
-                    "FLOOR"
-                ],
-                [
-                    "START",
-                    "WALL",
-                    "EXIT",
-                    "FLOOR",
-                    "FLOOR",
-                    "PIT3"
-                ]
-            ],
-            "active_boxes": [
-                true,
-                true,
-                true,
-                false
-            ],
-            "box_positions": [
-                [
-                    4,
-                    2
-                ],
-                [
-                    1,
-                    0
-                ],
-                [
-                    0,
-                    0
-                ],
-                [
-                    0,
-                    1
-                ]
-            ],
-            "player_start": [
-                0,
-                5
-            ],
-            "player_direction": "up",
-            "exit_active": true,
-            "score": 78
-        },
-        {
-            "level": 6,
-            "title": "Trick or Treat",
-            "map": [
-                [
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR"
-                ],
-                [
-                    "FLOOR",
-                    "FLOOR",
-                    "WALL",
-                    "FLOOR",
-                    "PIT4",
-                    "FLOOR"
-                ],
-                [
-                    "FLOOR",
-                    "FLOOR",
-                    "WALL",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR"
-                ],
-                [
-                    "FLOOR",
-                    "PIT1",
-                    "WALL",
-                    "WALL",
-                    "WALL",
-                    "FLOOR"
-                ],
-                [
-                    "WALL",
-                    "PIT2",
-                    "WALL",
-                    "START",
-                    "FLOOR",
-                    "FLOOR"
-                ],
-                [
-                    "EXIT",
-                    "PIT3",
-                    "WALL",
-                    "WALL",
-                    "WALL",
-                    "WALL"
-                ]
-            ],
-            "active_boxes": [
-                true,
-                true,
-                true,
-                true
-            ],
-            "box_positions": [
-                [
-                    1,
-                    2
-                ],
-                [
-                    5,
-                    0
-                ],
-                [
-                    5,
-                    1
-                ],
-                [
-                    0,
-                    3
-                ]
-            ],
-            "player_start": [
-                3,
-                4
-            ],
-            "player_direction": "right",
-            "exit_active": true,
-            "score": 58
-        }
-    ]
+  "levels": [
+    {
+      "level": 1,
+      "title": "Blocked!",
+      "map": [
+        [
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "WALL",
+          "EXIT",
+          "FLOOR"
+        ],
+        [
+          "PIT1",
+          "WALL",
+          "WALL",
+          "WALL",
+          "WALL",
+          "FLOOR"
+        ],
+        [
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "PIT4"
+        ],
+        [
+          "FLOOR",
+          "WALL",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "WALL"
+        ],
+        [
+          "FLOOR",
+          "WALL",
+          "FLOOR",
+          "FLOOR",
+          "WALL",
+          "WALL"
+        ],
+        [
+          "START",
+          "WALL",
+          "WALL",
+          "FLOOR",
+          "WALL",
+          "WALL"
+        ]
+      ],
+      "active_boxes": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "box_positions": [
+        [
+          0,
+          3
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          4,
+          2
+        ]
+      ],
+      "player_start": [
+        0,
+        5
+      ],
+      "player_direction": "up",
+      "exit_active": true,
+      "score": 19
+    },
+    {
+      "level": 2,
+      "title": "Deceiving Pits",
+      "map": [
+        [
+          "EXIT",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "PIT_WALL"
+        ],
+        [
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "WALL",
+          "FLOOR",
+          "PIT_WALL"
+        ],
+        [
+          "PIT_WALL",
+          "PIT_WALL",
+          "PIT_WALL",
+          "PIT2",
+          "PIT1",
+          "WALL"
+        ],
+        [
+          "WALL",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR"
+        ],
+        [
+          "PIT_WALL",
+          "FLOOR",
+          "WALL",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR"
+        ],
+        [
+          "PIT_WALL",
+          "START",
+          "PIT_WALL",
+          "WALL",
+          "WALL",
+          "WALL"
+        ]
+      ],
+      "active_boxes": [
+        true,
+        true,
+        true,
+        false
+      ],
+      "box_positions": [
+        [
+          5,
+          3
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "player_start": [
+        1,
+        5
+      ],
+      "player_direction": "up",
+      "exit_active": true,
+      "score": 24
+    },
+    {
+      "level": 3,
+      "title": "One too Many!",
+      "map": [
+        [
+          "FLOOR",
+          "FLOOR",
+          "WALL",
+          "WALL",
+          "WALL",
+          "EXIT"
+        ],
+        [
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "PIT2",
+          "FLOOR"
+        ],
+        [
+          "FLOOR",
+          "FLOOR",
+          "WALL",
+          "PIT3",
+          "WALL",
+          "WALL"
+        ],
+        [
+          "PIT1",
+          "WALL",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "START"
+        ],
+        [
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "WALL",
+          "PIT_WALL"
+        ],
+        [
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "WALL",
+          "WALL"
+        ]
+      ],
+      "active_boxes": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "box_positions": [
+        [
+          2,
+          5
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "player_start": [
+        5,
+        3
+      ],
+      "player_direction": "left",
+      "exit_active": true,
+      "score": 35
+    },
+    {
+      "level": 4,
+      "title": "Back and Forth",
+      "map": [
+        [
+          "START",
+          "WALL",
+          "EXIT",
+          "PIT3",
+          "FLOOR",
+          "FLOOR"
+        ],
+        [
+          "FLOOR",
+          "WALL",
+          "WALL",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR"
+        ],
+        [
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "WALL",
+          "PIT2",
+          "WALL"
+        ],
+        [
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "PIT1",
+          "FLOOR",
+          "FLOOR"
+        ],
+        [
+          "WALL",
+          "FLOOR",
+          "FLOOR",
+          "WALL",
+          "FLOOR",
+          "FLOOR"
+        ],
+        [
+          "WALL",
+          "WALL",
+          "WALL",
+          "WALL",
+          "FLOOR",
+          "FLOOR"
+        ]
+      ],
+      "active_boxes": [
+        true,
+        true,
+        true,
+        false
+      ],
+      "box_positions": [
+        [
+          0,
+          3
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          5,
+          3
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "player_start": [
+        0,
+        0
+      ],
+      "player_direction": "down",
+      "exit_active": true,
+      "score": 38
+    },
+    {
+      "level": 5,
+      "title": "The Circles of Life",
+      "map": [
+        [
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR"
+        ],
+        [
+          "WALL",
+          "WALL",
+          "PIT1",
+          "WALL",
+          "WALL",
+          "FLOOR"
+        ],
+        [
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR"
+        ],
+        [
+          "FLOOR",
+          "WALL",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "PIT2"
+        ],
+        [
+          "FLOOR",
+          "WALL",
+          "WALL",
+          "WALL",
+          "WALL",
+          "FLOOR"
+        ],
+        [
+          "START",
+          "WALL",
+          "EXIT",
+          "FLOOR",
+          "FLOOR",
+          "PIT3"
+        ]
+      ],
+      "active_boxes": [
+        true,
+        true,
+        true,
+        false
+      ],
+      "box_positions": [
+        [
+          4,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "player_start": [
+        0,
+        5
+      ],
+      "player_direction": "up",
+      "exit_active": true,
+      "score": 78
+    },
+    {
+      "level": 6,
+      "title": "Trick or Treat",
+      "map": [
+        [
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR"
+        ],
+        [
+          "FLOOR",
+          "FLOOR",
+          "WALL",
+          "FLOOR",
+          "PIT4",
+          "FLOOR"
+        ],
+        [
+          "FLOOR",
+          "FLOOR",
+          "WALL",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR"
+        ],
+        [
+          "FLOOR",
+          "PIT1",
+          "WALL",
+          "WALL",
+          "WALL",
+          "FLOOR"
+        ],
+        [
+          "WALL",
+          "PIT2",
+          "WALL",
+          "START",
+          "FLOOR",
+          "FLOOR"
+        ],
+        [
+          "EXIT",
+          "PIT3",
+          "WALL",
+          "WALL",
+          "WALL",
+          "WALL"
+        ]
+      ],
+      "active_boxes": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "box_positions": [
+        [
+          1,
+          2
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          0,
+          3
+        ]
+      ],
+      "player_start": [
+        3,
+        4
+      ],
+      "player_direction": "right",
+      "exit_active": true,
+      "score": 58
+    },
+    {
+      "level": 7,
+      "title": "Essence of Order",
+      "map": [
+        [
+          "EXIT",
+          "WALL",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR"
+        ],
+        [
+          "PIT4",
+          "PIT3",
+          "PIT2",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR"
+        ],
+        [
+          "WALL",
+          "WALL",
+          "WALL",
+          "FLOOR",
+          "WALL",
+          "FLOOR"
+        ],
+        [
+          "FLOOR",
+          "FLOOR",
+          "FLOOR",
+          "PIT1",
+          "WALL",
+          "FLOOR"
+        ],
+        [
+          "FLOOR",
+          "WALL",
+          "WALL",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR"
+        ],
+        [
+          "FLOOR",
+          "START",
+          "WALL",
+          "FLOOR",
+          "FLOOR",
+          "FLOOR"
+        ]
+      ],
+      "active_boxes": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "box_positions": [
+        [
+          2,
+          4
+        ],
+        [
+          4,
+          5
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          5,
+          1
+        ]
+      ],
+      "player_start": [ 2, 6 ],
+      "player_direction": "left",
+      "exit_active": true,
+      "score": 95
+    }
+  ]
 }

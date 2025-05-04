@@ -721,20 +721,20 @@ class LevelEditor:
         return [any(tile == f"BOX{i+1}" for row in self.level_map for tile in row) for i in range(4)]
 
     def get_box_positions(self):
-        box_positions = ["t1r1", "t1r1", "t1r1", "t1r1"]
+        box_positions = [[0, 0], [0, 0], [0, 0], [0, 0]]
         for row_idx, row in enumerate(self.level_map):
             for col_idx, tile in enumerate(row):
                 if tile == "BOX1":
-                    box_positions[0] = f"t{col_idx+1}r{row_idx+1}"
+                    box_positions[0] = [col_idx, row_idx]
                     self.under_tiles[row_idx][col_idx] = 'FLOOR'  # Save the element under the box
                 elif tile == "BOX2":
-                    box_positions[1] = f"t{col_idx+1}r{row_idx+1}"
+                    box_positions[1] = [col_idx, row_idx]
                     self.under_tiles[row_idx][col_idx] = 'FLOOR'  # Save the element under the box
                 elif tile == "BOX3":
-                    box_positions[2] = f"t{col_idx+1}r{row_idx+1}"
+                    box_positions[2] = [col_idx, row_idx]
                     self.under_tiles[row_idx][col_idx] = 'FLOOR'  # Save the element under the box
                 elif tile == "BOX4":
-                    box_positions[3] = f"t{col_idx+1}r{row_idx+1}"
+                    box_positions[3] = [col_idx, row_idx]
                     self.under_tiles[row_idx][col_idx] = 'FLOOR'  # Save the element under the box
         return box_positions
 
@@ -742,7 +742,7 @@ class LevelEditor:
         for row_idx, row in enumerate(self.level_map):
             for col_idx, tile in enumerate(row):
                 if tile == 'START':
-                    return f"t{col_idx+1}r{row_idx+1}"
+                    return [col_idx, row_idx]
         return None
 
     def show_file_dialog(self):
@@ -791,32 +791,11 @@ class LevelEditor:
                 level_map_str += f"    {row_str},\\n"
         return level_map_str
 
-    def get_box_positions(self):
-        box_positions = ["t1r1", "t1r1", "t1r1", "t1r1"]
-        for row_idx, row in enumerate(self.level_map):
-            for col_idx, tile in enumerate(row):
-                if tile == "BOX1":
-                    box_positions[0] = f"t{col_idx+1}r{row_idx+1}"
-                elif tile == "BOX2":
-                    box_positions[1] = f"t{col_idx+1}r{row_idx+1}"
-                elif tile == "BOX3":
-                    box_positions[2] = f"t{col_idx+1}r{row_idx+1}"
-                elif tile == "BOX4":
-                    box_positions[3] = f"t{col_idx+1}r{row_idx+1}"
-        return box_positions
-
     def find_unoccupied_floor_tile(self, box_positions):
         modified_map = [['WALL' if tile in ['BOX1', 'BOX2', 'BOX3', 'BOX4'] else tile for tile in row] for row in self.level_map]
         for row_idx, row in enumerate(modified_map):
             for col_idx, tile in enumerate(row):
                 if tile == 'WALL' and f"t{col_idx+1}r{row_idx+1}" not in box_positions.values():
-                    return f"t{col_idx+1}r{row_idx+1}"
-        return None
-
-    def get_player_start_position(self):
-        for row_idx, row in enumerate(self.level_map):
-            for col_idx, tile in enumerate(row):
-                if tile == 'START':
                     return f"t{col_idx+1}r{row_idx+1}"
         return None
 
