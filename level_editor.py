@@ -378,7 +378,7 @@ class LevelEditor:
 
     def draw_info_field(self):
         pygame.draw.rect(self.screen, (50, 50, 50), pygame.Rect(0, 30, 600, 40))
-        header = self.header_font.render('Edit or Add Elements to Map!', True, (255, 255, 255))
+        header = self.header_font.render('Add Elements or Edit map!', True, (255, 255, 255))
         self.screen.blit(header, (10, 42))
 
     def draw_button_field(self):
