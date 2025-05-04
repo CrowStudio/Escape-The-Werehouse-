@@ -11,7 +11,7 @@ There is a level editor to make it easier to create maps for new levels.<br>
 A random map of floor and wall tiles are generated each time the editor is started, or after a level is saved, you can also regenerate the map via the menu.<br>
 <img src="docs/WerehouseLevelEditor.png" width="300"><br>
 You simply add your start and exit tile, then you try to figur out a tricky way to place your pits and boxes in a way that is solvable,<br>
-add extra floor tiles or wall tiles if needed. When Saving the level it will be appended to the end of game_maps.json. You can update the Level Path in the menu if you do not want to save to game_maps.json.<br>
+add extra floor tiles or wall tiles if needed. When Saving the level it will be appended to the end of game_maps.json. You can update the level path via the Edit menu, if you do not want to save to game_maps.json.<br>
 <img src="docs/SaveANewlyMadeMap.png" width="300">
 
 ### Install the game
