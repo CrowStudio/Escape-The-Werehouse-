@@ -234,6 +234,7 @@ class GameState:
         self.debounce_timer = 0  # To avoid unwanted movements
         self.a_key_pressed = False
 
+        self.move_up = True
         self.travel = 0  # Only keep track of direction
         self.direction = None
         self.facing_direction = 'up'  # New attribute to track facing direction
@@ -246,29 +247,35 @@ class GameState:
 
 class StartScreen:
     def __init__(self, screen, game_state, high_scores, board):
+        # Initialize the start screen with necessary attributes
         self.screen = screen
         self.game_state = game_state
         self.high_scores = high_scores
         self.board = board
-        self.tutorial_checked = False
-        self.selected_level = 0
-        self.show_high_scores = False
-        self.dropdown_open = False
+        self.tutorial_checked = False  # Checkbox state for tutorial
+        self.selected_level = 0  # Currently selected level
+        self.show_high_scores = False  # Flag to show high scores
+        self.dropdown_open = False  # Flag to indicate if level dropdown is open
+        self.options_dropdown_open = False  # Flag to indicate if options dropdown is open
+        self.lights_off_checked = False  # Checkbox state for lights off option
+        self.arrow_up_up_checked = True  # Checkbox state for arrow up move option, default is True
+        self.arrow_up_facing_checked = False  # Checkbox state for arrow up facing move option
 
     def draw(self):
         # Draw the start screen UI
-        self.screen.fill((30, 30, 30))
-        pygame.display.set_caption(f'Escape the Werehouse! - START MENU')
+        self.screen.fill((30, 30, 30))  # Fill the screen with a dark background
+        pygame.display.set_caption('Escape the Werehouse! - START MENU')  # Set the window caption
+
+        # Title
         title_text = menu_font.render('Escape the Werehouse!', True, (255, 215, 115))
         title_center = title_text.get_rect(center=(self.screen.get_width() // 2, 50))
         self.screen.blit(title_text, title_center)
 
         # Tutorial checkbox
         tutorial_text = font.render('Tutorial', True, (255, 255, 255))
-        tutorial_check = pygame.Rect(350, 116, 25, 25)  # Adjusted checkbox position
+        tutorial_check = pygame.Rect(350, 116, 25, 25)
         pygame.draw.rect(self.screen, (255, 255, 255), tutorial_check, 2)
         if self.tutorial_checked:
-            # Draw the "X" mark inside the checkbox
             pygame.draw.line(self.screen, (255, 255, 255), (355, 120), (369, 135), 2)
             pygame.draw.line(self.screen, (255, 255, 255), (369, 120), (355, 135), 2)
         tutorial_text_center = tutorial_text.get_rect(center=(280, 130))
@@ -278,7 +285,7 @@ class StartScreen:
         level_text = font.render('Select Level:', True, (255, 255, 255))
         level_text_center = level_text.get_rect(center=(self.screen.get_width() // 2, 170))
         self.screen.blit(level_text, level_text_center)
-        dropdown_button = pygame.Rect(200, 190, 200, 40)  # Adjusted dropdown button position
+        dropdown_button = pygame.Rect(200, 190, 200, 40)
         pygame.draw.rect(self.screen, (255, 255, 255), dropdown_button, 2)
 
         # Display the selected level
@@ -289,146 +296,231 @@ class StartScreen:
         selected_level_text_center = selected_level_text.get_rect(center=(self.screen.get_width() // 2, 210))
         self.screen.blit(selected_level_text, selected_level_text_center)
 
-        # Lights checkbox
-        lights_text = font.render('Lights OFF', True, (255, 255, 255))
-        lights_check = pygame.Rect(self.screen.get_width() // 2 + 65, 356, 25, 25)  # Centered position
-        pygame.draw.rect(self.screen, (255, 255, 255), lights_check, 2)
-        if self.game_state.lights_out:
-            # Draw the "X" mark inside the checkbox
-            pygame.draw.line(self.screen, (255, 255, 255), (self.screen.get_width() // 2 + 70, 360), (self.screen.get_width() // 2 + 84, 375), 2)
-            pygame.draw.line(self.screen, (255, 255, 255), (self.screen.get_width() // 2 + 84, 360), (self.screen.get_width() // 2 + 70, 375), 2)
-        lights_text_center = lights_text.get_rect(center=(278, 370))
-        self.screen.blit(lights_text, lights_text_center)
-
         # Start Game button
-        start_button = pygame.Rect(200, 400, 200, 40)  # Adjusted start button position
+        start_button = pygame.Rect(200, 240, 200, 40)
         pygame.draw.rect(self.screen, (255, 255, 255), start_button, 2)
         start_text = font.render('Start Game', True, (255, 255, 255))
-        start_text_center = start_text.get_rect(center=(self.screen.get_width() // 2, 420))
+        start_text_center = start_text.get_rect(center=(self.screen.get_width() // 2, 260))
         self.screen.blit(start_text, start_text_center)
 
+        # Options dropdown
+        options_dropdown_button = pygame.Rect(200, 450, 200, 40)
+        pygame.draw.rect(self.screen, (255, 255, 255), options_dropdown_button, 2)
+
+        # Display the selected options
+        selected_options_text = dropdown_font.render('Options', True, (255, 255, 255))
+        selected_options_text_center = selected_options_text.get_rect(center=(self.screen.get_width() // 2, 470))
+        self.screen.blit(selected_options_text, selected_options_text_center)
+
         # High Scores button
-        high_scores_button = pygame.Rect(200, 450, 200, 40)  # Adjusted high scores button position
+        high_scores_button = pygame.Rect(200, 500, 200, 40)
         pygame.draw.rect(self.screen, (255, 255, 255), high_scores_button, 2)
         high_scores_text = font.render('High Scores', True, (255, 255, 255))
-        high_scores_text_center = high_scores_text.get_rect(center=(self.screen.get_width() // 2, 470))
+        high_scores_text_center = high_scores_text.get_rect(center=(self.screen.get_width() // 2, 520))
         self.screen.blit(high_scores_text, high_scores_text_center)
 
         # Quit button
-        quit_button = pygame.Rect(200, 500, 200, 40)  # Adjusted quit button position
+        quit_button = pygame.Rect(200, 550, 200, 40)
         pygame.draw.rect(self.screen, (255, 255, 255), quit_button, 2)
         quit_text = font.render('Quit', True, (255, 255, 255))
-        quit_text_center = quit_text.get_rect(center=(self.screen.get_width() // 2, 520))
+        quit_text_center = quit_text.get_rect(center=(self.screen.get_width() // 2, 570))
         self.screen.blit(quit_text, quit_text_center)
 
-        # Draw the dropdown menu last if it is open
+        # Draw the level dropdown menu if it is open
         if self.dropdown_open:
+            # Determine which set of titles to use based on tutorial mode
             if self.tutorial_checked:
                 titles = self.board.map_title[0]
             else:
                 titles = self.board.map_title[1]
 
-            lines = []
-            max_line_width = self.screen.get_width() - 50
+            lines = []  # Initialize a list to hold the lines of text for the dropdown
+            max_line_width = self.screen.get_width() - 50  # Maximum width for a line of text
 
+            # Process each title to format it for the dropdown
             for i, title in enumerate(titles, start=1):
-                # Trim the title after '!' but keep the '!'
+                # Handle titles with special characters
                 if '!' in title:
                     trimmed_title = title.split('!')[0] + '!'
                 else:
                     trimmed_title = title
+                trimmed_title = trimmed_title.split(',')[0]  # Remove any additional info after a comma
+                title_text = f"{i}: {trimmed_title}"  # Format the title text with its index
+                words = title_text.split()  # Split the title text into words
+                current_line = ""  # Initialize the current line of text
 
-                # Trim the title at ','
-                trimmed_title = trimmed_title.split(',')[0]
-
-                title_text = f"{i}: {trimmed_title}"
-                words = title_text.split()
-                current_line = ""
-
+                # Build the lines of text for the dropdown
                 for word in words:
-                    test_line = current_line + word + " "
-                    if dropdown_font.size(test_line)[0] > max_line_width:
+                    test_line = current_line + word + " "  # Test adding the next word to the current line
+                    if dropdown_font.size(test_line)[0] > max_line_width:  # If the line is too wide, finalize the current line
                         lines.append(current_line)
-                        current_line = word + " "
+                        current_line = word + " "  # Start a new line with the current word
                     else:
-                        current_line = test_line
+                        current_line = test_line  # Continue building the current line
 
-                if current_line:
+                if current_line:  # If there's any remaining text, add it as a new line
                     lines.append(current_line.strip())
 
-            # Calculate the width and height of the dropdown box
+            # Calculate the size and position of the dropdown box
             dropdown_width = max(dropdown_font.size(line)[0] for line in lines) + 40
-            text_height = len(lines) * 32  # Height of the text lines
-
-            # Set the y coordinate to 235 pixels from the top of the screen
+            text_height = len(lines) * 32
             dropdown_y = 235
-
-            # Calculate padding to add space below the text
-            bottom_padding = 16  # You can adjust this value as needed
+            bottom_padding = 16
             dropdown_height = text_height + bottom_padding
-
-            # Calculate the x coordinate to center the dropdown
             dropdown_x = self.screen.get_width() // 2 - dropdown_width // 2
-
-            # Draw the dropdown box with bottom padding
             dropdown_box = pygame.Rect(dropdown_x, dropdown_y, dropdown_width, dropdown_height)
-            pygame.draw.rect(self.screen, (50, 50, 50), dropdown_box)
+            pygame.draw.rect(self.screen, (50, 50, 50), dropdown_box)  # Draw the dropdown background
 
-            # Draw the level titles
+            # Render and display each line of text in the dropdown
             for i, line in enumerate(lines):
                 level_text = dropdown_font.render(line, True, (255, 255, 255))
                 level_text_rect = level_text.get_rect()
                 level_text_rect.topleft = (dropdown_x + 20, dropdown_y + 16 + i * 32)
                 self.screen.blit(level_text, level_text_rect)
 
+        # Draw the options dropdown menu if it is open
+        if self.options_dropdown_open:
+            lines = ["Lights OFF", "Arrow Up = Move Up", "Arrow Up = Move Facing Direction"]
+            max_line_width = self.screen.get_width() - 50
+
+            # Calculate the size and position of the options dropdown box
+            dropdown_width = max(dropdown_font.size(line)[0] for line in lines) + 80
+            text_height = len(lines) * 32
+            dropdown_y = 495
+            bottom_padding = 16
+            dropdown_height = text_height + bottom_padding
+            dropdown_x = self.screen.get_width() // 2 - dropdown_width // 2
+            dropdown_box = pygame.Rect(dropdown_x, dropdown_y, dropdown_width, dropdown_height)
+            pygame.draw.rect(self.screen, (50, 50, 50), dropdown_box)  # Draw the options dropdown background
+
+            # Render and display each option in the dropdown
+            for i, line in enumerate(lines):
+                option_text = dropdown_font.render(line, True, (255, 255, 255))
+                option_text_rect = option_text.get_rect()
+                option_text_rect.topleft = (dropdown_x + 20, dropdown_y + 16 + i * 32)
+                self.screen.blit(option_text, option_text_rect)
+
+                # Calculate checkbox position
+                checkbox_x = dropdown_x + dropdown_width - 40
+                checkbox_rect = pygame.Rect(checkbox_x, dropdown_y + 16 + i * 29, 25, 25)
+                pygame.draw.rect(self.screen, (255, 255, 255), checkbox_rect, 2)
+
+                # Draw the checkmark if the option is checked
+                if i == 0 and self.lights_off_checked:
+                    pygame.draw.line(self.screen, (255, 255, 255), (checkbox_x + 5, dropdown_y + 20 + i * 32), (checkbox_x + 19, dropdown_y + 35 + i * 32), 2)
+                    pygame.draw.line(self.screen, (255, 255, 255), (checkbox_x + 19, dropdown_y + 20 + i * 32), (checkbox_x + 5, dropdown_y + 35 + i * 32), 2)
+                elif i == 1 and self.arrow_up_up_checked:
+                    pygame.draw.line(self.screen, (255, 255, 255), (checkbox_x + 5, dropdown_y + 18 + i * 32), (checkbox_x + 19, dropdown_y + 33 + i * 32), 2)
+                    pygame.draw.line(self.screen, (255, 255, 255), (checkbox_x + 19, dropdown_y + 18 + i * 32), (checkbox_x + 5, dropdown_y + 32 + i * 32), 2)
+                elif i == 2 and self.arrow_up_facing_checked:
+                    pygame.draw.line(self.screen, (255, 255, 255), (checkbox_x + 5, dropdown_y + 15 + i * 32), (checkbox_x + 19, dropdown_y + 30 + i * 32), 2)
+                    pygame.draw.line(self.screen, (255, 255, 255), (checkbox_x + 19, dropdown_y + 15 + i * 32), (checkbox_x + 5, dropdown_y + 30 + i * 32), 2)
+
+        # Update the display
         pygame.display.flip()
 
     def handle_events(self):
-        # Handle user interactions on the start screen
+        # Handle user events such as mouse clicks and key presses
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                # Handle the quit event
                 pygame.quit()
                 sys.exit()
+
             elif event.type == pygame.MOUSEBUTTONDOWN:
+                # Handle mouse button down events
                 mouse_pos = pygame.mouse.get_pos()
-                # Toggle tutorial checkbox
+
+                # Check if the tutorial checkbox is clicked
                 if 350 <= mouse_pos[0] <= 375 and 116 <= mouse_pos[1] <= 141:
                     self.tutorial_checked = not self.tutorial_checked
-                    self.selected_level = 0  # Reset level selection
-                # Toggle dropdown menu
-                elif 200 <= mouse_pos[0] <= 400 and 200 <= mouse_pos[1] <= 240:
+                    self.selected_level = 0
+                    return  # Exit the method to prevent closing the dropdown
+
+                # Check if the level dropdown button is clicked
+                elif 200 <= mouse_pos[0] <= 400 and 190 <= mouse_pos[1] <= 230:
                     self.dropdown_open = not self.dropdown_open
-                # Select a level from the dropdown
-                elif self.dropdown_open and 200 <= mouse_pos[0] <= 400 and 250 <= mouse_pos[1] <= 490:
-                    level_index = (mouse_pos[1] - 250) // 30
+                    self.options_dropdown_open = False
+
+                # Check if a level is selected from the dropdown
+                elif self.dropdown_open and 200 <= mouse_pos[0] <= 400 and 235 <= mouse_pos[1] <= 475:
+                    level_index = (mouse_pos[1] - 235) // 32
                     levels = self.board.no_of_levels[0] if self.tutorial_checked else self.board.no_of_levels[1]
                     if level_index < levels:
                         self.selected_level = level_index
                         self.dropdown_open = False
-                # Toggle lights checkbox
-                elif self.screen.get_width() // 2 + 65 <= mouse_pos[0] <= self.screen.get_width() // 2 + 90 and 356 <= mouse_pos[1] <= 381:
-                    self.game_state.lights_out = not self.game_state.lights_out
-                    self.board.blackout = not self.board.blackout
-                    print(f"Light toggled: {'OFF' if self.board.blackout else 'ON'}")  # Debug statement
-                    self.draw()  # Redraw to update checkbox
-                # Start the game
-                elif 200 <= mouse_pos[0] <= 400 and 410 <= mouse_pos[1] <= 450:
+
+                # Check if the options dropdown button is clicked
+                elif 200 <= mouse_pos[0] <= 400 and 450 <= mouse_pos[1] <= 490:
+                    self.options_dropdown_open = not self.options_dropdown_open
+                    self.dropdown_open = False
+
+                # Check if an option in the options dropdown is clicked
+                elif self.options_dropdown_open:
+                    dropdown_x = self.screen.get_width() // 2 - (max(dropdown_font.size(line)[0] for line in ["Lights OFF", "Arrow Up = Move Up", "Arrow Up = Move Facing Direction"]) + 80) // 2
+                    dropdown_y = 495
+
+                    # Check if the "Lights OFF" option is clicked
+                    if dropdown_x <= mouse_pos[0] <= dropdown_x + max(dropdown_font.size(line)[0] for line in ["Lights OFF", "Arrow Up = Move Up", "Arrow Up = Move Facing Direction"]) + 80 and dropdown_y + 13 <= mouse_pos[1] <= dropdown_y + 38:
+                        self.lights_off_checked = not self.lights_off_checked
+                        self.game_state.lights_out = self.lights_off_checked
+                        self.board.blackout = self.game_state.lights_out
+                        print(f"Light toggled: {'OFF' if self.board.blackout else 'ON'}")
+                        self.draw()
+
+                    # Check if the "Arrow Up = Move Up" option is clicked
+                    elif dropdown_x <= mouse_pos[0] <= dropdown_x + max(dropdown_font.size(line)[0] for line in ["Lights OFF", "Arrow Up = Move Up", "Arrow Up = Move Facing Direction"]) + 80 and dropdown_y + 43 <= mouse_pos[1] <= dropdown_y + 68:
+                        self.arrow_up_up_checked = True
+                        self.arrow_up_facing_checked = False
+                        self.game_state.move_up = True
+                        self.draw()
+
+                    # Check if the "Arrow Up = Move Facing Direction" option is clicked
+                    elif dropdown_x <= mouse_pos[0] <= dropdown_x + max(dropdown_font.size(line)[0] for line in ["Lights OFF", "Arrow Up = Move Up", "Arrow Up = Move Facing Direction"]) + 80 and dropdown_y + 73 <= mouse_pos[1] <= dropdown_y + 98:
+                        self.arrow_up_up_checked = False
+                        self.arrow_up_facing_checked = True
+                        self.game_state.move_up = False
+                        self.draw()
+
+                # Check if the "Start Game" button is clicked
+                elif 200 <= mouse_pos[0] <= 400 and 240 <= mouse_pos[1] <= 280:
                     self.game_state.game = not self.tutorial_checked
                     self.game_state.current_level = self.selected_level
                     self.game_state.is_playing = True
-                    # Reset game_state
                     self.game_state.moves = 0
                     self.game_state.total_moves = 0
                     self.game_state.lives = 3
                     return 'start_game'
-                # Show high scores
-                elif 200 <= mouse_pos[0] <= 400 and 460 <= mouse_pos[1] <= 500:
+
+                # Check if the "High Scores" button is clicked
+                elif 200 <= mouse_pos[0] <= 400 and 500 <= mouse_pos[1] <= 540:
                     self.show_high_scores = True
-                    return 'show_high_scores'
-                # Quit the game
-                elif 200 <= mouse_pos[0] <= 400 and 510 <= mouse_pos[1] <= 550:
+                    return 'show_high_scres'
+
+                # Check if the "Quit" button is clicked
+                elif 200 <= mouse_pos[0] <= 400 and 550 <= mouse_pos[1] <= 590:
                     pygame.quit()
                     sys.exit()
+
+                # Close dropdowns if clicking outside their respective areas
+                if self.dropdown_open:
+                    dropdown_x = self.screen.get_width() // 2 - (max(dropdown_font.size(line)[0] for line in ["Lights OFF", "Arrow Up = Move Up", "Arrow Up = Move Facing Direction"]) + 80) // 2
+                    dropdown_y = 235
+                    dropdown_width = max(dropdown_font.size(line)[0] for line in ["Lights OFF", "Arrow Up = Move Up", "Arrow Up = Move Facing Direction"]) + 80
+                    dropdown_height = len(["Lights OFF", "Arrow Up = Move Up", "Arrow Up = Move Facing Direction"]) * 32 + 16
+                    if not (dropdown_x <= mouse_pos[0] <= dropdown_x + dropdown_width and dropdown_y <= mouse_pos[1] <= dropdown_y + dropdown_height):
+                        if not (200 <= mouse_pos[0] <= 400 and 190 <= mouse_pos[1] <= 230):
+                            self.dropdown_open = False
+
+                if self.options_dropdown_open:
+                    dropdown_x = self.screen.get_width() // 2 - (max(dropdown_font.size(line)[0] for line in ["Lights OFF", "Arrow Up = Move Up", "Arrow Up = Move Facing Direction"]) + 80) // 2
+                    dropdown_y = 495
+                    dropdown_width = max(dropdown_font.size(line)[0] for line in ["Lights OFF", "Arrow Up = Move Up", "Arrow Up = Move Facing Direction"]) + 80
+                    dropdown_height = len(["Lights OFF", "Arrow Up = Move Up", "Arrow Up = Move Facing Direction"]) * 32 + 16
+                    if not (dropdown_x <= mouse_pos[0] <= dropdown_x + dropdown_width and dropdown_y <= mouse_pos[1] <= dropdown_y + dropdown_height):
+                        if not (200 <= mouse_pos[0] <= 400 and 450 <= mouse_pos[1] <= 490):
+                            self.options_dropdown_open = False
+
         return None
 
 def check_level_complete(board, game_state, screen, game_board):
@@ -479,81 +571,174 @@ def check_level_complete(board, game_state, screen, game_board):
 
     return False
 
-# Handle keyboard input for player movement
 def handle_input(keys, board, game_state, audio):
+    """
+    Handle keyboard input for player movement and actions.
+    """
+    # Reset movement variables for this frame to ensure no residual state affects the current frame
+    reset_movement_variables(game_state)
 
-    # Reset movement variables for this frame
-    game_state.direction = None
-    game_state.travel = 0
-    game_state.search_speed = 0.1  # Default rotation speed for searchlight, 1 == fastest
-
-    # Handle pulling first. This is instantaneous.
+    # Handle pulling action, which is instantaneous and triggered by the spacebar
     game_state.is_pulling = keys[pygame.K_SPACE]
 
-    # Handle searching with WASD keys. This is separate from arrow inputs.
-    if keys[pygame.K_w]:
-        game_state.search = 1
-        game_state.is_searching = True
-    elif keys[pygame.K_s]:
-        game_state.search = 2
-        game_state.is_searching = True
-    elif keys[pygame.K_a]:
-        game_state.search = 3
-        game_state.is_searching = True
-    elif keys[pygame.K_d]:
-        game_state.search = 4
-        game_state.is_searching = True
-    else:
-        game_state.is_searching = False
+    # Handle searching with WASD keys, which controls the searchlight direction independently of movement
+    handle_searching(keys, game_state)
 
-    # Store current position for potential rollback
-    prev_x = board.px
-    prev_y = board.py
+    # Store the current player position to allow rollback if the move is invalid or dangerous
+    prev_x, prev_y = board.px, board.py
 
-    # Process arrow keys using the mapping.
-    for key, movement in ARROW_KEYS.items():
-        if keys[key]:
-            # If the arrow key is pressed and key_locked isn't active...
-            if not game_state.key_locked:
-                # If pulling (space held), ignore facing direction checks and always move
-                if game_state.is_pulling:
-                    game_state.direction = movement['direction']
-                    game_state.travel = movement['travel']
-                    game_state.search_speed = 1  # 1 == direct change to new direction, lower rotates slower and not full rotation at once - hold key to scan to the end point.
-                else:
-                    if game_state.lights_out:
-                        # Normal logic: if you're already facing the direction, move.
-                        if game_state.facing_direction == movement['direction']:
-                            game_state.direction = movement['direction']
-                            game_state.travel = movement['travel']
-                        else:
-                            # Update the facing direction and set search properties
-                            game_state.facing_direction = movement['direction']
-                            game_state.search = movement['search']
-                            game_state.is_searching = True
-                            game_state.search_speed = 1
-                    else:
-                        game_state.direction = movement['direction']
-                        game_state.travel = movement['travel']
-                # Lock the key press so it only triggers once per physical keypress.
-                game_state.key_locked = True
-                break  # Only process one arrow key per frame
-
-    # Unlock the key if no arrow key is pressed this frame.
-    if not any(keys[k] for k in ARROW_KEYS):
-        game_state.key_locked = False
-
-    # If a movement command has been issued, attempt to move the player.
-    if game_state.direction:
+    # Process arrow key inputs for player movement and direction changes
+    if process_arrow_keys(keys, game_state, board):
+        # Attempt to move the player and boxes; if successful, increment the move count
         if move_player_and_boxes(board, audio, game_state):
             game_state.moves += 1
             return True
         else:
-            # Reset player position if move was invalid or player fell into pit
-            board.px = prev_x
-            board.py = prev_y
+            # Reset player position if the move was invalid or the player fell into a pit
+            board.px, board.py = prev_x, prev_y
 
     return False
+
+def reset_movement_variables(game_state):
+    """
+    Reset the game state variables related to movement at the start of each frame.
+    """
+    game_state.direction = None  # Reset the movement direction
+    game_state.travel = 0  # Reset the travel distance
+    game_state.search_speed = 0.1  # Reset the searchlight rotation speed to default
+
+def handle_searching(keys, game_state):
+    """
+    Handle the searching action using WASD keys, which controls the searchlight direction.
+    """
+    # Check each WASD key and set the search direction accordingly
+    if keys[pygame.K_w]:
+        set_search_direction(game_state, 1)  # Search up
+    elif keys[pygame.K_s]:
+        set_search_direction(game_state, 2)  # Search down
+    elif keys[pygame.K_a]:
+        set_search_direction(game_state, 3)  # Search left
+    elif keys[pygame.K_d]:
+        set_search_direction(game_state, 4)  # Search right
+    else:
+        game_state.is_searching = False  # No searching if no WASD key is pressed
+
+def set_search_direction(game_state, direction):
+    """
+    Set the search direction and activate searching mode.
+    """
+    game_state.search = direction  # Set the search direction
+    game_state.is_searching = True  # Activate searching mode
+
+def process_arrow_keys(keys, game_state, board):
+    """
+    Process arrow key inputs for player movement and direction changes.
+    """
+    # Iterate over each arrow key and its corresponding movement data
+    for key, movement in ARROW_KEYS.items():
+        if keys[key] and not game_state.key_locked:
+            # Handle the movement based on the arrow key pressed
+            handle_movement(game_state, movement)
+            game_state.key_locked = True  # Lock the key to prevent repeated actions from a single press
+            return True  # Only process one arrow key per frame
+
+    # Unlock the key if no arrow key is pressed this frame, allowing future input
+    if not any(keys[k] for k in ARROW_KEYS):
+        game_state.key_locked = False
+    return False
+
+def handle_movement(game_state, movement):
+    """
+    Handle the movement logic based on the current game state and movement input.
+    """
+    if game_state.move_up:
+        # Handle normal movement when the player is allowed to move up
+        handle_normal_movement(game_state, movement)
+    else:
+        # Handle alternative movement, such as rotating or moving in the facing direction
+        handle_alternative_movement(game_state, movement)
+
+def handle_normal_movement(game_state, movement):
+    """
+    Handle normal movement when the player is moving up.
+    """
+    if game_state.is_pulling:
+        # If pulling, set the movement direction and increase search speed for immediate direction change
+        set_movement_direction(game_state, movement, search_speed=1)
+    else:
+        if game_state.lights_out:
+            # Handle movement when the lights are out, affecting visibility and direction
+            handle_lights_out_movement(game_state, movement)
+        else:
+            # Normal movement without pulling or lights out
+            set_movement_direction(game_state, movement)
+
+def handle_lights_out_movement(game_state, movement):
+    """
+    Handle movement logic when the lights are out, affecting visibility.
+    """
+    if game_state.facing_direction == movement['direction']:
+        # Move in the facing direction if already aligned
+        set_movement_direction(game_state, movement)
+    else:
+        # Update the facing direction and set searching properties if not aligned
+        update_facing_direction(game_state, movement)
+
+def set_movement_direction(game_state, movement, search_speed=0.1):
+    """
+    Set the movement direction and travel distance based on the movement input.
+    """
+    game_state.direction = movement['direction']  # Set the movement direction
+    game_state.travel = movement['travel']  # Set the travel distance
+    game_state.search_speed = search_speed  # Set the searchlight rotation speed
+
+def update_facing_direction(game_state, movement):
+    """
+    Update the player's facing direction and set searching properties.
+    """
+    game_state.facing_direction = movement['direction']  # Update the facing direction
+    game_state.search = movement['search']  # Set the search direction
+    game_state.is_searching = True  # Activate searching mode
+    game_state.search_speed = 1  # Set the search speed for immediate direction change
+
+def handle_alternative_movement(game_state, movement):
+    """
+    Handle alternative movement logic, such as rotating or moving in the facing direction.
+    """
+    if movement['direction'] == 'left':
+        # Rotate the facing direction counter-clockwise
+        rotate_facing_direction(game_state, counter_clockwise=True)
+    elif movement['direction'] == 'right':
+        # Rotate the facing direction clockwise
+        rotate_facing_direction(game_state, counter_clockwise=False)
+    elif movement['direction'] in ['up', 'down']:
+        # Move in the current facing direction
+        move_in_facing_direction(game_state, movement)
+
+def rotate_facing_direction(game_state, counter_clockwise):
+    """
+    Rotate the player's facing direction clockwise or counter-clockwise.
+    """
+    directions = ['up', 'right', 'down', 'left']  # List of possible directions
+    current_index = directions.index(game_state.facing_direction)  # Find the current direction index
+    if counter_clockwise:
+        current_index = (current_index - 1) % 4  # Rotate counter-clockwise
+    else:
+        current_index = (current_index + 1) % 4  # Rotate clockwise
+    game_state.facing_direction = directions[current_index]  # Update the facing direction
+
+def move_in_facing_direction(game_state, movement):
+    """
+    Move the player in the current facing direction based on the movement input.
+    """
+    # Map the movement direction to the facing direction
+    direction_map = {
+        'up': {'up': 'up', 'down': 'down', 'left': 'left', 'right': 'right'},
+        'down': {'up': 'down', 'down': 'up', 'left': 'right', 'right': 'left'}
+    }
+    game_state.direction = direction_map[movement['direction']][game_state.facing_direction]  # Set the movement direction
+    game_state.travel = movement['travel']  # Set the travel distance
+
 
 # Handle actions when a level is completed
 def handle_level_complete(board, game_state, high_scores):
