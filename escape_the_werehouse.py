@@ -571,126 +571,174 @@ def check_level_complete(board, game_state, screen, game_board):
 
     return False
 
-# Handle keyboard input for player movement
 def handle_input(keys, board, game_state, audio):
-    # Reset movement variables for this frame
-    game_state.direction = None
-    game_state.travel = 0
-    game_state.search_speed = 0.1  # Default rotation speed for searchlight, 1 == fastest
+    """
+    Handle keyboard input for player movement and actions.
+    """
+    # Reset movement variables for this frame to ensure no residual state affects the current frame
+    reset_movement_variables(game_state)
 
-    # Handle pulling first. This is instantaneous.
+    # Handle pulling action, which is instantaneous and triggered by the spacebar
     game_state.is_pulling = keys[pygame.K_SPACE]
 
-    # Handle searching with WASD keys. This is separate from arrow inputs.
-    if keys[pygame.K_w]:
-        game_state.search = 1
-        game_state.is_searching = True
-    elif keys[pygame.K_s]:
-        game_state.search = 2
-        game_state.is_searching = True
-    elif keys[pygame.K_a]:
-        game_state.search = 3
-        game_state.is_searching = True
-    elif keys[pygame.K_d]:
-        game_state.search = 4
-        game_state.is_searching = True
-    else:
-        game_state.is_searching = False
+    # Handle searching with WASD keys, which controls the searchlight direction independently of movement
+    handle_searching(keys, game_state)
 
-    # Store current position for potential rollback
-    prev_x = board.px
-    prev_y = board.py
+    # Store the current player position to allow rollback if the move is invalid or dangerous
+    prev_x, prev_y = board.px, board.py
 
-    # Process arrow keys using the mapping.
-    for key, movement in ARROW_KEYS.items():
-        if keys[key]:
-            # If the arrow key is pressed and key_locked isn't active...
-            if not game_state.key_locked:
-                if game_state.move_up:
-                    # Normal movement style
-                    if game_state.is_pulling:
-                        game_state.direction = movement['direction']
-                        game_state.travel = movement['travel']
-                        game_state.search_speed = 1  # 1 == direct change to new direction, lower rotates slower and not full rotation at once - hold key to scan to the end point.
-                    else:
-                        if game_state.lights_out:
-                            # Normal logic: if you're already facing the direction, move.
-                            if game_state.facing_direction == movement['direction']:
-                                game_state.direction = movement['direction']
-                                game_state.travel = movement['travel']
-                            else:
-                                # Update the facing direction and set search properties
-                                game_state.facing_direction = movement['direction']
-                                game_state.search = movement['search']
-                                game_state.is_searching = True
-                                game_state.search_speed = 1
-                        else:
-                            game_state.direction = movement['direction']
-                            game_state.travel = movement['travel']
-                else:
-                    # Alternative movement style
-                    if movement['direction'] == 'left':
-                        # Rotate facing direction 90 degrees counter-clockwise
-                        if game_state.facing_direction == 'up':
-                            game_state.facing_direction = 'left'
-                        elif game_state.facing_direction == 'left':
-                            game_state.facing_direction = 'down'
-                        elif game_state.facing_direction == 'down':
-                            game_state.facing_direction = 'right'
-                        elif game_state.facing_direction == 'right':
-                            game_state.facing_direction = 'up'
-                    elif movement['direction'] == 'right':
-                        # Rotate facing direction 90 degrees clockwise
-                        if game_state.facing_direction == 'up':
-                            game_state.facing_direction = 'right'
-                        elif game_state.facing_direction == 'right':
-                            game_state.facing_direction = 'down'
-                        elif game_state.facing_direction == 'down':
-                            game_state.facing_direction = 'left'
-                        elif game_state.facing_direction == 'left':
-                            game_state.facing_direction = 'up'
-                    elif movement['direction'] == 'up':
-                        # Move forward in the current facing direction
-                        if game_state.facing_direction == 'up':
-                            game_state.direction = 'up'
-                        elif game_state.facing_direction == 'down':
-                            game_state.direction = 'down'
-                        elif game_state.facing_direction == 'left':
-                            game_state.direction = 'left'
-                        elif game_state.facing_direction == 'right':
-                            game_state.direction = 'right'
-                        game_state.travel = movement['travel']
-                    elif movement['direction'] == 'down':
-                        # Move backward in the current facing direction
-                        if game_state.facing_direction == 'up':
-                            game_state.direction = 'down'
-                        elif game_state.facing_direction == 'down':
-                            game_state.direction = 'up'
-                        elif game_state.facing_direction == 'left':
-                            game_state.direction = 'right'
-                        elif game_state.facing_direction == 'right':
-                            game_state.direction = 'left'
-                        game_state.travel = movement['travel']
-
-                # Lock the key press so it only triggers once per physical keypress.
-                game_state.key_locked = True
-                break  # Only process one arrow key per frame
-
-    # Unlock the key if no arrow key is pressed this frame.
-    if not any(keys[k] for k in ARROW_KEYS):
-        game_state.key_locked = False
-
-    # If a movement command has been issued, attempt to move the player.
-    if game_state.direction:
+    # Process arrow key inputs for player movement and direction changes
+    if process_arrow_keys(keys, game_state, board):
+        # Attempt to move the player and boxes; if successful, increment the move count
         if move_player_and_boxes(board, audio, game_state):
             game_state.moves += 1
             return True
         else:
-            # Reset player position if move was invalid or player fell into pit
-            board.px = prev_x
-            board.py = prev_y
+            # Reset player position if the move was invalid or the player fell into a pit
+            board.px, board.py = prev_x, prev_y
 
     return False
+
+def reset_movement_variables(game_state):
+    """
+    Reset the game state variables related to movement at the start of each frame.
+    """
+    game_state.direction = None  # Reset the movement direction
+    game_state.travel = 0  # Reset the travel distance
+    game_state.search_speed = 0.1  # Reset the searchlight rotation speed to default
+
+def handle_searching(keys, game_state):
+    """
+    Handle the searching action using WASD keys, which controls the searchlight direction.
+    """
+    # Check each WASD key and set the search direction accordingly
+    if keys[pygame.K_w]:
+        set_search_direction(game_state, 1)  # Search up
+    elif keys[pygame.K_s]:
+        set_search_direction(game_state, 2)  # Search down
+    elif keys[pygame.K_a]:
+        set_search_direction(game_state, 3)  # Search left
+    elif keys[pygame.K_d]:
+        set_search_direction(game_state, 4)  # Search right
+    else:
+        game_state.is_searching = False  # No searching if no WASD key is pressed
+
+def set_search_direction(game_state, direction):
+    """
+    Set the search direction and activate searching mode.
+    """
+    game_state.search = direction  # Set the search direction
+    game_state.is_searching = True  # Activate searching mode
+
+def process_arrow_keys(keys, game_state, board):
+    """
+    Process arrow key inputs for player movement and direction changes.
+    """
+    # Iterate over each arrow key and its corresponding movement data
+    for key, movement in ARROW_KEYS.items():
+        if keys[key] and not game_state.key_locked:
+            # Handle the movement based on the arrow key pressed
+            handle_movement(game_state, movement)
+            game_state.key_locked = True  # Lock the key to prevent repeated actions from a single press
+            return True  # Only process one arrow key per frame
+
+    # Unlock the key if no arrow key is pressed this frame, allowing future input
+    if not any(keys[k] for k in ARROW_KEYS):
+        game_state.key_locked = False
+    return False
+
+def handle_movement(game_state, movement):
+    """
+    Handle the movement logic based on the current game state and movement input.
+    """
+    if game_state.move_up:
+        # Handle normal movement when the player is allowed to move up
+        handle_normal_movement(game_state, movement)
+    else:
+        # Handle alternative movement, such as rotating or moving in the facing direction
+        handle_alternative_movement(game_state, movement)
+
+def handle_normal_movement(game_state, movement):
+    """
+    Handle normal movement when the player is moving up.
+    """
+    if game_state.is_pulling:
+        # If pulling, set the movement direction and increase search speed for immediate direction change
+        set_movement_direction(game_state, movement, search_speed=1)
+    else:
+        if game_state.lights_out:
+            # Handle movement when the lights are out, affecting visibility and direction
+            handle_lights_out_movement(game_state, movement)
+        else:
+            # Normal movement without pulling or lights out
+            set_movement_direction(game_state, movement)
+
+def handle_lights_out_movement(game_state, movement):
+    """
+    Handle movement logic when the lights are out, affecting visibility.
+    """
+    if game_state.facing_direction == movement['direction']:
+        # Move in the facing direction if already aligned
+        set_movement_direction(game_state, movement)
+    else:
+        # Update the facing direction and set searching properties if not aligned
+        update_facing_direction(game_state, movement)
+
+def set_movement_direction(game_state, movement, search_speed=0.1):
+    """
+    Set the movement direction and travel distance based on the movement input.
+    """
+    game_state.direction = movement['direction']  # Set the movement direction
+    game_state.travel = movement['travel']  # Set the travel distance
+    game_state.search_speed = search_speed  # Set the searchlight rotation speed
+
+def update_facing_direction(game_state, movement):
+    """
+    Update the player's facing direction and set searching properties.
+    """
+    game_state.facing_direction = movement['direction']  # Update the facing direction
+    game_state.search = movement['search']  # Set the search direction
+    game_state.is_searching = True  # Activate searching mode
+    game_state.search_speed = 1  # Set the search speed for immediate direction change
+
+def handle_alternative_movement(game_state, movement):
+    """
+    Handle alternative movement logic, such as rotating or moving in the facing direction.
+    """
+    if movement['direction'] == 'left':
+        # Rotate the facing direction counter-clockwise
+        rotate_facing_direction(game_state, counter_clockwise=True)
+    elif movement['direction'] == 'right':
+        # Rotate the facing direction clockwise
+        rotate_facing_direction(game_state, counter_clockwise=False)
+    elif movement['direction'] in ['up', 'down']:
+        # Move in the current facing direction
+        move_in_facing_direction(game_state, movement)
+
+def rotate_facing_direction(game_state, counter_clockwise):
+    """
+    Rotate the player's facing direction clockwise or counter-clockwise.
+    """
+    directions = ['up', 'right', 'down', 'left']  # List of possible directions
+    current_index = directions.index(game_state.facing_direction)  # Find the current direction index
+    if counter_clockwise:
+        current_index = (current_index - 1) % 4  # Rotate counter-clockwise
+    else:
+        current_index = (current_index + 1) % 4  # Rotate clockwise
+    game_state.facing_direction = directions[current_index]  # Update the facing direction
+
+def move_in_facing_direction(game_state, movement):
+    """
+    Move the player in the current facing direction based on the movement input.
+    """
+    # Map the movement direction to the facing direction
+    direction_map = {
+        'up': {'up': 'up', 'down': 'down', 'left': 'left', 'right': 'right'},
+        'down': {'up': 'down', 'down': 'up', 'left': 'right', 'right': 'left'}
+    }
+    game_state.direction = direction_map[movement['direction']][game_state.facing_direction]  # Set the movement direction
+    game_state.travel = movement['travel']  # Set the travel distance
+
 
 # Handle actions when a level is completed
 def handle_level_complete(board, game_state, high_scores):
