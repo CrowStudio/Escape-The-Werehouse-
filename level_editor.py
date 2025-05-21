@@ -538,7 +538,7 @@ class LevelEditor:
             }
         else:
             self.save_dialog_inputs = {
-                'level_number': '',
+                'level_number': str(len(self.level_map) + 2),
                 'level_name': '',
                 'player_direction': 'up',
                 'moves_for_3_stars': ''
@@ -563,7 +563,10 @@ class LevelEditor:
         title_text = self.header_font.render("Save Level", True, (255, 255, 255))
         dialog_surface.blit(title_text, (20, 20))
 
-        self.draw_input_field(dialog_surface, "Level Number:", 60, self.save_dialog_inputs['level_number'], 'level_number')
+        # Render "Level Number" as plain text
+        level_number_text = self.input_font.render(f"Level Number:       {self.save_dialog_inputs['level_number']}", True, (255, 255, 255))
+        dialog_surface.blit(level_number_text, (20, 60))
+
         self.draw_input_field(dialog_surface, "Level Name:", 100, self.save_dialog_inputs['level_name'], 'level_name')
         self.draw_dropdown(dialog_surface, "Player Direction:", 140, self.save_dialog_inputs['player_direction'], ['up', 'down', 'left', 'right'], self.dropdown_active)
         self.draw_input_field(dialog_surface, "Moves for 3 Stars:", 180, self.save_dialog_inputs['moves_for_3_stars'], 'moves_for_3_stars')
@@ -608,9 +611,9 @@ class LevelEditor:
 
     def handle_save_dialog_click(self, pos):
         adjusted_pos = (pos[0] - 100, pos[1] - 150)
-        if self.save_dialog_inputs['level_number_rect'].collidepoint(adjusted_pos):
-            self.active_input = 'level_number'
-        elif self.save_dialog_inputs['level_name_rect'].collidepoint(adjusted_pos):
+        # if self.save_dialog_inputs['level_number_rect'].collidepoint(adjusted_pos):
+        #     self.active_input = 'level_number'
+        if self.save_dialog_inputs['level_name_rect'].collidepoint(adjusted_pos):
             self.active_input = 'level_name'
         elif self.save_dialog_inputs['moves_for_3_stars_rect'].collidepoint(adjusted_pos):
             self.active_input = 'moves_for_3_stars'
@@ -778,18 +781,6 @@ class LevelEditor:
 
         with open(file_path, 'w') as file:
             json.dump(data, file, indent=4)
-
-    def format_level_map(self):
-        level_map_str = ""
-        for row_idx, row in enumerate(self.level_map):
-            row_str = ','.join(['FLOOR' if tile in ['BOX1', 'BOX2', 'BOX3', 'BOX4'] else tile for tile in row])
-            if row_idx == 0:
-                level_map_str += f"    {row_str},\\n"
-            elif row_idx == len(self.level_map) - 1:
-                level_map_str += f"    {row_str}\\n"
-            else:
-                level_map_str += f"    {row_str},\\n"
-        return level_map_str
 
     def find_unoccupied_floor_tile(self, box_positions):
         modified_map = [['WALL' if tile in ['BOX1', 'BOX2', 'BOX3', 'BOX4'] else tile for tile in row] for row in self.level_map]
