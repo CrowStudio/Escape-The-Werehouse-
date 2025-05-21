@@ -530,6 +530,7 @@ class LevelEditor:
         self.save_dialog_active = True
         if self.current_level_index is not None:
             selected_level = self.loaded_levels[self.current_level_index]
+            title_text = self.header_font.render("Update Level", True, (255, 255, 255))
             self.save_dialog_inputs = {
                 'level_number': str(selected_level['level']),
                 'level_name': selected_level['title'],
@@ -537,6 +538,7 @@ class LevelEditor:
                 'moves_for_3_stars': str(selected_level.get('score', ''))
             }
         else:
+            title_text = self.header_font.render("Save New Level", True, (255, 255, 255))
             self.save_dialog_inputs = {
                 'level_number': str(len(self.level_map) + 2),
                 'level_name': '',
@@ -544,7 +546,7 @@ class LevelEditor:
                 'moves_for_3_stars': ''
             }
         while self.save_dialog_active:
-            self.draw_save_dialog()
+            self.draw_save_dialog(title_text)
             pygame.display.flip()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -555,12 +557,11 @@ class LevelEditor:
                 elif event.type == pygame.KEYDOWN:
                     self.handle_save_dialog_keydown(event)
 
-    def draw_save_dialog(self):
+    def draw_save_dialog(self, title_text):
         dialog_surface = pygame.Surface((400, 360))
         dialog_surface.fill((50, 50, 50))
         pygame.draw.rect(dialog_surface, (255, 255, 255), dialog_surface.get_rect().inflate(-10, -10), 2)
 
-        title_text = self.header_font.render("Save Level", True, (255, 255, 255))
         dialog_surface.blit(title_text, (20, 20))
 
         # Render "Level Number" as plain text
@@ -611,8 +612,6 @@ class LevelEditor:
 
     def handle_save_dialog_click(self, pos):
         adjusted_pos = (pos[0] - 100, pos[1] - 150)
-        # if self.save_dialog_inputs['level_number_rect'].collidepoint(adjusted_pos):
-        #     self.active_input = 'level_number'
         if self.save_dialog_inputs['level_name_rect'].collidepoint(adjusted_pos):
             self.active_input = 'level_name'
         elif self.save_dialog_inputs['moves_for_3_stars_rect'].collidepoint(adjusted_pos):
@@ -681,7 +680,7 @@ class LevelEditor:
         player_direction = self.save_dialog_inputs['player_direction']
         moves_for_3_stars = self.save_dialog_inputs['moves_for_3_stars']
 
-        if not level_number or not level_name or not moves_for_3_stars:
+        if not level_name or not moves_for_3_stars:
             self.show_message("Input Error", "All fields must be filled.")
             return
 
