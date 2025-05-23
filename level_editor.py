@@ -689,10 +689,45 @@ class LevelEditor:
         # Format the level data
         formatted_level_data = self.format_level_data_for_saving(level_number, level_name, player_direction, moves_for_3_stars)
 
-        self.write_level_to_file(file_path, formatted_level_data)
-        self.show_message("Level Saved", f"The level '{level_name}' has been appended to the JSON file.")
+        # Update the level data in the JSON file
+        self.update_level_in_file(file_path, formatted_level_data)
+        self.show_message("Level Saved", f"The level '{level_name}' has been updated in the JSON file.")
         self.regenerate_map()
         self.save_dialog_active = False
+
+    def update_level_in_file(self, file_path, formatted_level_data):
+        with open(file_path, 'r') as file:
+            data = json.load(file)
+
+        # Update the specific level or append a new level
+        if self.current_level_index is not None and 0 <= self.current_level_index < len(data['levels']):
+            data['levels'][self.current_level_index] = {
+                "level": formatted_level_data['level_number'],
+                "title": formatted_level_data['level_name'],
+                "map": formatted_level_data['map'],
+                "active_boxes": formatted_level_data['active_boxes'],
+                "box_positions": formatted_level_data['box_positions'],
+                "player_start": formatted_level_data['player_start'],
+                "player_direction": formatted_level_data['player_direction'],
+                "exit_active": True,
+                "score": formatted_level_data['moves_for_3_stars'] if 'moves_for_3_stars' in formatted_level_data else None
+            }
+        else:
+            # Append a new level
+            data['levels'].append({
+                "level": formatted_level_data['level_number'],
+                "title": formatted_level_data['level_name'],
+                "map": formatted_level_data['map'],
+                "active_boxes": formatted_level_data['active_boxes'],
+                "box_positions": formatted_level_data['box_positions'],
+                "player_start": formatted_level_data['player_start'],
+                "player_direction": formatted_level_data['player_direction'],
+                "exit_active": True,
+                "score": formatted_level_data['moves_for_3_stars'] if 'moves_for_3_stars' in formatted_level_data else None
+            })
+
+        with open(file_path, 'w') as file:
+            json.dump(data, file, indent=4)
 
     def are_start_and_exit_tiles_placed(self):
         start_tile_placed = any(tile == 'START' for row in self.level_map for tile in row)
