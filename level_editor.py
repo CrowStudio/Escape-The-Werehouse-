@@ -530,6 +530,7 @@ class LevelEditor:
         self.save_dialog_active = True
         if self.current_level_index is not None:
             selected_level = self.loaded_levels[self.current_level_index]
+            title_text = self.header_font.render("Update Level", True, (255, 255, 255))
             self.save_dialog_inputs = {
                 'level_number': str(selected_level['level']),
                 'level_name': selected_level['title'],
@@ -537,14 +538,15 @@ class LevelEditor:
                 'moves_for_3_stars': str(selected_level.get('score', ''))
             }
         else:
+            title_text = self.header_font.render("Save New Level", True, (255, 255, 255))
             self.save_dialog_inputs = {
-                'level_number': '',
+                'level_number': str(len(self.level_map) + 2),
                 'level_name': '',
                 'player_direction': 'up',
                 'moves_for_3_stars': ''
             }
         while self.save_dialog_active:
-            self.draw_save_dialog()
+            self.draw_save_dialog(title_text)
             pygame.display.flip()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -555,15 +557,17 @@ class LevelEditor:
                 elif event.type == pygame.KEYDOWN:
                     self.handle_save_dialog_keydown(event)
 
-    def draw_save_dialog(self):
+    def draw_save_dialog(self, title_text):
         dialog_surface = pygame.Surface((400, 360))
         dialog_surface.fill((50, 50, 50))
         pygame.draw.rect(dialog_surface, (255, 255, 255), dialog_surface.get_rect().inflate(-10, -10), 2)
 
-        title_text = self.header_font.render("Save Level", True, (255, 255, 255))
         dialog_surface.blit(title_text, (20, 20))
 
-        self.draw_input_field(dialog_surface, "Level Number:", 60, self.save_dialog_inputs['level_number'], 'level_number')
+        # Render "Level Number" as plain text
+        level_number_text = self.input_font.render(f"Level Number:       {self.save_dialog_inputs['level_number']}", True, (255, 255, 255))
+        dialog_surface.blit(level_number_text, (20, 60))
+
         self.draw_input_field(dialog_surface, "Level Name:", 100, self.save_dialog_inputs['level_name'], 'level_name')
         self.draw_dropdown(dialog_surface, "Player Direction:", 140, self.save_dialog_inputs['player_direction'], ['up', 'down', 'left', 'right'], self.dropdown_active)
         self.draw_input_field(dialog_surface, "Moves for 3 Stars:", 180, self.save_dialog_inputs['moves_for_3_stars'], 'moves_for_3_stars')
@@ -608,9 +612,7 @@ class LevelEditor:
 
     def handle_save_dialog_click(self, pos):
         adjusted_pos = (pos[0] - 100, pos[1] - 150)
-        if self.save_dialog_inputs['level_number_rect'].collidepoint(adjusted_pos):
-            self.active_input = 'level_number'
-        elif self.save_dialog_inputs['level_name_rect'].collidepoint(adjusted_pos):
+        if self.save_dialog_inputs['level_name_rect'].collidepoint(adjusted_pos):
             self.active_input = 'level_name'
         elif self.save_dialog_inputs['moves_for_3_stars_rect'].collidepoint(adjusted_pos):
             self.active_input = 'moves_for_3_stars'
@@ -678,7 +680,7 @@ class LevelEditor:
         player_direction = self.save_dialog_inputs['player_direction']
         moves_for_3_stars = self.save_dialog_inputs['moves_for_3_stars']
 
-        if not level_number or not level_name or not moves_for_3_stars:
+        if not level_name or not moves_for_3_stars:
             self.show_message("Input Error", "All fields must be filled.")
             return
 
@@ -687,10 +689,45 @@ class LevelEditor:
         # Format the level data
         formatted_level_data = self.format_level_data_for_saving(level_number, level_name, player_direction, moves_for_3_stars)
 
-        self.write_level_to_file(file_path, formatted_level_data)
-        self.show_message("Level Saved", f"The level '{level_name}' has been appended to the JSON file.")
+        # Update the level data in the JSON file
+        self.update_level_in_file(file_path, formatted_level_data)
+        self.show_message("Level Saved", f"The level '{level_name}' has been updated in the JSON file.")
         self.regenerate_map()
         self.save_dialog_active = False
+
+    def update_level_in_file(self, file_path, formatted_level_data):
+        with open(file_path, 'r') as file:
+            data = json.load(file)
+
+        # Update the specific level or append a new level
+        if self.current_level_index is not None and 0 <= self.current_level_index < len(data['levels']):
+            data['levels'][self.current_level_index] = {
+                "level": formatted_level_data['level_number'],
+                "title": formatted_level_data['level_name'],
+                "map": formatted_level_data['map'],
+                "active_boxes": formatted_level_data['active_boxes'],
+                "box_positions": formatted_level_data['box_positions'],
+                "player_start": formatted_level_data['player_start'],
+                "player_direction": formatted_level_data['player_direction'],
+                "exit_active": True,
+                "score": formatted_level_data['moves_for_3_stars'] if 'moves_for_3_stars' in formatted_level_data else None
+            }
+        else:
+            # Append a new level
+            data['levels'].append({
+                "level": formatted_level_data['level_number'],
+                "title": formatted_level_data['level_name'],
+                "map": formatted_level_data['map'],
+                "active_boxes": formatted_level_data['active_boxes'],
+                "box_positions": formatted_level_data['box_positions'],
+                "player_start": formatted_level_data['player_start'],
+                "player_direction": formatted_level_data['player_direction'],
+                "exit_active": True,
+                "score": formatted_level_data['moves_for_3_stars'] if 'moves_for_3_stars' in formatted_level_data else None
+            })
+
+        with open(file_path, 'w') as file:
+            json.dump(data, file, indent=4)
 
     def are_start_and_exit_tiles_placed(self):
         start_tile_placed = any(tile == 'START' for row in self.level_map for tile in row)
@@ -778,18 +815,6 @@ class LevelEditor:
 
         with open(file_path, 'w') as file:
             json.dump(data, file, indent=4)
-
-    def format_level_map(self):
-        level_map_str = ""
-        for row_idx, row in enumerate(self.level_map):
-            row_str = ','.join(['FLOOR' if tile in ['BOX1', 'BOX2', 'BOX3', 'BOX4'] else tile for tile in row])
-            if row_idx == 0:
-                level_map_str += f"    {row_str},\\n"
-            elif row_idx == len(self.level_map) - 1:
-                level_map_str += f"    {row_str}\\n"
-            else:
-                level_map_str += f"    {row_str},\\n"
-        return level_map_str
 
     def find_unoccupied_floor_tile(self, box_positions):
         modified_map = [['WALL' if tile in ['BOX1', 'BOX2', 'BOX3', 'BOX4'] else tile for tile in row] for row in self.level_map]
