@@ -591,7 +591,9 @@ def handle_input(keys, board, game_state, audio):
     if process_arrow_keys(keys, game_state, board):
         # Attempt to move the player and boxes; if successful, increment the move count
         if move_player_and_boxes(board, audio, game_state):
-            game_state.moves += 1
+            # Only increment the move count if the player's position has changed
+            if (board.px, board.py) != (prev_x, prev_y):
+                game_state.moves += 1
             return True
         else:
             # Reset player position if the move was invalid or the player fell into a pit
