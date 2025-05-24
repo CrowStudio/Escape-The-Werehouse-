@@ -526,6 +526,16 @@ class LevelEditor:
         pygame.display.flip()
         pygame.time.wait(2000)
 
+    def handle_save_dialog_keydown(self, event):
+        if event.key == pygame.K_RETURN:
+            self.save_level_data()
+        elif event.key == pygame.K_BACKSPACE:
+            if self.active_input in self.save_dialog_inputs:
+                self.save_dialog_inputs[self.active_input] = self.save_dialog_inputs[self.active_input][:-1]
+        else:
+            if self.active_input in self.save_dialog_inputs:
+                self.save_dialog_inputs[self.active_input] += event.unicode
+
     def show_save_dialog(self):
         self.save_dialog_active = True
         if self.current_level_index is not None:
@@ -535,15 +545,22 @@ class LevelEditor:
                 'level_number': str(selected_level['level']),
                 'level_name': selected_level['title'],
                 'player_direction': selected_level['player_direction'],
-                'moves_for_3_stars': str(selected_level.get('score', ''))
+                'moves_for_3_stars': str(selected_level.get('score', '')),
+                'save_as_new': False  # Checkbox init state
             }
         else:
+            # Determine the next available level number
+            if not self.loaded_levels:
+                next_level_number = len(self.level_map) + 2
+            else:
+                next_level_number = len(self.loaded_levels) + 1
             title_text = self.header_font.render("Save New Level", True, (255, 255, 255))
             self.save_dialog_inputs = {
-                'level_number': str(len(self.level_map) + 2),
+                'level_number': str(next_level_number),
                 'level_name': '',
                 'player_direction': 'up',
-                'moves_for_3_stars': ''
+                'moves_for_3_stars': '',
+                'save_as_new': False  # Checkbox init state
             }
         while self.save_dialog_active:
             self.draw_save_dialog(title_text)
@@ -558,7 +575,7 @@ class LevelEditor:
                     self.handle_save_dialog_keydown(event)
 
     def draw_save_dialog(self, title_text):
-        dialog_surface = pygame.Surface((400, 360))
+        dialog_surface = pygame.Surface((400, 400))
         dialog_surface.fill((50, 50, 50))
         pygame.draw.rect(dialog_surface, (255, 255, 255), dialog_surface.get_rect().inflate(-10, -10), 2)
 
@@ -572,19 +589,29 @@ class LevelEditor:
         self.draw_dropdown(dialog_surface, "Player Direction:", 140, self.save_dialog_inputs['player_direction'], ['up', 'down', 'left', 'right'], self.dropdown_active)
         self.draw_input_field(dialog_surface, "Moves for 3 Stars:", 180, self.save_dialog_inputs['moves_for_3_stars'], 'moves_for_3_stars')
 
-        save_button_rect = pygame.Rect(150, 300, 100, 40)
+        # Draw the checkbox if current_level_index is not None
+        if self.current_level_index is not None:
+            checkbox_rect = pygame.Rect(182, 222, 25, 25)
+            pygame.draw.rect(dialog_surface, (255, 255, 255), checkbox_rect, 2)
+            if self.save_dialog_inputs['save_as_new']:
+                pygame.draw.line(dialog_surface, (255, 255, 255), (187, 227), (199, 240), 2)
+                pygame.draw.line(dialog_surface, (255, 255, 255), (199, 227), (187, 240), 2)
+            checkbox_text = self.input_font.render("Save as new level", True, (255, 255, 255))
+            dialog_surface.blit(checkbox_text, (18, 220))
+
+        save_button_rect = pygame.Rect(150, 350, 100, 40)  # Adjusted position
         pygame.draw.rect(dialog_surface, (0, 200, 0), save_button_rect)
         save_button_text = self.button_font.render("Save", True, (255, 255, 255))
         dialog_surface.blit(save_button_text, save_button_text.get_rect(center=save_button_rect.center))
 
-        cancel_button_rect = pygame.Rect(260, 300, 100, 40)
+        cancel_button_rect = pygame.Rect(260, 350, 100, 40)  # Adjusted position
         pygame.draw.rect(dialog_surface, (200, 0, 0), cancel_button_rect)
         cancel_button_text = self.button_font.render("Cancel", True, (255, 255, 255))
         dialog_surface.blit(cancel_button_text, cancel_button_text.get_rect(center=cancel_button_rect.center))
 
         if self.dropdown_active:
             for i, option in enumerate(self.save_dialog_inputs['player_direction_options']):
-                option_rect = pygame.Rect(180, 170 + i * 30, 200, 30)
+                option_rect = pygame.Rect(182, 170 + i * 30, 200, 30)
                 pygame.draw.rect(dialog_surface, (80, 80, 80), option_rect)
                 option_text = self.input_font.render(option, True, (255, 255, 255))
                 dialog_surface.blit(option_text, (option_rect.x + 5, option_rect.y))
@@ -600,16 +627,6 @@ class LevelEditor:
 
         self.screen.blit(dialog_surface, (100, 150))
 
-    def handle_save_dialog_keydown(self, event):
-        if event.key == pygame.K_RETURN:
-            self.save_level_data()
-        elif event.key == pygame.K_BACKSPACE:
-            if self.active_input in self.save_dialog_inputs:
-                self.save_dialog_inputs[self.active_input] = self.save_dialog_inputs[self.active_input][:-1]
-        else:
-            if self.active_input in self.save_dialog_inputs:
-                self.save_dialog_inputs[self.active_input] += event.unicode
-
     def handle_save_dialog_click(self, pos):
         adjusted_pos = (pos[0] - 100, pos[1] - 150)
         if self.save_dialog_inputs['level_name_rect'].collidepoint(adjusted_pos):
@@ -620,20 +637,29 @@ class LevelEditor:
             self.toggle_dropdown()
         elif self.dropdown_active and self.save_dialog_inputs['player_direction_options']:
             for i, option in enumerate(self.save_dialog_inputs['player_direction_options']):
-                option_rect = pygame.Rect(180, 170 + i * 30, 200, 30)
+                option_rect = pygame.Rect(182, 170 + i * 30, 200, 30)
                 if option_rect.collidepoint(adjusted_pos):
                     self.save_dialog_inputs['player_direction'] = option
                     self.dropdown_active = False
                     break
-        elif pygame.Rect(150, 290, 100, 40).collidepoint(adjusted_pos):
+        elif self.current_level_index is not None and pygame.Rect(180, 220, 20, 20).collidepoint(adjusted_pos):
+            self.save_dialog_inputs['save_as_new'] = not self.save_dialog_inputs['save_as_new']
+            if self.save_dialog_inputs['save_as_new']:
+                # Change level number to last level number + 1
+                self.save_dialog_inputs['level_number'] = str(len(self.loaded_levels) + 1)
+            else:
+                # Revert to the loaded level number
+                selected_level = self.loaded_levels[self.current_level_index]
+                self.save_dialog_inputs['level_number'] = str(selected_level['level'])
+        elif pygame.Rect(150, 340, 100, 40).collidepoint(adjusted_pos):
             self.save_level_data()
-        elif pygame.Rect(260, 290, 100, 40).collidepoint(adjusted_pos):
+        elif pygame.Rect(260, 340, 100, 40).collidepoint(adjusted_pos):
             self.save_dialog_active = False
 
     def draw_input_field(self, surface, label, y, value, key):
         label_text = self.input_font.render(label, True, (255, 255, 255))
-        surface.blit(label_text, (20, y))
-        input_rect = pygame.Rect(180, y, 200, 30)
+        surface.blit(label_text, (18, y))
+        input_rect = pygame.Rect(182, y, 200, 30)
         pygame.draw.rect(surface, (255, 255, 255), input_rect, 2)
         input_text = self.input_font.render(value, True, (255, 255, 255))
         surface.blit(input_text, (input_rect.x + 5, input_rect.y + 1))
@@ -641,8 +667,8 @@ class LevelEditor:
 
     def draw_dropdown(self, surface, label, y, value, options, is_active=False):
         label_text = self.input_font.render(label, True, (255, 255, 255))
-        surface.blit(label_text, (20, y))
-        dropdown_rect = pygame.Rect(180, y, 200, 30)
+        surface.blit(label_text, (18, y))
+        dropdown_rect = pygame.Rect(182, y, 200, 30)
         pygame.draw.rect(surface, (50, 50, 50), dropdown_rect)
         dropdown_text = self.input_font.render(value, True, (255, 255, 255))
         surface.blit(dropdown_text, (dropdown_rect.x + 5, dropdown_rect.y))
@@ -655,7 +681,7 @@ class LevelEditor:
                 self.toggle_dropdown()
             elif self.dropdown_active:
                 for i, option in enumerate(self.save_dialog_inputs['player_direction_options']):
-                    option_rect = pygame.Rect(180, 170 + i * 30, 200, 30)
+                    option_rect = pygame.Rect(182, 170 + i * 30, 200, 30)
                     if option_rect.collidepoint(event.pos):
                         self.save_dialog_inputs['player_direction'] = option
                         self.dropdown_active = False
@@ -691,16 +717,27 @@ class LevelEditor:
 
         # Update the level data in the JSON file
         self.update_level_in_file(file_path, formatted_level_data)
-        self.show_message("Level Saved", f"The level '{level_name}' has been updated in the JSON file.")
+
+        # Determine if the level is being saved as a new level
+        is_new_level = self.current_level_index is None or self.save_dialog_inputs.get('save_as_new', False)
+
+        if is_new_level:
+            self.show_message("Level Saved", f"The level '{level_name}' has been saved.")
+        else:
+            self.show_message("Level Saved", f"The level '{level_name}' has been updated.")
+
         self.regenerate_map()
         self.save_dialog_active = False
+
+        # Reload levels to ensure self.loaded_levels is up-to-date
+        self.load_levels_from_json()
 
     def update_level_in_file(self, file_path, formatted_level_data):
         with open(file_path, 'r') as file:
             data = json.load(file)
 
         # Update the specific level or append a new level
-        if self.current_level_index is not None and 0 <= self.current_level_index < len(data['levels']):
+        if self.current_level_index is not None and 0 <= self.current_level_index < len(data['levels']) and not self.save_dialog_inputs.get('save_as_new', False):
             data['levels'][self.current_level_index] = {
                 "level": formatted_level_data['level_number'],
                 "title": formatted_level_data['level_name'],
