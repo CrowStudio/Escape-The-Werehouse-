@@ -520,7 +520,7 @@ class StartScreen:
                     if not (dropdown_x <= mouse_pos[0] <= dropdown_x + dropdown_width and dropdown_y <= mouse_pos[1] <= dropdown_y + dropdown_height):
                         if not (200 <= mouse_pos[0] <= 400 and 450 <= mouse_pos[1] <= 490):
                             self.options_dropdown_open = False
-
+                             
         return None
 
 def check_level_complete(board, game_state, screen, game_board):
