@@ -2,6 +2,7 @@ import sys
 import os
 import logging
 import pygame
+import subprocess
 # from game_board.maps import game_maps, tutorial_maps
 from game_board import BoardElements, TileType, TILE_SIZE
 
@@ -271,6 +272,9 @@ class StartScreen:
         title_center = title_text.get_rect(center=(self.screen.get_width() // 2, 50))
         self.screen.blit(title_text, title_center)
 
+        # Store the position of the letter "E" in the title
+        self.e_position = (title_center.x + 10, title_center.y)  # Adjust the x offset as needed
+
         # Tutorial checkbox
         tutorial_text = font.render('Tutorial', True, (255, 255, 255))
         tutorial_check = pygame.Rect(350, 116, 25, 25)
@@ -431,6 +435,10 @@ class StartScreen:
                 # Handle mouse button down events
                 mouse_pos = pygame.mouse.get_pos()
 
+                # Check if the letter "E" in the title is clicked
+                if self.is_e_clicked(mouse_pos):
+                    self.launch_level_editor()
+
                 # Check if the tutorial checkbox is clicked
                 if 350 <= mouse_pos[0] <= 375 and 116 <= mouse_pos[1] <= 141:
                     self.tutorial_checked = not self.tutorial_checked
@@ -495,7 +503,7 @@ class StartScreen:
                 # Check if the "High Scores" button is clicked
                 elif 200 <= mouse_pos[0] <= 400 and 500 <= mouse_pos[1] <= 540:
                     self.show_high_scores = True
-                    return 'show_high_scres'
+                    return 'show_high_scores'
 
                 # Check if the "Quit" button is clicked
                 elif 200 <= mouse_pos[0] <= 400 and 550 <= mouse_pos[1] <= 590:
@@ -520,8 +528,17 @@ class StartScreen:
                     if not (dropdown_x <= mouse_pos[0] <= dropdown_x + dropdown_width and dropdown_y <= mouse_pos[1] <= dropdown_y + dropdown_height):
                         if not (200 <= mouse_pos[0] <= 400 and 450 <= mouse_pos[1] <= 490):
                             self.options_dropdown_open = False
-                             
+
         return None
+
+    def is_e_clicked(self, mouse_pos):
+        # Define the area around the letter "E"
+        e_rect = pygame.Rect(self.e_position[0], self.e_position[1], 20, 40)  # Adjust the width and height as needed
+        return e_rect.collidepoint(mouse_pos)
+
+    def launch_level_editor(self):
+        # Launch the level editor script
+        subprocess.Popen([sys.executable, "level_editor.py"])
 
 def check_level_complete(board, game_state, screen, game_board):
     # Check if the current level is complete
