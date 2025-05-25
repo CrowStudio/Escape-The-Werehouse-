@@ -234,7 +234,7 @@ class GameState:
         self.debounce_timer = 0  # To avoid unwanted movements
         self.a_key_pressed = False
 
-        self.move_up = True
+        self.normal_movement = True
         self.travel = 0  # Only keep track of direction
         self.direction = None
         self.facing_direction = 'up'  # New attribute to track facing direction
@@ -243,7 +243,7 @@ class GameState:
         self.lights_out = False  # New attribute for lights checkbox
         self.is_searching = False
         self.search = 0
-        self.search_speed = 0.1
+        self.search_speed = 0.4
 
 class StartScreen:
     def __init__(self, screen, game_state, high_scores, board):
@@ -472,14 +472,14 @@ class StartScreen:
                     elif dropdown_x <= mouse_pos[0] <= dropdown_x + max(dropdown_font.size(line)[0] for line in ["Lights OFF", "Arrow Up = Move Up", "Arrow Up = Move Facing Direction"]) + 80 and dropdown_y + 43 <= mouse_pos[1] <= dropdown_y + 68:
                         self.arrow_up_up_checked = True
                         self.arrow_up_facing_checked = False
-                        self.game_state.move_up = True
+                        self.game_state.normal_movement = True
                         self.draw()
 
                     # Check if the "Arrow Up = Move Facing Direction" option is clicked
                     elif dropdown_x <= mouse_pos[0] <= dropdown_x + max(dropdown_font.size(line)[0] for line in ["Lights OFF", "Arrow Up = Move Up", "Arrow Up = Move Facing Direction"]) + 80 and dropdown_y + 73 <= mouse_pos[1] <= dropdown_y + 98:
                         self.arrow_up_up_checked = False
                         self.arrow_up_facing_checked = True
-                        self.game_state.move_up = False
+                        self.game_state.normal_movement = False
                         self.draw()
 
                 # Check if the "Start Game" button is clicked
@@ -544,9 +544,6 @@ def check_level_complete(board, game_state, screen, game_board):
 
                 # Show score for completed level
                 if game_state.game:
-                    # Add moves to total_moves for high scores
-                    game_state.total_moves += game_state.moves
-
                     pygame.display.set_caption(f'Escape the Werehouse!')
 
                     # Draw the status bar at the top
@@ -591,7 +588,11 @@ def handle_input(keys, board, game_state, audio):
     if process_arrow_keys(keys, game_state, board):
         # Attempt to move the player and boxes; if successful, increment the move count
         if move_player_and_boxes(board, audio, game_state):
-            game_state.moves += 1
+            # Only increment the move count if the player's position has changed
+            if (board.px, board.py) != (prev_x, prev_y):
+                game_state.moves += 1
+                # Add moves to total_moves for high scores
+                game_state.total_moves += 1
             return True
         else:
             # Reset player position if the move was invalid or the player fell into a pit
@@ -605,7 +606,6 @@ def reset_movement_variables(game_state):
     """
     game_state.direction = None  # Reset the movement direction
     game_state.travel = 0  # Reset the travel distance
-    game_state.search_speed = 0.1  # Reset the searchlight rotation speed to default
 
 def handle_searching(keys, game_state):
     """
@@ -621,12 +621,14 @@ def handle_searching(keys, game_state):
     elif keys[pygame.K_d]:
         set_search_direction(game_state, 4)  # Search right
     else:
+        game_state.search_speed = 0.4
         game_state.is_searching = False  # No searching if no WASD key is pressed
 
 def set_search_direction(game_state, direction):
     """
     Set the search direction and activate searching mode.
     """
+    game_state.search_speed = 0.1
     game_state.search = direction  # Set the search direction
     game_state.is_searching = True  # Activate searching mode
 
@@ -651,7 +653,7 @@ def handle_movement(game_state, movement):
     """
     Handle the movement logic based on the current game state and movement input.
     """
-    if game_state.move_up:
+    if game_state.normal_movement:
         # Handle normal movement when the player is allowed to move up
         handle_normal_movement(game_state, movement)
     else:
@@ -662,16 +664,15 @@ def handle_normal_movement(game_state, movement):
     """
     Handle normal movement when the player is moving up.
     """
-    if game_state.is_pulling:
-        # If pulling, set the movement direction and increase search speed for immediate direction change
-        set_movement_direction(game_state, movement, search_speed=1)
+    if game_state.lights_out and not game_state.is_pulling:
+        # Handle movement when the lights are out, affecting visibility and direction
+        handle_lights_out_movement(game_state, movement)
+    elif game_state.is_pulling:
+        # If pulling, set the movement direction
+        set_movement_direction(game_state, movement)
     else:
-        if game_state.lights_out:
-            # Handle movement when the lights are out, affecting visibility and direction
-            handle_lights_out_movement(game_state, movement)
-        else:
-            # Normal movement without pulling or lights out
-            set_movement_direction(game_state, movement)
+        # Normal movement without pulling or lights out
+        set_movement_direction(game_state, movement)
 
 def handle_lights_out_movement(game_state, movement):
     """
@@ -684,13 +685,12 @@ def handle_lights_out_movement(game_state, movement):
         # Update the facing direction and set searching properties if not aligned
         update_facing_direction(game_state, movement)
 
-def set_movement_direction(game_state, movement, search_speed=0.1):
+def set_movement_direction(game_state, movement):
     """
     Set the movement direction and travel distance based on the movement input.
     """
     game_state.direction = movement['direction']  # Set the movement direction
     game_state.travel = movement['travel']  # Set the travel distance
-    game_state.search_speed = search_speed  # Set the searchlight rotation speed
 
 def update_facing_direction(game_state, movement):
     """
@@ -699,7 +699,6 @@ def update_facing_direction(game_state, movement):
     game_state.facing_direction = movement['direction']  # Update the facing direction
     game_state.search = movement['search']  # Set the search direction
     game_state.is_searching = True  # Activate searching mode
-    game_state.search_speed = 1  # Set the search speed for immediate direction change
 
 def handle_alternative_movement(game_state, movement):
     """
@@ -738,7 +737,6 @@ def move_in_facing_direction(game_state, movement):
     }
     game_state.direction = direction_map[movement['direction']][game_state.facing_direction]  # Set the movement direction
     game_state.travel = movement['travel']  # Set the travel distance
-
 
 # Handle actions when a level is completed
 def handle_level_complete(board, game_state, high_scores):
@@ -845,6 +843,16 @@ def move_player_and_boxes(board, audio, game_state):
                 audio.play_sound('fall')
             else:
                 audio.play_sound('move')
+
+    # Check if player falls into pit
+    if check_player_in_pit(board, game_state, new_x, new_y, audio):
+        return False  # Movement was valid but player fell
+
+    # Move player to new position
+    board.px = new_x
+    board.py = new_y
+
+    return True
 
     # Check if player falls into pit
     if check_player_in_pit(board, game_state, new_x, new_y, audio):

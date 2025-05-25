@@ -643,7 +643,7 @@ class BoardElements():
     def blit_player(self, game_board, game_state, p_move):
         '''blit_player'''
         # If play equals True
-        if self.play and game_state.move_up:
+        if self.play and game_state.normal_movement:
             # If movement is Up
             # - Blit player in direction of y corresponding of p_move' value
             if game_state.travel == 1 and not game_state.is_pulling:
@@ -756,16 +756,16 @@ class BoardElements():
             if game_state.is_pulling:
                 # Map travel directions to opposite angles when pulling
                 travel_to_opposite = {1: 'down', 2: 'up', 3: 'right', 4: 'left'}
-                if game_state.travel in travel_to_opposite:
-                    target_angle = direction_to_angle[travel_to_opposite[game_state.travel]]
+                if game_state.direction in travel_to_opposite:
+                    target_angle = direction_to_angle[travel_to_opposite[game_state.direction]]
             elif game_state.is_searching:
                 # Map search directions to angles
                 search_to_direction = {1: 'up', 2: 'down', 3: 'left', 4: 'right'}
                 if game_state.search in search_to_direction:
                     target_angle = direction_to_angle[search_to_direction[game_state.search]]
             else:
-                if game_state.move_up:
-                    # Map travel directions to angles when move_up is True
+                if game_state.normal_movement:
+                    # Map travel directions to angles when normal_movement is True
                     travel_to_direction = {1: 'up', 2: 'down', 3: 'left', 4: 'right'}
                     if game_state.travel in travel_to_direction:
                         target_angle = direction_to_angle[travel_to_direction[game_state.travel]]
