@@ -1,7 +1,8 @@
 import pygame
-import math
-from random import randrange
 import time
+import math
+import random
+from random import randrange
 from game_board.elements import gfx
 import json
 import os
@@ -829,3 +830,70 @@ class BoardElements():
             pygame.draw.circle(mask, (0, 0, 0, 0), player_center, inner_circle_radius)
             # Finally, blit the mask onto the game board.
             game_board.blit(mask, (0, 0))
+
+    def flicker_effect(self, game_board, game_state, board, screen):
+        if self.blackout:
+            screen.fill((30, 30, 30))
+            bar_rect = pygame.Rect(0, board.offset_y - board.offset_y, screen.get_width(), board.offset_y)
+            font = pygame.font.SysFont('Lucida Console', 24)  # Font for UI text
+            moves_text = font.render(f'Moves: {game_state.moves}', True, (255, 255, 255))
+            total_moves_text = font.render(f'Total Moves: {game_state.total_moves}', True, (255, 255, 255))
+            lives_text = font.render(f'Lives: {game_state.lives}', True, (255, 255, 255))
+            # Define the base pattern of on/off durations in seconds
+            base_pattern = [
+                (0.8, 0.2),
+                (0.15, 0.05),
+                (0.3, 0.05),
+                (0.035, 0.05),
+                (0.015, 0.01)
+            ]
+
+            # Loop through the base pattern and apply random variations
+            for on_time, off_time in base_pattern:
+                # Apply slight random variations to the on and off times
+                on_time = max(0.01, on_time + random.uniform(-0.05, 0.05))
+                off_time = max(0.01, off_time + random.uniform(-0.05, 0.05))
+
+                # Apply the on time with a mask of lower opacity
+                mask = pygame.Surface((self.game_board_x, self.game_board_y + self.offset_y), pygame.SRCALPHA)
+                mask.fill((0, 0, 0, 76))  # Lower opacity
+                game_board.fill((30, 30, 30))  # Lighter shade
+                self.blit_level(game_board)
+                self.blit_box_1(game_board, 0, 0)
+                self.blit_box_2(game_board, 0, 0)
+                self.blit_box_3(game_board, 0, 0)
+                self.blit_box_4(game_board, 0, 0)
+                self.blit_player(game_board, game_state, 0)  # Assuming 0 as a placeholder for p_move
+                game_board.blit(mask, (0, 0))
+                # Render status bar
+                pygame.draw.rect(screen, (50, 50, 50), bar_rect)  # Dark gray color for the bar
+                game_board.blit(moves_text, (10, 10))
+                game_board.blit(total_moves_text, (200, 10))
+                game_board.blit(lives_text, (480, 10))
+                pygame.display.update()
+                time.sleep(on_time)
+
+                # Apply the off time with a mask of higher opacity
+                mask = pygame.Surface((self.game_board_x, self.game_board_y + self.offset_y), pygame.SRCALPHA)
+                mask.fill((0, 0, 0, 249))  # Higher opacity
+                game_board.fill((30, 30, 30))  # Lighter shade
+                self.blit_level(game_board)
+                self.blit_box_1(game_board, 0, 0)
+                self.blit_box_2(game_board, 0, 0)
+                self.blit_box_3(game_board, 0, 0)
+                self.blit_box_4(game_board, 0, 0)
+                game_board.blit(mask, (0, 0))
+                # Render status bar
+                pygame.draw.rect(screen, (50, 50, 50), bar_rect)  # Dark gray color for the bar
+                game_board.blit(moves_text, (10, 10))
+                game_board.blit(total_moves_text, (200, 10))
+                game_board.blit(lives_text, (480, 10))
+                pygame.display.update()
+                time.sleep(off_time)
+
+            # Add a delay before turning on the flashlight beam
+            time.sleep(1)
+
+            # Turn on the flashlight beam
+            self.apply_blackout(game_board, game_state)
+            pygame.display.update()

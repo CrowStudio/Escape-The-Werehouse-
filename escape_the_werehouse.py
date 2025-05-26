@@ -1123,6 +1123,8 @@ def main():
             game_board = pygame.display.set_mode((board.game_board_x, board.game_board_y + board.offset_y))  # Adjust the height
             game_state.new_level = True  # Reset level to start from the selected one
 
+
+
             # Main game loop
             while game_state.is_playing:
                 for event in pygame.event.get():
@@ -1135,6 +1137,10 @@ def main():
                     board.lv = game_state.current_level
                     mode_index = 0 if game_state.game == False else 1
                     game_state.new_level = board.generate_level(game_board, game_state, True, mode_index)
+
+                    # Apply flickering effect if lights are off
+                    if game_state.lights_out:
+                        board.flicker_effect(game_board, game_state, board, screen)
 
                 # Handle input only if not in movement cooldown
                 if game_state.debounce_timer == 0:
