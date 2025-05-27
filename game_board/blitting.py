@@ -839,6 +839,7 @@ class BoardElements():
             moves_text = font.render(f'Moves: {game_state.moves}', True, (255, 255, 255))
             total_moves_text = font.render(f'Total Moves: {game_state.total_moves}', True, (255, 255, 255))
             lives_text = font.render(f'Lives: {game_state.lives}', True, (255, 255, 255))
+
             # Define the base pattern of on/off durations in seconds
             base_pattern = [
                 (0.8, 0.2),
@@ -848,30 +849,50 @@ class BoardElements():
                 (0.015, 0.01)
             ]
 
+            first_iteration = True  # Flag to track the first iteration
+
             # Loop through the base pattern and apply random variations
             for on_time, off_time in base_pattern:
                 # Apply slight random variations to the on and off times
                 on_time = max(0.01, on_time + random.uniform(-0.05, 0.05))
                 off_time = max(0.01, off_time + random.uniform(-0.05, 0.05))
 
-                # Apply the on time with a mask of lower opacity
-                mask = pygame.Surface((self.game_board_x, self.game_board_y + self.offset_y), pygame.SRCALPHA)
-                mask.fill((0, 0, 0, 76))  # Lower opacity
-                game_board.fill((30, 30, 30))  # Lighter shade
-                self.blit_level(game_board)
-                self.blit_box_1(game_board, 0, 0)
-                self.blit_box_2(game_board, 0, 0)
-                self.blit_box_3(game_board, 0, 0)
-                self.blit_box_4(game_board, 0, 0)
-                self.blit_player(game_board, game_state, 0)  # Assuming 0 as a placeholder for p_move
-                game_board.blit(mask, (0, 0))
-                # Render status bar
-                pygame.draw.rect(screen, (50, 50, 50), bar_rect)  # Dark gray color for the bar
-                game_board.blit(moves_text, (10, 10))
-                game_board.blit(total_moves_text, (200, 10))
-                game_board.blit(lives_text, (480, 10))
-                pygame.display.update()
-                time.sleep(on_time)
+                if first_iteration:
+                    # First iteration: no mask
+                    game_board.fill((30, 30, 30))  # Lighter shade
+                    self.blit_level(game_board)
+                    self.blit_box_1(game_board, 0, 0)
+                    self.blit_box_2(game_board, 0, 0)
+                    self.blit_box_3(game_board, 0, 0)
+                    self.blit_box_4(game_board, 0, 0)
+                    self.blit_player(game_board, game_state, 0)  # Assuming 0 as a placeholder for p_move
+                    # Render status bar
+                    pygame.draw.rect(screen, (50, 50, 50), bar_rect)  # Dark gray color for the bar
+                    game_board.blit(moves_text, (10, 10))
+                    game_board.blit(total_moves_text, (200, 10))
+                    game_board.blit(lives_text, (480, 10))
+                    pygame.display.update()
+                    time.sleep(on_time)
+                    first_iteration = False
+                else:
+                    # Apply the on time with a mask of lower opacity
+                    mask = pygame.Surface((self.game_board_x, self.game_board_y + self.offset_y), pygame.SRCALPHA)
+                    mask.fill((0, 0, 0, 76))  # Lower opacity
+                    game_board.fill((30, 30, 30))  # Lighter shade
+                    self.blit_level(game_board)
+                    self.blit_box_1(game_board, 0, 0)
+                    self.blit_box_2(game_board, 0, 0)
+                    self.blit_box_3(game_board, 0, 0)
+                    self.blit_box_4(game_board, 0, 0)
+                    self.blit_player(game_board, game_state, 0)  # Assuming 0 as a placeholder for p_move
+                    game_board.blit(mask, (0, 0))
+                    # Render status bar
+                    pygame.draw.rect(screen, (50, 50, 50), bar_rect)  # Dark gray color for the bar
+                    game_board.blit(moves_text, (10, 10))
+                    game_board.blit(total_moves_text, (200, 10))
+                    game_board.blit(lives_text, (480, 10))
+                    pygame.display.update()
+                    time.sleep(on_time)
 
                 # Apply the off time with a mask of higher opacity
                 mask = pygame.Surface((self.game_board_x, self.game_board_y + self.offset_y), pygame.SRCALPHA)
