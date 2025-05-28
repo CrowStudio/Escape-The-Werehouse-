@@ -940,6 +940,7 @@ class BoardElements():
         # Decrease alpha gradually from 255 (opaque) to 0 (transparent)
         for alpha in range(255, 0, -10):
             # Re-blit the game state each frame
+            screen.fill((30, 30, 30))
             board.blit_level(screen)
             board.blit_box_1(screen, 0, 0)
             board.blit_box_2(screen, 0, 0)
