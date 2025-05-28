@@ -1,7 +1,8 @@
 import pygame
-import math
-from random import randrange
 import time
+import math
+import random
+from random import randrange
 from game_board.elements import gfx
 import json
 import os
@@ -829,3 +830,199 @@ class BoardElements():
             pygame.draw.circle(mask, (0, 0, 0, 0), player_center, inner_circle_radius)
             # Finally, blit the mask onto the game board.
             game_board.blit(mask, (0, 0))
+
+    def flicker_effect(self, game_board, game_state, board, screen):
+        if self.blackout:
+            screen.fill((30, 30, 30))
+            # Status bar
+            bar_rect = pygame.Rect(0, board.offset_y - board.offset_y, screen.get_width(), board.offset_y)
+            font = pygame.font.SysFont('Lucida Console', 24)  # Font for UI text
+            moves_text = font.render(f'Moves: {game_state.moves}', True, (255, 255, 255))
+            total_moves_text = font.render(f'Total Moves: {game_state.total_moves}', True, (255, 255, 255))
+            lives_text = font.render(f'Lives: {game_state.lives}', True, (255, 255, 255))
+            # Tutorial bar
+            tutorial_font = pygame.font.SysFont('Lucida Console', 12)  # Font for tutorial text
+            tutorial_text = tutorial_font.render(f'{board.map_title[0][game_state.current_level]}', True, (255, 255, 255)) # Set status bar
+
+            # Define the base pattern of on/off durations in seconds
+            base_pattern = [
+                (0.8, 0.2),
+                (0.15, 0.05),
+                (0.3, 0.05),
+                (0.035, 0.05),
+                (0.015, 0.01)
+            ]
+
+            first_iteration = True  # Flag to track the first iteration
+
+            # Loop through the base pattern and apply random variations
+            for on_time, off_time in base_pattern:
+                # Apply slight random variations to the on and off times
+                on_time = max(0.015, on_time + random.uniform(-0.05, 0.05))
+                off_time = max(0.01, off_time + random.uniform(-0.05, 0.05))
+
+                if first_iteration:
+                    # First iteration: no mask
+                    game_board.fill((30, 30, 30))
+                    self.blit_level(game_board)
+                    self.blit_box_1(game_board, 0, 0)
+                    self.blit_box_2(game_board, 0, 0)
+                    self.blit_box_3(game_board, 0, 0)
+                    self.blit_box_4(game_board, 0, 0)
+                    self.blit_player(game_board, game_state, 0)  # Assuming 0 as a placeholder for p_move
+                    # Render status bar
+                    if game_state.game == True:
+                        pygame.display.set_caption(f'Escape the Werehouse! - {board.map_title[1][game_state.current_level]}')
+                        pygame.draw.rect(screen, (50, 50, 50), bar_rect)  # Dark gray color for the bar
+                        screen.blit(moves_text, (10, 10))
+                        screen.blit(total_moves_text, (200, 10))
+                        screen.blit(lives_text, (480, 10))
+                        pygame.display.update()
+                    else:
+                        pygame.display.set_caption(f'Escape the Werehouse! - Tutorial {game_state.current_level + 1}')
+                        pygame.draw.rect(screen, (50, 50, 50), bar_rect)  # Dark gray color for the bar
+                        screen.blit(tutorial_text, (15, 15))
+                    time.sleep(on_time)
+                    first_iteration = False
+                else:
+                    # Apply the on time with a mask of lower opacity
+                    mask = pygame.Surface((self.game_board_x, self.game_board_y + self.offset_y), pygame.SRCALPHA)
+                    mask.fill((0, 0, 0, 76))  # Lower opacity
+                    game_board.fill((30, 30, 30))
+                    self.blit_level(game_board)
+                    self.blit_box_1(game_board, 0, 0)
+                    self.blit_box_2(game_board, 0, 0)
+                    self.blit_box_3(game_board, 0, 0)
+                    self.blit_box_4(game_board, 0, 0)
+                    self.blit_player(game_board, game_state, 0)  # Assuming 0 as a placeholder for p_move
+                    game_board.blit(mask, (0, 0))
+                    # Render status bar
+                    if game_state.game == True:
+                        pygame.display.set_caption(f'Escape the Werehouse! - {board.map_title[1][game_state.current_level]}')
+                        pygame.draw.rect(screen, (50, 50, 50), bar_rect)  # Dark gray color for the bar
+                        screen.blit(moves_text, (10, 10))
+                        screen.blit(total_moves_text, (200, 10))
+                        screen.blit(lives_text, (480, 10))
+                        pygame.display.update()
+                    else:
+                        pygame.display.set_caption(f'Escape the Werehouse! - Tutorial {game_state.current_level + 1}')
+                        pygame.draw.rect(screen, (50, 50, 50), bar_rect)  # Dark gray color for the bar
+                        screen.blit(tutorial_text, (15, 15))
+                    pygame.display.update()
+                    time.sleep(on_time)
+
+                # Apply the off time with a mask of higher opacity
+                mask = pygame.Surface((self.game_board_x, self.game_board_y + self.offset_y), pygame.SRCALPHA)
+                mask.fill((0, 0, 0, 249))  # Higher opacity
+                game_board.fill((30, 30, 30))
+                self.blit_level(game_board)
+                self.blit_box_1(game_board, 0, 0)
+                self.blit_box_2(game_board, 0, 0)
+                self.blit_box_3(game_board, 0, 0)
+                self.blit_box_4(game_board, 0, 0)
+                game_board.blit(mask, (0, 0))
+                # Render status bar
+                if game_state.game == True:
+                    pygame.display.set_caption(f'Escape the Werehouse! - {board.map_title[1][game_state.current_level]}')
+                    pygame.draw.rect(screen, (50, 50, 50), bar_rect)  # Dark gray color for the bar
+                    screen.blit(moves_text, (10, 10))
+                    screen.blit(total_moves_text, (200, 10))
+                    screen.blit(lives_text, (480, 10))
+                    pygame.display.update()
+                else:
+                    pygame.display.set_caption(f'Escape the Werehouse! - Tutorial {game_state.current_level + 1}')
+                    pygame.draw.rect(screen, (50, 50, 50), bar_rect)  # Dark gray color for the bar
+                    screen.blit(tutorial_text, (15, 15))
+                pygame.display.update()
+                time.sleep(off_time)
+
+            # Add a delay before turning on the flashlight beam
+            flashligtht_on_delay = 0.7 + random.uniform(-0.2, 0.3)
+            time.sleep(flashligtht_on_delay)
+
+            # Turn on the flashlight beam
+            self.apply_blackout(game_board, game_state)
+            pygame.display.update()
+
+    def fade_out(self, game_state, screen, width, height):
+        """Create a fade-out effect."""
+        fade = pygame.Surface((width, height))
+        fade.fill((10, 10, 10))
+
+        if game_state.lights_out:
+            delay = 120
+            start_alpha = 20
+            end_alpha = 180
+            inc_alpha = 10
+            init = 300
+        else:
+            delay = 40
+            start_alpha = 0
+            end_alpha = 180
+            inc_alpha = 10
+            init = 200
+
+        for alpha in range(start_alpha, end_alpha, inc_alpha):  # Increase alpha gradually
+            fade.set_alpha(alpha)
+            screen.blit(fade, (0, 0))
+            pygame.display.update()
+            if alpha == 0:
+                pygame.time.wait(init)
+            pygame.time.wait(delay)  # Small delay to control the speed of the fade
+
+        if game_state.player_in_pit:
+            # Render the warning text
+            font = pygame.font.SysFont('Arial Black', 42)
+            warning_text = font.render("Watch out for those pits!", True, (220, 0, 10))  # Red text
+            warning_text_rect = warning_text.get_rect(center=(width // 2, 200))
+
+            # Blit the warning text
+            screen.blit(warning_text, warning_text_rect)
+            pygame.display.update()
+
+            # Wait for a moment to let the player read the warning
+            pygame.time.wait(1500)  # Wait for 1.5 seconds
+
+    def fade_in(self, screen, width, height, board, game_state):
+        """Create a fade-in effect while re-blitting the game board and player."""
+        # Status bar
+        bar_rect = pygame.Rect(0, board.offset_y - board.offset_y, screen.get_width(), board.offset_y)
+        font = pygame.font.SysFont('Lucida Console', 24)  # Font for UI text
+        moves_text = font.render(f'Moves: {game_state.moves}', True, (255, 255, 255))
+        total_moves_text = font.render(f'Total Moves: {game_state.total_moves}', True, (255, 255, 255))
+        lives_text = font.render(f'Lives: {game_state.lives}', True, (255, 255, 255))
+        # Tutorial bar
+        tutorial_font = pygame.font.SysFont('Lucida Console', 12)  # Font for tutorial text
+        tutorial_text = tutorial_font.render(f'{board.map_title[0][game_state.current_level]}', True, (255, 255, 255)) # Set status bar
+
+        fade = pygame.Surface((width, height))
+        fade.fill((10, 10, 10))
+
+        # Decrease alpha gradually from 255 (opaque) to 0 (transparent)
+        for alpha in range(255, 0, -10):
+            # Re-blit the game state each frame
+            screen.fill((30, 30, 30))
+            board.blit_level(screen)
+            board.blit_box_1(screen, 0, 0)
+            board.blit_box_2(screen, 0, 0)
+            board.blit_box_3(screen, 0, 0)
+            board.blit_box_4(screen, 0, 0)
+            board.blit_player(screen, game_state, 0)
+
+            if game_state.game == True:
+                pygame.display.set_caption(f'Escape the Werehouse! - {board.map_title[1][game_state.current_level]}')
+                pygame.draw.rect(screen, (50, 50, 50), bar_rect)  # Dark gray color for the bar
+                screen.blit(moves_text, (10, 10))
+                screen.blit(total_moves_text, (200, 10))
+                screen.blit(lives_text, (480, 10))
+                pygame.display.update()
+            else:
+                pygame.display.set_caption(f'Escape the Werehouse! - Tutorial {game_state.current_level + 1}')
+                pygame.draw.rect(screen, (50, 50, 50), bar_rect)  # Dark gray color for the bar
+                screen.blit(tutorial_text, (15, 15))
+
+            fade.set_alpha(alpha)
+            screen.blit(fade, (0, 0))
+            pygame.display.update()
+            pygame.time.wait(30)
+        return
