@@ -859,7 +859,7 @@ class BoardElements():
 
                 if first_iteration:
                     # First iteration: no mask
-                    game_board.fill((30, 30, 30))  # Lighter shade
+                    game_board.fill((30, 30, 30))
                     self.blit_level(game_board)
                     self.blit_box_1(game_board, 0, 0)
                     self.blit_box_2(game_board, 0, 0)
@@ -878,7 +878,7 @@ class BoardElements():
                     # Apply the on time with a mask of lower opacity
                     mask = pygame.Surface((self.game_board_x, self.game_board_y + self.offset_y), pygame.SRCALPHA)
                     mask.fill((0, 0, 0, 76))  # Lower opacity
-                    game_board.fill((30, 30, 30))  # Lighter shade
+                    game_board.fill((30, 30, 30))
                     self.blit_level(game_board)
                     self.blit_box_1(game_board, 0, 0)
                     self.blit_box_2(game_board, 0, 0)
@@ -897,7 +897,7 @@ class BoardElements():
                 # Apply the off time with a mask of higher opacity
                 mask = pygame.Surface((self.game_board_x, self.game_board_y + self.offset_y), pygame.SRCALPHA)
                 mask.fill((0, 0, 0, 249))  # Higher opacity
-                game_board.fill((30, 30, 30))  # Lighter shade
+                game_board.fill((30, 30, 30))
                 self.blit_level(game_board)
                 self.blit_box_1(game_board, 0, 0)
                 self.blit_box_2(game_board, 0, 0)
@@ -919,3 +919,36 @@ class BoardElements():
             # Turn on the flashlight beam
             self.apply_blackout(game_board, game_state)
             pygame.display.update()
+
+    def fade_out(self, game_state, screen, width, height):
+        """Create a fade-out effect."""
+        fade = pygame.Surface((width, height))
+        fade.fill((0, 0, 0))
+        for alpha in range(0, 255, 5):  # Increase alpha gradually
+            fade.set_alpha(alpha)
+            screen.blit(fade, (0, 0))
+            pygame.display.update()
+            if game_state.lights_out:
+                pygame.time.wait(40)  # Small delay to control the speed of the fade
+            else:
+                pygame.time.wait(20)  # Small delay to control the speed of the fade
+
+    def fade_in(self, screen, width, height, board, game_state):
+        """Create a fade-in effect while re-blitting the game board and player."""
+        fade = pygame.Surface((width, height))
+        fade.fill((0, 0, 0))
+        # Decrease alpha gradually from 255 (opaque) to 0 (transparent)
+        for alpha in range(255, 0, -10):
+            # Re-blit the game state each frame
+            board.blit_level(screen)
+            board.blit_box_1(screen, 0, 0)
+            board.blit_box_2(screen, 0, 0)
+            board.blit_box_3(screen, 0, 0)
+            board.blit_box_4(screen, 0, 0)
+            board.blit_player(screen, game_state, 0)
+
+            fade.set_alpha(alpha)
+            screen.blit(fade, (0, 0))
+            pygame.display.update()
+            pygame.time.wait(10)
+        return

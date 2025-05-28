@@ -1,3 +1,4 @@
+from pickle import FALSE
 import sys
 import os
 import logging
@@ -240,6 +241,7 @@ class GameState:
         self.direction = None
         self.facing_direction = 'up'  # New attribute to track facing direction
         self.is_pulling = False
+        self.player_in_pit = False
 
         self.lights_out = False  # New attribute for lights checkbox
         self.is_searching = False
@@ -871,16 +873,6 @@ def move_player_and_boxes(board, audio, game_state):
 
     return True
 
-    # Check if player falls into pit
-    if check_player_in_pit(board, game_state, new_x, new_y, audio):
-        return False  # Movement was valid but player fell
-
-    # Move player to new position
-    board.px = new_x
-    board.py = new_y
-
-    return True
-
 # Check if a box has fallen into a pit and update states accordingly
 def check_box_in_pit(board, box_num, x, y):
     # Mapping of pit types to their corresponding attributes
@@ -1015,8 +1007,10 @@ def is_valid_move(board, new_x, new_y, game_state):
 
     return True
 
-
 def check_player_in_pit(board, game_state, x, y, audio):
+    if game_state.player_in_pit:
+        return False
+
     for element in board.elements:
         if element[1] == (x, y):
             if element[0] in [TileType.PIT1, TileType.PIT2, TileType.PIT3, TileType.PIT4]:
@@ -1028,6 +1022,7 @@ def check_player_in_pit(board, game_state, x, y, audio):
                     # Player fell in pit
                     audio.play_sound('fall')
                     game_state.lives -= 1
+                    game_state.player_in_pit = True
 
                     # Update player position to the pit
                     board.px, board.py = x, y
@@ -1049,20 +1044,24 @@ def check_player_in_pit(board, game_state, x, y, audio):
                     # Blit the player on the pit tile
                     board.blit_player(screen, game_state, 0)
                     pygame.display.flip()
-                    pygame.time.wait(500)  # Wait briefly to show the player falling
+
+                    # Fade out effect
+                    board.fade_out(game_state, screen, board.game_board_x, (board.game_board_y + board.offset_y))
+                    pygame.time.wait(500)
 
                     if game_state.lives <= 0:
                         display_game_over(game_state)
                         game_state.is_playing = False
-                        return True
                     else:
                         # Reset level
                         game_state.new_level = True
                         game_state.total_moves += game_state.moves
                         game_state.moves = 0
+
+                        return False
+
                     return True
     return False
-
 
 # Show GAME OVER screen when out of lives
 def display_game_over(game_state):
@@ -1124,7 +1123,6 @@ def main():
             game_state.new_level = True  # Reset level to start from the selected one
 
 
-
             # Main game loop
             while game_state.is_playing:
                 for event in pygame.event.get():
@@ -1138,9 +1136,14 @@ def main():
                     mode_index = 0 if game_state.game == False else 1
                     game_state.new_level = board.generate_level(game_board, game_state, True, mode_index)
 
+                    # Fade in effect after resetting the level
+                    board.fade_in(screen, board.game_board_x, (board.game_board_y + board.offset_y), board, game_state)
+
                     # Apply flickering effect if lights are off
                     if game_state.lights_out:
                         board.flicker_effect(game_board, game_state, board, screen)
+
+                    game_state.player_in_pit = False
 
                 # Handle input only if not in movement cooldown
                 if game_state.debounce_timer == 0:
@@ -1160,54 +1163,55 @@ def main():
                         pygame.time.wait(3000)
                         show_start_screen = True
 
-                # Set background color
-                game_board.fill((30, 30, 30))
+                if not game_state.player_in_pit:
+                    # Set background color
+                    game_board.fill((30, 30, 30))
 
-                # Render the rest of the game elements
-                board.blit_level(game_board)
-                board.blit_box_1(game_board, 0, 0)
-                board.blit_box_2(game_board, 0, 0)
-                board.blit_box_3(game_board, 0, 0)
-                board.blit_box_4(game_board, 0, 0)
+                    # Render the rest of the game elements
+                    board.blit_level(game_board)
+                    board.blit_box_1(game_board, 0, 0)
+                    board.blit_box_2(game_board, 0, 0)
+                    board.blit_box_3(game_board, 0, 0)
+                    board.blit_box_4(game_board, 0, 0)
 
-                # Render player with direction
-                if game_state.travel in [1, 2]:
-                    board.blit_player(game_board, game_state, board.py)
-                elif game_state.travel in [3, 4]:
-                    board.blit_player(game_board, game_state, board.px)
-                else:
-                    board.blit_player(game_board, game_state, 0)
+                    # Render player with direction
+                    if game_state.travel in [1, 2]:
+                        board.blit_player(game_board, game_state, board.py)
+                    elif game_state.travel in [3, 4]:
+                        board.blit_player(game_board, game_state, board.px)
+                    else:
+                        board.blit_player(game_board, game_state, 0)
 
-                # Apply blackout effect
-                board.apply_blackout(game_board, game_state)
+                    # Apply blackout effect
+                    board.apply_blackout(game_board, game_state)
 
-                # Draw the status bar at the top
-                bar_rect = pygame.Rect(0, board.offset_y - board.offset_y, screen.get_width(), board.offset_y)
-                pygame.draw.rect(screen, (50, 50, 50), bar_rect)  # Dark gray color for the bar
+                    # Draw the status bar at the top
+                    bar_rect = pygame.Rect(0, board.offset_y - board.offset_y, screen.get_width(), board.offset_y)
+                    pygame.draw.rect(screen, (50, 50, 50), bar_rect)  # Dark gray color for the bar
 
-                # Set caption and render the text inside the status bar
-                if game_state.game and game_state.is_playing:
-                    # Set window caption
-                    pygame.display.set_caption(f'Escape the Werehouse! - {board.map_title[1][game_state.current_level]}')
-                    # Set status bar
-                    moves_text = font.render(f'Moves: {game_state.moves}', True, (255, 255, 255))
-                    total_moves_text = font.render(f'Total Moves: {game_state.total_moves}', True, (255, 255, 255))
-                    lives_text = font.render(f'Lives: {game_state.lives}', True, (255, 255, 255))
-                    # Render status bar
-                    game_board.blit(moves_text, (10, 10))
-                    game_board.blit(total_moves_text, (200, 10))
-                    game_board.blit(lives_text, (480, 10))
-                elif game_state.is_playing:
-                    # Set window caption
-                    pygame.display.set_caption(f'Escape the Werehouse! - Tutorial {game_state.current_level + 1}')
-                    # Set status bar
-                    tutorial_text = tutorial_font.render(f'{board.map_title[0][game_state.current_level]}', True, (255, 255, 255))
-                    # Render status bar
-                    game_board.blit(tutorial_text, (15, 15))
+                    # Set caption and render the text inside the status bar
+                    if game_state.game and game_state.is_playing:
+                        # Set window caption
+                        pygame.display.set_caption(f'Escape the Werehouse! - {board.map_title[1][game_state.current_level]}')
+                        # Set status bar
+                        moves_text = font.render(f'Moves: {game_state.moves}', True, (255, 255, 255))
+                        total_moves_text = font.render(f'Total Moves: {game_state.total_moves}', True, (255, 255, 255))
+                        lives_text = font.render(f'Lives: {game_state.lives}', True, (255, 255, 255))
+                        # Render status bar
+                        game_board.blit(moves_text, (10, 10))
+                        game_board.blit(total_moves_text, (200, 10))
+                        game_board.blit(lives_text, (480, 10))
+                    elif game_state.is_playing:
+                        # Set window caption
+                        pygame.display.set_caption(f'Escape the Werehouse! - Tutorial {game_state.current_level + 1}')
+                        # Set status bar
+                        tutorial_text = tutorial_font.render(f'{board.map_title[0][game_state.current_level]}', True, (255, 255, 255))
+                        # Render status bar
+                        game_board.blit(tutorial_text, (15, 15))
 
-                pygame.display.flip()
-                # Cap frame rate
-                clock.tick(FPS)
+                    pygame.display.flip()
+                    # Cap frame rate
+                    clock.tick(FPS)
 
             # Ensure the start screen is shown after game over
             show_start_screen = True
