@@ -150,6 +150,7 @@ class HighScores:
             screen.blit(back_text, back_text_center)
 
         pygame.display.flip()
+        pygame.time.wait(300)
 
     # Input box for entering initials after achieving a high score
     def get_initials(self, screen):
@@ -1156,7 +1157,6 @@ def main():
                     if not game_state.is_playing:
                         high_scores.from_start_screen = False  # Set the flag to False
                         high_scores.display_scores(screen)
-                        pygame.time.wait(3000)
                         show_start_screen = True
 
                     # Fade out effect
