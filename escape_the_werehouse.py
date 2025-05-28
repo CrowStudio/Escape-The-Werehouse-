@@ -224,14 +224,13 @@ class HighScores:
 class GameState:
     def __init__(self):
         self.game = False  # False == no of initial tutorial levels, True == no of game levels
+        self.is_playing = True
+        self.new_level = True
 
         self.current_level = 0
         self.moves = 0
-        self.lives = 3
-
-        self.is_playing = True
-        self.new_level = True
         self.total_moves = 0
+        self.lives = 3
 
         self.debounce_timer = 0  # To avoid unwanted movements
         self.a_key_pressed = False
@@ -542,47 +541,12 @@ class StartScreen:
         # Launch the level editor script
         subprocess.Popen([sys.executable, "level_editor.py"])
 
-def check_level_complete(board, game_state, screen, game_board):
-    # Check if the current level is complete
-    if not board.exit:
-        return False
-
+def check_level_complete(board, game_state):
     # Check if player is on exit tile
     for element in board.elements:
         if element[0] == TileType.EXIT:
             if (board.px, board.py) == element[1]:  # Player position matches exit position
                 game_state.travel = 0
-                # Render one last frame with player on exit
-                screen.fill((30, 30, 30))
-                board.blit_level(screen)
-                board.blit_box_1(screen, 0, 0)
-                board.blit_box_2(screen, 0, 0)
-                board.blit_box_3(screen, 0, 0)
-                board.blit_box_4(screen, 0, 0)
-                board.blit_player(screen, game_state, 0)
-
-                # Show score for completed level
-                if game_state.game:
-                    pygame.display.set_caption(f'Escape the Werehouse!')
-
-                    # Draw the status bar at the top
-                    bar_rect = pygame.Rect(0, board.offset_y - board.offset_y, screen.get_width(), board.offset_y)
-                    pygame.draw.rect(screen, (50, 50, 50), bar_rect)  # Dark gray color for the bar
-
-                    # Render the text inside the bar
-                    moves_text = font.render(f'Moves: {game_state.moves}', True, (255, 255, 255))
-                    total_moves_text = font.render(f'Total Moves: {game_state.total_moves}', True, (255, 255, 255))
-                    lives_text = font.render(f'Lives: {game_state.lives}', True, (255, 255, 255))
-                    game_board.blit(moves_text, (10, 10))
-                    game_board.blit(total_moves_text, (200, 10))
-                    game_board.blit(lives_text, (480, 10))
-
-                    # Blit stars
-                    board.blit_stars(screen, game_state)
-
-                pygame.display.flip()
-                pygame.time.wait(500)
-
                 return True
 
     return False
@@ -758,12 +722,43 @@ def move_in_facing_direction(game_state, movement):
     game_state.travel = movement['travel']  # Set the travel distance
 
 # Handle actions when a level is completed
-def handle_level_complete(board, game_state, high_scores):
+def handle_level_complete(board, game_board, game_state, screen, high_scores):
     game_state.moves = 0
     game_state.new_level = True
 
     # Increment level counter
     game_state.current_level += 1
+
+    # Render one last frame with player on exit
+    screen.fill((30, 30, 30))
+    board.blit_level(screen)
+    board.blit_box_1(screen, 0, 0)
+    board.blit_box_2(screen, 0, 0)
+    board.blit_box_3(screen, 0, 0)
+    board.blit_box_4(screen, 0, 0)
+    board.blit_player(screen, game_state, 0)
+
+    # Show score for completed level
+    if game_state.game:
+        pygame.display.set_caption(f'Escape the Werehouse!')
+
+        # Draw the status bar at the top
+        bar_rect = pygame.Rect(0, board.offset_y - board.offset_y, screen.get_width(), board.offset_y)
+        pygame.draw.rect(screen, (50, 50, 50), bar_rect)  # Dark gray color for the bar
+
+        # Render the text inside the bar
+        moves_text = font.render(f'Moves: {game_state.moves}', True, (255, 255, 255))
+        total_moves_text = font.render(f'Total Moves: {game_state.total_moves}', True, (255, 255, 255))
+        lives_text = font.render(f'Lives: {game_state.lives}', True, (255, 255, 255))
+        game_board.blit(moves_text, (10, 10))
+        game_board.blit(total_moves_text, (200, 10))
+        game_board.blit(lives_text, (480, 10))
+
+        # Blit stars
+        board.blit_stars(screen, game_state)
+
+    pygame.display.flip()
+    pygame.time.wait(300)
 
     # Handle mode transitions
     if game_state.game == False and game_state.current_level >= 4:
@@ -1029,6 +1024,7 @@ def check_player_in_pit(board, game_state, x, y, audio):
 
                     # Blit the game board and boxes
                     screen = pygame.display.get_surface()
+                    screen.fill((30, 30, 30))
                     board.blit_level(screen)
                     board.blit_box_1(screen, 0, 0)
                     board.blit_box_2(screen, 0, 0)
@@ -1047,7 +1043,6 @@ def check_player_in_pit(board, game_state, x, y, audio):
 
                     # Fade out effect
                     board.fade_out(game_state, screen, board.game_board_x, (board.game_board_y + board.offset_y))
-                    pygame.time.wait(500)
 
                     if game_state.lives <= 0:
                         display_game_over(game_state)
@@ -1067,10 +1062,10 @@ def check_player_in_pit(board, game_state, x, y, audio):
 def display_game_over(game_state):
     screen = pygame.display.get_surface()
     # Clear the screen
-    screen.fill((30, 30, 30))
+    screen.fill((10, 10, 10))
     pygame.display.set_caption('GAME OVER')
     # Render "GAME OVER" text
-    game_over_text = dead_font.render('GAME OVER', True, (255, 0, 10))
+    game_over_text = dead_font.render('GAME OVER', True, (220, 0, 10))
     game_over_center = game_over_text.get_rect(center=(screen.get_width() // 2, 200))
     screen.blit(game_over_text, game_over_center)
 
@@ -1136,6 +1131,7 @@ def main():
                     mode_index = 0 if game_state.game == False else 1
                     game_state.new_level = board.generate_level(game_board, game_state, True, mode_index)
 
+                    game_board.fill((30, 30, 30))
                     # Fade in effect after resetting the level
                     board.fade_in(screen, board.game_board_x, (board.game_board_y + board.offset_y), board, game_state)
 
@@ -1155,15 +1151,18 @@ def main():
                     game_state.debounce_timer -= 1
 
                 # Check level completion
-                if check_level_complete(board, game_state, screen, game_board):
-                    handle_level_complete(board, game_state, high_scores)
+                if check_level_complete(board, game_state):
+                    handle_level_complete(board, game_board, game_state, screen, high_scores)
                     if not game_state.is_playing:
                         high_scores.from_start_screen = False  # Set the flag to False
                         high_scores.display_scores(screen)
                         pygame.time.wait(3000)
                         show_start_screen = True
 
-                if not game_state.player_in_pit:
+                    # Fade out effect
+                    board.fade_out(game_state, screen, board.game_board_x, (board.game_board_y + board.offset_y))
+
+                if not game_state.player_in_pit and not check_level_complete(board, game_state):
                     # Set background color
                     game_board.fill((30, 30, 30))
 

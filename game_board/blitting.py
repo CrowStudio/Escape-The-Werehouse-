@@ -923,20 +923,57 @@ class BoardElements():
     def fade_out(self, game_state, screen, width, height):
         """Create a fade-out effect."""
         fade = pygame.Surface((width, height))
-        fade.fill((0, 0, 0))
-        for alpha in range(0, 255, 5):  # Increase alpha gradually
+        fade.fill((10, 10, 10))
+
+        if game_state.lights_out:
+            delay = 120
+            start_alpha = 20
+            end_alpha = 180
+            inc_alpha = 10
+            init = 300
+        else:
+            delay = 40
+            start_alpha = 0
+            end_alpha = 180
+            inc_alpha = 10
+            init = 200
+
+        for alpha in range(start_alpha, end_alpha, inc_alpha):  # Increase alpha gradually
             fade.set_alpha(alpha)
             screen.blit(fade, (0, 0))
             pygame.display.update()
-            if game_state.lights_out:
-                pygame.time.wait(40)  # Small delay to control the speed of the fade
-            else:
-                pygame.time.wait(20)  # Small delay to control the speed of the fade
+            if alpha == 0:
+                pygame.time.wait(init)
+            pygame.time.wait(delay)  # Small delay to control the speed of the fade
+
+        if game_state.player_in_pit:
+            # Render the warning text
+            font = pygame.font.SysFont('Arial Black', 42)
+            warning_text = font.render("Watch out for those pits!", True, (220, 0, 10))  # Red text
+            warning_text_rect = warning_text.get_rect(center=(width // 2, 200))
+
+            # Blit the warning text
+            screen.blit(warning_text, warning_text_rect)
+            pygame.display.update()
+
+            # Wait for a moment to let the player read the warning
+            pygame.time.wait(1500)  # Wait for 1.5 seconds
 
     def fade_in(self, screen, width, height, board, game_state):
         """Create a fade-in effect while re-blitting the game board and player."""
+        # Status bar
+        bar_rect = pygame.Rect(0, board.offset_y - board.offset_y, screen.get_width(), board.offset_y)
+        font = pygame.font.SysFont('Lucida Console', 24)  # Font for UI text
+        moves_text = font.render(f'Moves: {game_state.moves}', True, (255, 255, 255))
+        total_moves_text = font.render(f'Total Moves: {game_state.total_moves}', True, (255, 255, 255))
+        lives_text = font.render(f'Lives: {game_state.lives}', True, (255, 255, 255))
+        # Tutorial bar
+        tutorial_font = pygame.font.SysFont('Lucida Console', 12)  # Font for tutorial text
+        tutorial_text = tutorial_font.render(f'{board.map_title[0][game_state.current_level]}', True, (255, 255, 255)) # Set status bar
+
         fade = pygame.Surface((width, height))
-        fade.fill((0, 0, 0))
+        fade.fill((10, 10, 10))
+
         # Decrease alpha gradually from 255 (opaque) to 0 (transparent)
         for alpha in range(255, 0, -10):
             # Re-blit the game state each frame
@@ -948,8 +985,20 @@ class BoardElements():
             board.blit_box_4(screen, 0, 0)
             board.blit_player(screen, game_state, 0)
 
+            if game_state.game == True:
+                pygame.display.set_caption(f'Escape the Werehouse! - {board.map_title[1][game_state.current_level]}')
+                pygame.draw.rect(screen, (50, 50, 50), bar_rect)  # Dark gray color for the bar
+                screen.blit(moves_text, (10, 10))
+                screen.blit(total_moves_text, (200, 10))
+                screen.blit(lives_text, (480, 10))
+                pygame.display.update()
+            else:
+                pygame.display.set_caption(f'Escape the Werehouse! - Tutorial {game_state.current_level + 1}')
+                pygame.draw.rect(screen, (50, 50, 50), bar_rect)  # Dark gray color for the bar
+                screen.blit(tutorial_text, (15, 15))
+
             fade.set_alpha(alpha)
             screen.blit(fade, (0, 0))
             pygame.display.update()
-            pygame.time.wait(10)
+            pygame.time.wait(30)
         return
