@@ -854,7 +854,7 @@ class BoardElements():
             # Loop through the base pattern and apply random variations
             for on_time, off_time in base_pattern:
                 # Apply slight random variations to the on and off times
-                on_time = max(0.01, on_time + random.uniform(-0.05, 0.05))
+                on_time = max(0.015, on_time + random.uniform(-0.05, 0.05))
                 off_time = max(0.01, off_time + random.uniform(-0.05, 0.05))
 
                 if first_iteration:
@@ -913,7 +913,8 @@ class BoardElements():
                 time.sleep(off_time)
 
             # Add a delay before turning on the flashlight beam
-            time.sleep(1)
+            flashligtht_on_delay = 0.7 + random.uniform(-0.2, 0.3)
+            time.sleep(flashligtht_on_delay)
 
             # Turn on the flashlight beam
             self.apply_blackout(game_board, game_state)
