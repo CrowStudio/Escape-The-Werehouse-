@@ -724,12 +724,6 @@ def move_in_facing_direction(game_state, movement):
 
 # Handle actions when a level is completed
 def handle_level_complete(board, game_board, game_state, screen, high_scores):
-    game_state.moves = 0
-    game_state.new_level = True
-
-    # Increment level counter
-    game_state.current_level += 1
-
     # Render one last frame with player on exit
     screen.fill((30, 30, 30))
     board.blit_level(screen)
@@ -760,6 +754,11 @@ def handle_level_complete(board, game_board, game_state, screen, high_scores):
 
     pygame.display.flip()
     pygame.time.wait(300)
+
+    # Increment level counter
+    game_state.current_level += 1
+    game_state.moves = 0
+    game_state.new_level = True
 
     # Handle mode transitions
     if game_state.game == False and game_state.current_level >= 4:

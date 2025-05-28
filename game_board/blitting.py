@@ -834,15 +834,17 @@ class BoardElements():
     def flicker_effect(self, game_board, game_state, board, screen):
         if self.blackout:
             screen.fill((30, 30, 30))
-            # Status bar
-            bar_rect = pygame.Rect(0, board.offset_y - board.offset_y, screen.get_width(), board.offset_y)
-            font = pygame.font.SysFont('Lucida Console', 24)  # Font for UI text
-            moves_text = font.render(f'Moves: {game_state.moves}', True, (255, 255, 255))
-            total_moves_text = font.render(f'Total Moves: {game_state.total_moves}', True, (255, 255, 255))
-            lives_text = font.render(f'Lives: {game_state.lives}', True, (255, 255, 255))
-            # Tutorial bar
-            tutorial_font = pygame.font.SysFont('Lucida Console', 12)  # Font for tutorial text
-            tutorial_text = tutorial_font.render(f'{board.map_title[0][game_state.current_level]}', True, (255, 255, 255)) # Set status bar
+            if game_state.game == True:
+                # Status bar
+                bar_rect = pygame.Rect(0, board.offset_y - board.offset_y, screen.get_width(), board.offset_y)
+                font = pygame.font.SysFont('Lucida Console', 24)  # Font for UI text
+                moves_text = font.render(f'Moves: {game_state.moves}', True, (255, 255, 255))
+                total_moves_text = font.render(f'Total Moves: {game_state.total_moves}', True, (255, 255, 255))
+                lives_text = font.render(f'Lives: {game_state.lives}', True, (255, 255, 255))
+            else:
+                # Tutorial bar
+                tutorial_font = pygame.font.SysFont('Lucida Console', 12)  # Font for tutorial text
+                tutorial_text = tutorial_font.render(f'{board.map_title[0][game_state.current_level]}', True, (255, 255, 255)) # Set status bar
 
             # Define the base pattern of on/off durations in seconds
             base_pattern = [
@@ -985,15 +987,17 @@ class BoardElements():
 
     def fade_in(self, screen, width, height, board, game_state):
         """Create a fade-in effect while re-blitting the game board and player."""
-        # Status bar
-        bar_rect = pygame.Rect(0, board.offset_y - board.offset_y, screen.get_width(), board.offset_y)
-        font = pygame.font.SysFont('Lucida Console', 24)  # Font for UI text
-        moves_text = font.render(f'Moves: {game_state.moves}', True, (255, 255, 255))
-        total_moves_text = font.render(f'Total Moves: {game_state.total_moves}', True, (255, 255, 255))
-        lives_text = font.render(f'Lives: {game_state.lives}', True, (255, 255, 255))
-        # Tutorial bar
-        tutorial_font = pygame.font.SysFont('Lucida Console', 12)  # Font for tutorial text
-        tutorial_text = tutorial_font.render(f'{board.map_title[0][game_state.current_level]}', True, (255, 255, 255)) # Set status bar
+        if game_state.game == True:
+            # Status bar
+            bar_rect = pygame.Rect(0, board.offset_y - board.offset_y, screen.get_width(), board.offset_y)
+            font = pygame.font.SysFont('Lucida Console', 24)  # Font for UI text
+            moves_text = font.render(f'Moves: {game_state.moves}', True, (255, 255, 255))
+            total_moves_text = font.render(f'Total Moves: {game_state.total_moves}', True, (255, 255, 255))
+            lives_text = font.render(f'Lives: {game_state.lives}', True, (255, 255, 255))
+        else:
+            # Tutorial bar
+            tutorial_font = pygame.font.SysFont('Lucida Console', 12)  # Font for tutorial text
+            tutorial_text = tutorial_font.render(f'{board.map_title[0][game_state.current_level]}', True, (255, 255, 255)) # Set status bar
 
         fade = pygame.Surface((width, height))
         fade.fill((10, 10, 10))
