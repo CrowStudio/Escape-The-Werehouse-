@@ -1,12 +1,12 @@
 from pickle import FALSE
 import sys
-import os
 import logging
 import pygame
 import subprocess
 # from game_board.maps import game_maps, tutorial_maps
 from game_board import BoardElements, TileType, TILE_SIZE
-from sound.audio_manager import AudioManager
+from sound import AudioManager
+from high_scores import ScoreManager
 
 # Setup logging
 logging.basicConfig(level=logging.DEBUG)
@@ -21,7 +21,6 @@ try:
     tutorial_font = pygame.font.SysFont('Lucida Console', 12)  # Font for tutorial text
     font = pygame.font.SysFont('Lucida Console', 24)  # Font for UI text
     dropdown_font = pygame.font.SysFont('Lucida Console', 20)  # Smaller font for dropdown
-    hig_score_font = pygame.font.SysFont('Arial Black', 32)  # Bigger font for High Scores
     menu_font = pygame.font.SysFont('Arial Black', 42)  # Even bigger font for START MENU
     dead_font = pygame.font.SysFont('Arial Black', 72)  # Biggest font for GAME OVER
 except pygame.error as e:
@@ -41,150 +40,6 @@ ARROW_KEYS = {pygame.K_UP:    {'direction': 'up',    'travel': 1, 'search': 1},
 # level_map = [tutorial_maps.tutorial_map]
 # level_map.append(game_maps.level_map)
 
-class HighScores:
-    def __init__(self):
-        self.scores = self.load_scores()
-        self.latest_score = None  # Track the latest added score
-        self.from_start_screen = False  # Initialize the flag
-
-    # Add a new score to the list and sort
-    def add_score(self, score, initials):
-        self.scores.append((score, initials))
-        self.scores = sorted(self.scores, key=lambda x: x[0])[:3]  # Keep only top 3
-        self.latest_score = (score, initials)  # Update the latest score
-        self.save_scores()
-
-    # Check if the score is a high score
-    def is_high_score(self, score):
-        # If there are fewer than 3 high scores, the score qualifies automatically
-        if len(self.scores) < 3:
-            return True
-
-        # The list is sorted in ascending order (lower is better)
-        third_place = self.scores[-1][0]
-
-        # If the new score is strictly better than (i.e. less than) the third place, it's a high score.
-        if score < third_place:
-            return True
-
-        # If the new score equals the third place score, only allow it if
-        # it also matches one of the top two scores that are strictly better.
-        # In other words, at least one of the top two scores must be strictly less than the new score.
-        elif score == third_place:
-            # Check for at least one score among the top two that's strictly less than the new score
-            if self.scores[0][0] < score or self.scores[1][0] < score:
-                return True
-
-        # Otherwise, it doesn't qualify as a high score.
-        return False
-
-    # Display the high scores on the screen
-    def display_scores(self, screen):
-        screen.fill((30, 30, 30))
-
-        # Render the title
-        pygame.display.set_caption(f'High Scores')
-        title_text = hig_score_font.render('High Scores', True, (255, 215, 115))
-        title_center = title_text.get_rect(center=(screen.get_width() // 2, 120))
-        screen.blit(title_text, title_center)
-
-        # Determine the maximum score length for alignment
-        max_score_length = max(len(str(score)) for score, _ in self.scores)
-
-        # Render each score entry with alignment
-        for i, (score, initials) in enumerate(self.scores, start=1):
-            score_str = f'{i}. {str(score).rjust(max_score_length)} {initials}'
-
-            # Highlight the latest added score by rendering text twice with an offset
-            if self.latest_score and self.latest_score == (score, initials):
-                bold_text = font.render(score_str, True, (255, 215, 0))  # Gold color for highlight
-                bold_center = bold_text.get_rect(center=(screen.get_width() // 2 + 1, 120 + i * 50 + 1))
-                screen.blit(bold_text, bold_center)
-
-            score_text = font.render(score_str, True, (255, 255, 255))
-            score_center = score_text.get_rect(center=(screen.get_width() // 2, 120 + i * 50))
-            screen.blit(score_text, score_center)
-
-        # Only show Back button if coming from start screen
-        if self.from_start_screen:
-            back_button = pygame.Rect(200, 500, 200, 40)  # Adjusted back button position
-            pygame.draw.rect(screen, (255, 255, 255), back_button, 2)
-            back_text = font.render('Back', True, (255, 255, 255))
-            back_text_center = back_text.get_rect(center=(screen.get_width() // 2, 520))
-            screen.blit(back_text, back_text_center)
-
-        pygame.display.flip()
-        pygame.time.wait(300)
-
-    # Input box for entering initials after achieving a high score
-    def get_initials(self, screen):
-        input_box = pygame.Rect(0, 0, 140, 32)
-        input_box.center = (screen.get_width() // 2, 120)
-        color = pygame.Color('gold')
-        active = True
-        text = ''
-        done = False
-
-        while not done:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
-                if event.type == pygame.KEYDOWN:
-                    if active:
-                        if event.key == pygame.K_RETURN:
-                            done = True
-                        elif event.key == pygame.K_BACKSPACE:
-                            text = text[:-1]
-                        else:
-                            if len(text) < 3:
-                                text += event.unicode.upper()
-
-            screen.fill((30, 30, 30))
-            # Show celebration text
-            celebration_text = font.render('Congratulations!', True, (255, 255, 255))
-            celebration_center = celebration_text.get_rect(center=(screen.get_width() // 2, 30))
-            screen.blit(celebration_text, celebration_center)
-            three_text = font.render('You made it to the top three!', True, (255, 255, 255))
-            three_center = three_text.get_rect(center=(screen.get_width() // 2, 60))
-            screen.blit(three_text, three_center)
-
-            # Show prompt text
-            prompt_text = font.render('Enter your initials:', True, (255, 255, 255))
-            prompt_center = prompt_text.get_rect(center=(screen.get_width() // 2, 90))
-            screen.blit(prompt_text, prompt_center)
-
-            # Blit input text
-            txt_surface = font.render(text, True, color)
-            text_center = txt_surface.get_rect(center=input_box.center)
-            screen.blit(txt_surface, text_center)
-
-            pygame.display.flip()
-
-        return text
-
-    # Load scores from a file, create the file if it doesn't exist
-    def load_scores(self):
-        if not os.path.exists('high_scores.py'):
-            with open('high_scores.py', 'w') as file:
-                file.write('SCORES = [(100, \'who\'), (200, \'are\'), (300, \'you\')]')
-
-        try:
-            with open('high_scores.py', 'r') as file:
-                content = file.read()
-                # Extract scores from the file content
-                scores = eval(content.split('=')[1])
-                return scores
-        except Exception as e:
-            print(f"Error loading scores: {e}")
-
-        # Return default scores if loading fails
-        return [(100, 'who'), (200, 'are'), (300, 'you')]
-
-    # Save the current scores to a file
-    def save_scores(self):
-        with open('high_scores.py', 'w') as file:
-            file.write(f'SCORES = {self.scores}')
 
 class GameState:
     def __init__(self):
@@ -1044,7 +899,7 @@ def main():
     game_state = GameState()
     board = BoardElements()
     audio = AudioManager()
-    high_scores = HighScores()
+    high_scores = ScoreManager()
     screen = pygame.display.set_mode((600, 640))  # Set the screen size to 600x640
     start_screen = StartScreen(screen, game_state, high_scores, board)
 
