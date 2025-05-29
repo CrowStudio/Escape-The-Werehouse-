@@ -66,6 +66,24 @@ def handle_input(keys, board, game_state, audio):
 
     return False
 
+def process_arrow_keys(keys, game_state, board):
+    """
+    Process arrow key inputs for player movement and direction changes.
+    """
+    # Iterate over each arrow key and its corresponding movement data
+    for key, movement in ARROW_KEYS.items():
+        if keys[key] and not game_state.key_locked:
+            # Handle the movement based on the arrow key pressed
+            handle_movement(game_state, movement)
+            game_state.key_locked = True  # Lock the key to prevent repeated actions from a single press
+            return True  # Only process one arrow key per frame
+
+    # Unlock the key if no arrow key is pressed this frame, allowing future input
+    if not any(keys[k] for k in ARROW_KEYS):
+        game_state.key_locked = False
+
+    return False
+
 def handle_searching(keys, game_state):
     """
     Handle the searching action using WASD keys, which controls the searchlight direction.
@@ -82,23 +100,6 @@ def handle_searching(keys, game_state):
     else:
         game_state.search_speed = 0.4
         game_state.is_searching = False  # No searching if no WASD key is pressed
-
-def process_arrow_keys(keys, game_state, board):
-    """
-    Process arrow key inputs for player movement and direction changes.
-    """
-    # Iterate over each arrow key and its corresponding movement data
-    for key, movement in ARROW_KEYS.items():
-        if keys[key] and not game_state.key_locked:
-            # Handle the movement based on the arrow key pressed
-            handle_movement(game_state, movement)
-            game_state.key_locked = True  # Lock the key to prevent repeated actions from a single press
-            return True  # Only process one arrow key per frame
-
-    # Unlock the key if no arrow key is pressed this frame, allowing future input
-    if not any(keys[k] for k in ARROW_KEYS):
-        game_state.key_locked = False
-    return False
 
 def handle_movement(game_state, movement):
     """
@@ -161,91 +162,6 @@ def move_in_facing_direction(game_state, movement):
     }
     game_state.direction = direction_map[movement['direction']][game_state.facing_direction]  # Set the movement direction
     game_state.travel = movement['travel']  # Set the travel distance
-
-# Handle movement of player and associated boxes
-def move_player_and_boxes(board, audio, game_state):
-    # Get current position
-    x = board.px
-    y = board.py
-    new_x, new_y = x, y
-
-    # Calculate target position (exactly one tile)
-    if game_state.direction == 'up':
-        new_y = y - 100  # Move exactly one tile up
-    elif game_state.direction == 'down':
-        new_y = y + 100  # Move exactly one tile down
-    elif game_state.direction == 'left':
-        new_x = x - 100  # Move exactly one tile left
-    elif game_state.direction == 'right':
-        new_x = x + 100  # Move exactly one tile right
-
-    # First check if the move is valid
-    if not is_valid_move(board, new_x, new_y, game_state):
-        return False  # Don't move if invalid
-
-    # Handle box movement
-    if game_state.is_pulling:
-        # Calculate position behind player
-        behind_x = x + (x - new_x)
-        behind_y = y + (y - new_y)
-
-        # Check for box behind player and move it to current player position first
-        if (behind_x, behind_y) == (board.b1x, board.b1y) and board.box1:
-            board.b1x, board.b1y = x, y  # Move box to current player position
-            game_state.check_box_in_pit(board, 1, x, y)
-            audio.play_sound('move')
-        elif (behind_x, behind_y) == (board.b2x, board.b2y) and board.box2:
-            board.b2x, board.b2y = x, y  # Move box to current player position
-            game_state.check_box_in_pit(board, 2, x, y)
-            audio.play_sound('move')
-        elif (behind_x, behind_y) == (board.b3x, board.b3y) and board.box3:
-            board.b3x, board.b3y = x, y  # Move box to current player position
-            game_state.check_box_in_pit(board, 3, x, y)
-            audio.play_sound('move')
-        elif (behind_x, behind_y) == (board.b4x, board.b4y) and board.box4:
-            board.b4x, board.b4y = x, y  # Move box to current player position
-            game_state.check_box_in_pit(board, 4, x, y)
-            audio.play_sound('move')
-    else:
-        # Handle pushing boxes
-        if (new_x, new_y) == (board.b1x, board.b1y) and board.box1:
-            board.b1x = new_x + (new_x - x)
-            board.b1y = new_y + (new_y - y)
-            if game_state.check_box_in_pit(board, 1, board.b1x, board.b1y):
-                audio.play_sound('fall')
-            else:
-                audio.play_sound('move')
-        elif (new_x, new_y) == (board.b2x, board.b2y) and board.box2:
-            board.b2x = new_x + (new_x - x)
-            board.b2y = new_y + (new_y - y)
-            if game_state.check_box_in_pit(board, 2, board.b2x, board.b2y):
-                audio.play_sound('fall')
-            else:
-                audio.play_sound('move')
-        elif (new_x, new_y) == (board.b3x, board.b3y) and board.box3:
-            board.b3x = new_x + (new_x - x)
-            board.b3y = new_y + (new_y - y)
-            if game_state.check_box_in_pit(board, 3, board.b3x, board.b3y):
-                audio.play_sound('fall')
-            else:
-                audio.play_sound('move')
-        elif (new_x, new_y) == (board.b4x, board.b4y) and board.box4:
-            board.b4x = new_x + (new_x - x)
-            board.b4y = new_y + (new_y - y)
-            if game_state.check_box_in_pit(board, 4, board.b4x, board.b4y):
-                audio.play_sound('fall')
-            else:
-                audio.play_sound('move')
-
-    # Check if player falls into pit
-    if game_state.check_player_in_pit(board, new_x, new_y, audio):
-        return False  # Movement was valid but player fell
-
-    # Move player to new position
-    board.px = new_x
-    board.py = new_y
-
-    return True
 
 # Check if move is valid
 def is_valid_move(board, new_x, new_y, game_state):
@@ -341,6 +257,91 @@ def is_valid_move(board, new_x, new_y, game_state):
             for box_pos in box_positions:
                 if box_pos == (push_x, push_y):
                     return False
+
+    return True
+
+# Handle movement of player and associated boxes
+def move_player_and_boxes(board, audio, game_state):
+    # Get current position
+    x = board.px
+    y = board.py
+    new_x, new_y = x, y
+
+    # Calculate target position (exactly one tile)
+    if game_state.direction == 'up':
+        new_y = y - 100  # Move exactly one tile up
+    elif game_state.direction == 'down':
+        new_y = y + 100  # Move exactly one tile down
+    elif game_state.direction == 'left':
+        new_x = x - 100  # Move exactly one tile left
+    elif game_state.direction == 'right':
+        new_x = x + 100  # Move exactly one tile right
+
+    # First check if the move is valid
+    if not is_valid_move(board, new_x, new_y, game_state):
+        return False  # Don't move if invalid
+
+    # Handle box movement
+    if game_state.is_pulling:
+        # Calculate position behind player
+        behind_x = x + (x - new_x)
+        behind_y = y + (y - new_y)
+
+        # Check for box behind player and move it to current player position first
+        if (behind_x, behind_y) == (board.b1x, board.b1y) and board.box1:
+            board.b1x, board.b1y = x, y  # Move box to current player position
+            game_state.check_box_in_pit(board, 1, x, y)
+            audio.play_sound('move')
+        elif (behind_x, behind_y) == (board.b2x, board.b2y) and board.box2:
+            board.b2x, board.b2y = x, y  # Move box to current player position
+            game_state.check_box_in_pit(board, 2, x, y)
+            audio.play_sound('move')
+        elif (behind_x, behind_y) == (board.b3x, board.b3y) and board.box3:
+            board.b3x, board.b3y = x, y  # Move box to current player position
+            game_state.check_box_in_pit(board, 3, x, y)
+            audio.play_sound('move')
+        elif (behind_x, behind_y) == (board.b4x, board.b4y) and board.box4:
+            board.b4x, board.b4y = x, y  # Move box to current player position
+            game_state.check_box_in_pit(board, 4, x, y)
+            audio.play_sound('move')
+    else:
+        # Handle pushing boxes
+        if (new_x, new_y) == (board.b1x, board.b1y) and board.box1:
+            board.b1x = new_x + (new_x - x)
+            board.b1y = new_y + (new_y - y)
+            if game_state.check_box_in_pit(board, 1, board.b1x, board.b1y):
+                audio.play_sound('fall')
+            else:
+                audio.play_sound('move')
+        elif (new_x, new_y) == (board.b2x, board.b2y) and board.box2:
+            board.b2x = new_x + (new_x - x)
+            board.b2y = new_y + (new_y - y)
+            if game_state.check_box_in_pit(board, 2, board.b2x, board.b2y):
+                audio.play_sound('fall')
+            else:
+                audio.play_sound('move')
+        elif (new_x, new_y) == (board.b3x, board.b3y) and board.box3:
+            board.b3x = new_x + (new_x - x)
+            board.b3y = new_y + (new_y - y)
+            if game_state.check_box_in_pit(board, 3, board.b3x, board.b3y):
+                audio.play_sound('fall')
+            else:
+                audio.play_sound('move')
+        elif (new_x, new_y) == (board.b4x, board.b4y) and board.box4:
+            board.b4x = new_x + (new_x - x)
+            board.b4y = new_y + (new_y - y)
+            if game_state.check_box_in_pit(board, 4, board.b4x, board.b4y):
+                audio.play_sound('fall')
+            else:
+                audio.play_sound('move')
+
+    # Check if player falls into pit
+    if game_state.check_player_in_pit(board, new_x, new_y, audio):
+        return False  # Movement was valid but player fell
+
+    # Move player to new position
+    board.px = new_x
+    board.py = new_y
 
     return True
 
