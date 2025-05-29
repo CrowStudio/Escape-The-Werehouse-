@@ -403,7 +403,7 @@ def main():
 
                     # Apply flickering effect if lights are off
                     if game_state.lights_out:
-                        board.flicker_effect(game_board, game_state, board, game_board)
+                        board.flicker_effect(game_board, game_state, board)
 
                     game_state.player_in_pit = False
 
