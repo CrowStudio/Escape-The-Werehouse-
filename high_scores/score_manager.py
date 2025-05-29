@@ -83,7 +83,7 @@ class ScoreManager:
 
         # Render the title at the top center
         title_text = self.hig_score_font.render('High Scores', True, (255, 215, 115))
-        title_rect = title_text.get_rect(center=(screen.get_width() // 2, 60))
+        title_rect = title_text.get_rect(center=(screen.get_width() // 2, 120))
         screen.blit(title_text, title_rect)
 
         # Define spacing between columns
@@ -166,10 +166,11 @@ class ScoreManager:
             back_text = self.font.render('Back', True, (255, 255, 255))
             back_text_center = back_text.get_rect(center=(screen.get_width() // 2, 520))
             screen.blit(back_text, back_text_center)
-
-        pygame.display.flip()
-        # Wait for a bit so the display stays visible (or you can handle events for interactive behavior)
-        pygame.time.wait(3000)
+            pygame.display.flip()
+        else:
+            pygame.display.flip()
+            # Wait for a bit so the display stays visible (or you can handle events for interactive behavior)
+            pygame.time.wait(3000)
 
 
     # Input box for entering initials after achieving a high score
