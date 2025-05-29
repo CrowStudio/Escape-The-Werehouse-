@@ -155,18 +155,6 @@ class GameState:
         self.search = movement['search']  # Set the search direction
         self.is_searching = True  # Activate searching mode
 
-    def rotate_facing_direction(self, counter_clockwise):
-        """
-        Rotate the player's facing direction clockwise or counter-clockwise.
-        """
-        directions = ['up', 'right', 'down', 'left']  # List of possible directions
-        current_index = directions.index(self.facing_direction)  # Find the current direction index
-        if counter_clockwise:
-            current_index = (current_index - 1) % 4  # Rotate counter-clockwise
-        else:
-            current_index = (current_index + 1) % 4  # Rotate clockwise
-        self.facing_direction = directions[current_index]  # Update the facing direction
-
     # Check if a box has fallen into a pit and update states accordingly
     def check_box_in_pit(self, board, box_num, x, y):
         # Mapping of pit types to their corresponding attributes

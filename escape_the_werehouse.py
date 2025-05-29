@@ -4,6 +4,7 @@ import pygame
 import subprocess
 from pickle import FALSE
 from game_board import BoardElements, TileType, TILE_SIZE
+import game_state
 from sound import AudioManager
 from high_scores import ScoreManager
 from start_screen import StartMenu
@@ -143,13 +144,25 @@ def handle_alternative_movement(game_state, movement):
     """
     if movement['direction'] == 'left':
         # Rotate the facing direction counter-clockwise
-        game_state.rotate_facing_direction(counter_clockwise=True)
+        rotate_facing_direction(game_state, counter_clockwise=True)
     elif movement['direction'] == 'right':
         # Rotate the facing direction clockwise
-        game_state.rotate_facing_direction(counter_clockwise=False)
+        rotate_facing_direction(game_state, counter_clockwise=False)
     elif movement['direction'] in ['up', 'down']:
         # Move in the current facing direction
         move_in_facing_direction(game_state, movement)
+
+def rotate_facing_direction(game_state, counter_clockwise):
+    """
+    Rotate the player's facing direction clockwise or counter-clockwise.
+    """
+    directions = ['up', 'right', 'down', 'left']  # List of possible directions
+    current_index = directions.index(game_state.facing_direction)  # Find the current direction index
+    if counter_clockwise:
+        current_index = (current_index - 1) % 4  # Rotate counter-clockwise
+    else:
+        current_index = (current_index + 1) % 4  # Rotate clockwise
+    game_state.facing_direction = directions[current_index]  # Update the facing direction
 
 def move_in_facing_direction(game_state, movement):
     """
