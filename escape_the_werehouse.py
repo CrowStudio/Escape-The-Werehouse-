@@ -17,11 +17,6 @@ logger = logging.getLogger(__name__)
 try:
     pygame.mixer.pre_init(44100, -16, 1, 2048)
     pygame.init()
-
-    # Create font objects
-    tutorial_font = pygame.font.SysFont('Lucida Console', 12)  # Font for tutorial text
-    font = pygame.font.SysFont('Lucida Console', 24)  # Font for UI text
-    dead_font = pygame.font.SysFont('Arial Black', 72)  # Biggest font for GAME OVER
 except pygame.error as e:
     logger.error(f"Failed to initialize PyGame: {e}")
     sys.exit(1)
@@ -355,8 +350,8 @@ def main():
     board = BoardElements()
     audio = AudioManager()
     high_scores = ScoreManager()
-    screen = pygame.display.set_mode((600, 640))  # Set the screen size to 600x640
-    start_menu = StartMenu(screen, game_state, high_scores, board)
+    game_board = pygame.display.set_mode((board.game_board_x, (board.game_board_y + board.offset_y)))  # Set the screen size to 600x640
+    start_menu = StartMenu(game_board, game_state, high_scores, board)
 
     clock = pygame.time.Clock()
     show_start_screen = True
@@ -374,7 +369,7 @@ def main():
             elif action == 'show_high_scores':
                 # Set to True to enable Back button
                 high_scores.from_start_screen = True
-                high_scores.display_scores(screen)
+                high_scores.display_scores(game_board)
                 while start_menu.show_high_scores:
                     for event in pygame.event.get():
                         if event.type == pygame.QUIT:
@@ -387,10 +382,7 @@ def main():
                                 start_menu.show_high_scores = False
                                 start_menu.draw()
         else:
-            # Set up game board
-            game_board = pygame.display.set_mode((board.game_board_x, board.game_board_y + board.offset_y))  # Adjust the height
             game_state.new_level = True  # Reset level to start from the selected one
-
 
             # Main game loop
             while game_state.is_playing:
@@ -407,11 +399,11 @@ def main():
 
                     game_board.fill((30, 30, 30))
                     # Fade in effect after resetting the level
-                    board.fade_in(screen, board.game_board_x, (board.game_board_y + board.offset_y), board, game_state)
+                    board.fade_in(game_board, board.game_board_x, (board.game_board_y + board.offset_y), board, game_state)
 
                     # Apply flickering effect if lights are off
                     if game_state.lights_out:
-                        board.flicker_effect(game_board, game_state, board, screen)
+                        board.flicker_effect(game_board, game_state, board, game_board)
 
                     game_state.player_in_pit = False
 
@@ -426,14 +418,14 @@ def main():
 
                 # Check level completion
                 if game_state.check_level_complete(board):
-                    game_state.handle_level_complete(board, game_board, screen, high_scores)
+                    game_state.handle_level_complete(board, game_board, high_scores)
                     if not game_state.is_playing:
                         high_scores.from_start_screen = False  # Set the flag to False
-                        high_scores.display_scores(screen)
+                        high_scores.display_scores(game_board)
                         show_start_screen = True
 
                     # Fade out effect
-                    board.fade_out(game_state, screen, board.game_board_x, (board.game_board_y + board.offset_y))
+                    board.fade_out(game_state, game_board, board.game_board_x, (board.game_board_y + board.offset_y))
 
                 if not game_state.player_in_pit and not game_state.check_level_complete(board):
                     # Set background color
@@ -457,29 +449,7 @@ def main():
                     # Apply blackout effect
                     board.apply_blackout(game_board, game_state)
 
-                    # Draw the status bar at the top
-                    bar_rect = pygame.Rect(0, board.offset_y - board.offset_y, screen.get_width(), board.offset_y)
-                    pygame.draw.rect(screen, (50, 50, 50), bar_rect)  # Dark gray color for the bar
-
-                    # Set caption and render the text inside the status bar
-                    if game_state.game and game_state.is_playing:
-                        # Set window caption
-                        pygame.display.set_caption(f'Escape the Werehouse! - {board.map_title[1][game_state.current_level]}')
-                        # Set status bar
-                        moves_text = font.render(f'Moves: {game_state.moves}', True, (255, 255, 255))
-                        total_moves_text = font.render(f'Total Moves: {game_state.total_moves}', True, (255, 255, 255))
-                        lives_text = font.render(f'Lives: {game_state.lives}', True, (255, 255, 255))
-                        # Render status bar
-                        game_board.blit(moves_text, (10, 10))
-                        game_board.blit(total_moves_text, (200, 10))
-                        game_board.blit(lives_text, (480, 10))
-                    elif game_state.is_playing:
-                        # Set window caption
-                        pygame.display.set_caption(f'Escape the Werehouse! - Tutorial {game_state.current_level + 1}')
-                        # Set status bar
-                        tutorial_text = tutorial_font.render(f'{board.map_title[0][game_state.current_level]}', True, (255, 255, 255))
-                        # Render status bar
-                        game_board.blit(tutorial_text, (15, 15))
+                    game_state.draw_status_bar(board, game_board)
 
                     pygame.display.flip()
                     # Cap frame rate

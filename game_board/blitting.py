@@ -947,7 +947,7 @@ class BoardElements():
             self.apply_blackout(game_board, game_state)
             pygame.display.update()
 
-    def fade_out(self, game_state, screen, width, height):
+    def fade_out(self, game_state, game_board, width, height):
         """Create a fade-out effect."""
         fade = pygame.Surface((width, height))
         fade.fill((10, 10, 10))
@@ -967,7 +967,7 @@ class BoardElements():
 
         for alpha in range(start_alpha, end_alpha, inc_alpha):  # Increase alpha gradually
             fade.set_alpha(alpha)
-            screen.blit(fade, (0, 0))
+            game_board.blit(fade, (0, 0))
             pygame.display.update()
             if alpha == 0:
                 pygame.time.wait(init)
@@ -980,13 +980,13 @@ class BoardElements():
             warning_text_rect = warning_text.get_rect(center=(width // 2, 200))
 
             # Blit the warning text
-            screen.blit(warning_text, warning_text_rect)
+            game_board.blit(warning_text, warning_text_rect)
             pygame.display.update()
 
             # Wait for a moment to let the player read the warning
             pygame.time.wait(1500)  # Wait for 1.5 seconds
 
-    def fade_in(self, screen, width, height, board, game_state):
+    def fade_in(self, game_board, width, height, board, game_state):
         """Create a fade-in effect while re-blitting the game board and player."""
         if game_state.game == True:
             # Status bar
@@ -999,7 +999,7 @@ class BoardElements():
             tutorial_font = pygame.font.SysFont('Lucida Console', 12)  # Font for tutorial text
             tutorial_text = tutorial_font.render(f'{board.map_title[0][game_state.current_level]}', True, (255, 255, 255)) # Set window bar
 
-        bar_rect = pygame.Rect(0, board.offset_y - board.offset_y, screen.get_width(), board.offset_y)
+        bar_rect = pygame.Rect(0, board.offset_y - board.offset_y, game_board.get_width(), board.offset_y)
 
         fade = pygame.Surface((width, height))
         fade.fill((10, 10, 10))
@@ -1007,28 +1007,28 @@ class BoardElements():
         # Decrease alpha gradually from 255 (opaque) to 0 (transparent)
         for alpha in range(255, 0, -10):
             # Re-blit the game state each frame
-            screen.fill((30, 30, 30))
-            board.blit_level(screen)
-            board.blit_box_1(screen, 0, 0)
-            board.blit_box_2(screen, 0, 0)
-            board.blit_box_3(screen, 0, 0)
-            board.blit_box_4(screen, 0, 0)
-            board.blit_player(screen, game_state, 0)
+            game_board.fill((30, 30, 30))
+            board.blit_level(game_board)
+            board.blit_box_1(game_board, 0, 0)
+            board.blit_box_2(game_board, 0, 0)
+            board.blit_box_3(game_board, 0, 0)
+            board.blit_box_4(game_board, 0, 0)
+            board.blit_player(game_board, game_state, 0)
 
             if game_state.game == True:
                 pygame.display.set_caption(f'Escape the Werehouse! - {board.map_title[1][game_state.current_level]}')
-                pygame.draw.rect(screen, (50, 50, 50), bar_rect)  # Dark gray color for the bar
-                screen.blit(moves_text, (10, 10))
-                screen.blit(total_moves_text, (200, 10))
-                screen.blit(lives_text, (480, 10))
+                pygame.draw.rect(game_board, (50, 50, 50), bar_rect)  # Dark gray color for the bar
+                game_board.blit(moves_text, (10, 10))
+                game_board.blit(total_moves_text, (200, 10))
+                game_board.blit(lives_text, (480, 10))
                 pygame.display.update()
             else:
                 pygame.display.set_caption(f'Escape the Werehouse! - Tutorial {game_state.current_level + 1}')
-                pygame.draw.rect(screen, (50, 50, 50), bar_rect)  # Dark gray color for the bar
-                screen.blit(tutorial_text, (15, 15))
+                pygame.draw.rect(game_board, (50, 50, 50), bar_rect)  # Dark gray color for the bar
+                game_board.blit(tutorial_text, (15, 15))
 
             fade.set_alpha(alpha)
-            screen.blit(fade, (0, 0))
+            game_board.blit(fade, (0, 0))
             pygame.display.update()
             pygame.time.wait(30)
         return
