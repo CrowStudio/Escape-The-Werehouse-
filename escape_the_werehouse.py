@@ -1,4 +1,5 @@
 from pickle import FALSE
+import sys
 import logging
 import pygame
 import subprocess
@@ -20,8 +21,6 @@ try:
     # Create font objects
     tutorial_font = pygame.font.SysFont('Lucida Console', 12)  # Font for tutorial text
     font = pygame.font.SysFont('Lucida Console', 24)  # Font for UI text
-    dropdown_font = pygame.font.SysFont('Lucida Console', 20)  # Smaller font for dropdown
-    menu_font = pygame.font.SysFont('Arial Black', 42)  # Even bigger font for START MENU
     dead_font = pygame.font.SysFont('Arial Black', 72)  # Biggest font for GAME OVER
 except pygame.error as e:
     logger.error(f"Failed to initialize PyGame: {e}")
