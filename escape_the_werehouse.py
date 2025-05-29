@@ -1,13 +1,13 @@
-from pickle import FALSE
 import sys
 import logging
 import pygame
 import subprocess
-# from game_board.maps import game_maps, tutorial_maps
+from pickle import FALSE
 from game_board import BoardElements, TileType, TILE_SIZE
 from sound import AudioManager
 from high_scores import ScoreManager
 from start_screen import StartMenu
+from game_state import GameState
 
 # Setup logging
 logging.basicConfig(level=logging.DEBUG)
@@ -39,49 +39,12 @@ ARROW_KEYS = {pygame.K_UP:    {'direction': 'up',    'travel': 1, 'search': 1},
 # level_map = [tutorial_maps.tutorial_map]
 # level_map.append(game_maps.level_map)
 
-
-class GameState:
-    def __init__(self):
-        self.game = False  # False == no of initial tutorial levels, True == no of game levels
-        self.is_playing = True
-        self.new_level = True
-
-        self.current_level = 0
-        self.moves = 0
-        self.total_moves = 0
-        self.lives = 3
-
-        self.debounce_timer = 0  # To avoid unwanted movements
-        self.a_key_pressed = False
-
-        self.normal_movement = True
-        self.travel = 0  # Only keep track of direction
-        self.direction = None
-        self.facing_direction = 'up'  # New attribute to track facing direction
-        self.is_pulling = False
-        self.player_in_pit = False
-
-        self.lights_out = False  # New attribute for lights checkbox
-        self.is_searching = False
-        self.search = 0
-        self.search_speed = 0.4
-
-def check_level_complete(board, game_state):
-    # Check if player is on exit tile
-    for element in board.elements:
-        if element[0] == TileType.EXIT:
-            if (board.px, board.py) == element[1]:  # Player position matches exit position
-                game_state.travel = 0
-                return True
-
-    return False
-
 def handle_input(keys, board, game_state, audio):
     """
     Handle keyboard input for player movement and actions.
     """
     # Reset movement variables for this frame to ensure no residual state affects the current frame
-    reset_movement_variables(game_state)
+    game_state.reset_movement_variables()
 
     # Handle pulling action, which is instantaneous and triggered by the spacebar
     game_state.is_pulling = keys[pygame.K_SPACE]
@@ -90,30 +53,23 @@ def handle_input(keys, board, game_state, audio):
     handle_searching(keys, game_state)
 
     # Store the current player position to allow rollback if the move is invalid or dangerous
-    prev_x, prev_y = board.px, board.py
+    game_state.prev_x, game_state.prev_y = board.px, board.py
 
     # Process arrow key inputs for player movement and direction changes
     if process_arrow_keys(keys, game_state, board):
         # Attempt to move the player and boxes; if successful, increment the move count
         if move_player_and_boxes(board, audio, game_state):
             # Only increment the move count if the player's position has changed
-            if (board.px, board.py) != (prev_x, prev_y):
+            if (board.px, board.py) != (game_state.prev_x, game_state.prev_y):
                 game_state.moves += 1
                 # Add moves to total_moves for high scores
                 game_state.total_moves += 1
             return True
         else:
             # Reset player position if the move was invalid or the player fell into a pit
-            board.px, board.py = prev_x, prev_y
+            board.px, board.py = game_state.prev_x, game_state.prev_y
 
     return False
-
-def reset_movement_variables(game_state):
-    """
-    Reset the game state variables related to movement at the start of each frame.
-    """
-    game_state.direction = None  # Reset the movement direction
-    game_state.travel = 0  # Reset the travel distance
 
 def handle_searching(keys, game_state):
     """
@@ -121,24 +77,16 @@ def handle_searching(keys, game_state):
     """
     # Check each WASD key and set the search direction accordingly
     if keys[pygame.K_w]:
-        set_search_direction(game_state, 1)  # Search up
+        game_state.set_search_direction(1)  # Search up
     elif keys[pygame.K_s]:
-        set_search_direction(game_state, 2)  # Search down
+        game_state.set_search_direction(2)  # Search down
     elif keys[pygame.K_a]:
-        set_search_direction(game_state, 3)  # Search left
+        game_state.set_search_direction(3)  # Search left
     elif keys[pygame.K_d]:
-        set_search_direction(game_state, 4)  # Search right
+        game_state.set_search_direction(4)  # Search right
     else:
         game_state.search_speed = 0.4
         game_state.is_searching = False  # No searching if no WASD key is pressed
-
-def set_search_direction(game_state, direction):
-    """
-    Set the search direction and activate searching mode.
-    """
-    game_state.search_speed = 0.1
-    game_state.search = direction  # Set the search direction
-    game_state.is_searching = True  # Activate searching mode
 
 def process_arrow_keys(keys, game_state, board):
     """
@@ -177,10 +125,10 @@ def handle_normal_movement(game_state, movement):
         handle_lights_out_movement(game_state, movement)
     elif game_state.is_pulling:
         # If pulling, set the movement direction
-        set_movement_direction(game_state, movement)
+        game_state.set_movement_direction(movement)
     else:
         # Normal movement without pulling or lights out
-        set_movement_direction(game_state, movement)
+        game_state.set_movement_direction(movement)
 
 def handle_lights_out_movement(game_state, movement):
     """
@@ -188,25 +136,10 @@ def handle_lights_out_movement(game_state, movement):
     """
     if game_state.facing_direction == movement['direction']:
         # Move in the facing direction if already aligned
-        set_movement_direction(game_state, movement)
+        game_state.set_movement_direction(movement)
     else:
         # Update the facing direction and set searching properties if not aligned
-        update_facing_direction(game_state, movement)
-
-def set_movement_direction(game_state, movement):
-    """
-    Set the movement direction and travel distance based on the movement input.
-    """
-    game_state.direction = movement['direction']  # Set the movement direction
-    game_state.travel = movement['travel']  # Set the travel distance
-
-def update_facing_direction(game_state, movement):
-    """
-    Update the player's facing direction and set searching properties.
-    """
-    game_state.facing_direction = movement['direction']  # Update the facing direction
-    game_state.search = movement['search']  # Set the search direction
-    game_state.is_searching = True  # Activate searching mode
+        game_state.update_facing_direction(movement)
 
 def handle_alternative_movement(game_state, movement):
     """
@@ -214,25 +147,13 @@ def handle_alternative_movement(game_state, movement):
     """
     if movement['direction'] == 'left':
         # Rotate the facing direction counter-clockwise
-        rotate_facing_direction(game_state, counter_clockwise=True)
+        game_state.rotate_facing_direction(counter_clockwise=True)
     elif movement['direction'] == 'right':
         # Rotate the facing direction clockwise
-        rotate_facing_direction(game_state, counter_clockwise=False)
+        game_state.rotate_facing_direction(counter_clockwise=False)
     elif movement['direction'] in ['up', 'down']:
         # Move in the current facing direction
         move_in_facing_direction(game_state, movement)
-
-def rotate_facing_direction(game_state, counter_clockwise):
-    """
-    Rotate the player's facing direction clockwise or counter-clockwise.
-    """
-    directions = ['up', 'right', 'down', 'left']  # List of possible directions
-    current_index = directions.index(game_state.facing_direction)  # Find the current direction index
-    if counter_clockwise:
-        current_index = (current_index - 1) % 4  # Rotate counter-clockwise
-    else:
-        current_index = (current_index + 1) % 4  # Rotate clockwise
-    game_state.facing_direction = directions[current_index]  # Update the facing direction
 
 def move_in_facing_direction(game_state, movement):
     """
@@ -245,67 +166,6 @@ def move_in_facing_direction(game_state, movement):
     }
     game_state.direction = direction_map[movement['direction']][game_state.facing_direction]  # Set the movement direction
     game_state.travel = movement['travel']  # Set the travel distance
-
-# Handle actions when a level is completed
-def handle_level_complete(board, game_board, game_state, screen, high_scores):
-    # Render one last frame with player on exit
-    screen.fill((30, 30, 30))
-    board.blit_level(screen)
-    board.blit_box_1(screen, 0, 0)
-    board.blit_box_2(screen, 0, 0)
-    board.blit_box_3(screen, 0, 0)
-    board.blit_box_4(screen, 0, 0)
-    board.blit_player(screen, game_state, 0)
-
-    # Show score for completed level
-    if game_state.game:
-        pygame.display.set_caption(f'Escape the Werehouse!')
-
-        # Draw the status bar at the top
-        bar_rect = pygame.Rect(0, board.offset_y - board.offset_y, screen.get_width(), board.offset_y)
-        pygame.draw.rect(screen, (50, 50, 50), bar_rect)  # Dark gray color for the bar
-
-        # Render the text inside the bar
-        moves_text = font.render(f'Moves: {game_state.moves}', True, (255, 255, 255))
-        total_moves_text = font.render(f'Total Moves: {game_state.total_moves}', True, (255, 255, 255))
-        lives_text = font.render(f'Lives: {game_state.lives}', True, (255, 255, 255))
-        game_board.blit(moves_text, (10, 10))
-        game_board.blit(total_moves_text, (200, 10))
-        game_board.blit(lives_text, (480, 10))
-
-        # Blit stars
-        board.blit_stars(screen, game_state)
-
-    pygame.display.flip()
-    pygame.time.wait(300)
-
-    # Increment level counter
-    game_state.current_level += 1
-    game_state.moves = 0
-    game_state.new_level = True
-
-    # Handle mode transitions
-    if game_state.game == False and game_state.current_level >= 4:
-        # Debug statement
-        print('Well done, you finished the Tutorials! Now try to Escape the Werehouse!')
-        # Set game states
-        game_state.game = True
-        game_state.current_level = 0
-        game_state.moves = 0
-        game_state.total_moves = 0
-        game_state.lives = 3
-    elif game_state.game == True and game_state.current_level >= board.no_of_levels[1]:
-        # Debug statements
-        print('Congratulations! You finished the last level!')
-        print(f'Your have made a total of {game_state.total_moves} successful moves!')
-        # End game
-        game_state.is_playing = False
-        if high_scores.is_high_score(game_state.total_moves):
-            initials = high_scores.get_initials(pygame.display.get_surface())
-            high_scores.add_score(game_state.total_moves, initials)
-
-        print("Displaying high scores...")  # Debug statement
-        high_scores.display_scores(pygame.display.get_surface())
 
 # Handle movement of player and associated boxes
 def move_player_and_boxes(board, audio, game_state):
@@ -337,53 +197,53 @@ def move_player_and_boxes(board, audio, game_state):
         # Check for box behind player and move it to current player position first
         if (behind_x, behind_y) == (board.b1x, board.b1y) and board.box1:
             board.b1x, board.b1y = x, y  # Move box to current player position
-            check_box_in_pit(board, 1, x, y)
+            game_state.check_box_in_pit(board, 1, x, y)
             audio.play_sound('move')
         elif (behind_x, behind_y) == (board.b2x, board.b2y) and board.box2:
             board.b2x, board.b2y = x, y  # Move box to current player position
-            check_box_in_pit(board, 2, x, y)
+            game_state.check_box_in_pit(board, 2, x, y)
             audio.play_sound('move')
         elif (behind_x, behind_y) == (board.b3x, board.b3y) and board.box3:
             board.b3x, board.b3y = x, y  # Move box to current player position
-            check_box_in_pit(board, 3, x, y)
+            game_state.check_box_in_pit(board, 3, x, y)
             audio.play_sound('move')
         elif (behind_x, behind_y) == (board.b4x, board.b4y) and board.box4:
             board.b4x, board.b4y = x, y  # Move box to current player position
-            check_box_in_pit(board, 4, x, y)
+            game_state.check_box_in_pit(board, 4, x, y)
             audio.play_sound('move')
     else:
         # Handle pushing boxes
         if (new_x, new_y) == (board.b1x, board.b1y) and board.box1:
             board.b1x = new_x + (new_x - x)
             board.b1y = new_y + (new_y - y)
-            if check_box_in_pit(board, 1, board.b1x, board.b1y):
+            if game_state.check_box_in_pit(board, 1, board.b1x, board.b1y):
                 audio.play_sound('fall')
             else:
                 audio.play_sound('move')
         elif (new_x, new_y) == (board.b2x, board.b2y) and board.box2:
             board.b2x = new_x + (new_x - x)
             board.b2y = new_y + (new_y - y)
-            if check_box_in_pit(board, 2, board.b2x, board.b2y):
+            if game_state.check_box_in_pit(board, 2, board.b2x, board.b2y):
                 audio.play_sound('fall')
             else:
                 audio.play_sound('move')
         elif (new_x, new_y) == (board.b3x, board.b3y) and board.box3:
             board.b3x = new_x + (new_x - x)
             board.b3y = new_y + (new_y - y)
-            if check_box_in_pit(board, 3, board.b3x, board.b3y):
+            if game_state.check_box_in_pit(board, 3, board.b3x, board.b3y):
                 audio.play_sound('fall')
             else:
                 audio.play_sound('move')
         elif (new_x, new_y) == (board.b4x, board.b4y) and board.box4:
             board.b4x = new_x + (new_x - x)
             board.b4y = new_y + (new_y - y)
-            if check_box_in_pit(board, 4, board.b4x, board.b4y):
+            if game_state.check_box_in_pit(board, 4, board.b4x, board.b4y):
                 audio.play_sound('fall')
             else:
                 audio.play_sound('move')
 
     # Check if player falls into pit
-    if check_player_in_pit(board, game_state, new_x, new_y, audio):
+    if game_state.check_player_in_pit(board, new_x, new_y, audio):
         return False  # Movement was valid but player fell
 
     # Move player to new position
@@ -391,43 +251,6 @@ def move_player_and_boxes(board, audio, game_state):
     board.py = new_y
 
     return True
-
-# Check if a box has fallen into a pit and update states accordingly
-def check_box_in_pit(board, box_num, x, y):
-    # Mapping of pit types to their corresponding attributes
-    pit_mapping = {
-        TileType.PIT1: ('pit1', 'in_pit1'),
-        TileType.PIT2: ('pit2', 'in_pit2'),
-        TileType.PIT3: ('pit3', 'in_pit3'),
-        TileType.PIT4: ('pit4', 'in_pit4'),
-    }
-
-    # Iterate over the elements on the board
-    for element in board.elements:
-        position, pit_type = element[1], element[0]
-
-        # Check if the current element is a pit and matches the given coordinates
-        if position == (x, y) and pit_type in pit_mapping:
-            pit_attr, in_pit_attr = pit_mapping[pit_type]
-
-            # Only proceed if the pit is active
-            if getattr(board, pit_attr):
-                # Deactivate the pit and set the box number in the pit
-                setattr(board, pit_attr, False)
-                setattr(board, in_pit_attr, box_num)
-                print(f"Box {box_num} fell into pit {pit_type}")  # Debug statement
-
-                if box_num == 1:
-                    board.box1 = False
-                elif box_num == 2:
-                    board.box2 = False
-                elif box_num == 3:
-                    board.box3 = False
-                elif box_num == 4:
-                    board.box4 = False
-                return True
-
-            return False
 
 # Check if move is valid
 def is_valid_move(board, new_x, new_y, game_state):
@@ -526,79 +349,6 @@ def is_valid_move(board, new_x, new_y, game_state):
 
     return True
 
-def check_player_in_pit(board, game_state, x, y, audio):
-    if game_state.player_in_pit:
-        return False
-
-    for element in board.elements:
-        if element[1] == (x, y):
-            if element[0] in [TileType.PIT1, TileType.PIT2, TileType.PIT3, TileType.PIT4]:
-                # Check if pit is not filled (active)
-                if ((element[0] == TileType.PIT1 and board.pit1) or
-                    (element[0] == TileType.PIT2 and board.pit2) or
-                    (element[0] == TileType.PIT3 and board.pit3) or
-                    (element[0] == TileType.PIT4 and board.pit4)):
-                    # Player fell in pit
-                    audio.play_sound('fall')
-                    game_state.lives -= 1
-                    game_state.player_in_pit = True
-
-                    # Update player position to the pit
-                    board.px, board.py = x, y
-
-                    # Blit the game board and boxes
-                    screen = pygame.display.get_surface()
-                    screen.fill((30, 30, 30))
-                    board.blit_level(screen)
-                    board.blit_box_1(screen, 0, 0)
-                    board.blit_box_2(screen, 0, 0)
-                    board.blit_box_3(screen, 0, 0)
-                    board.blit_box_4(screen, 0, 0)
-
-                    # Debug statement to check player position
-                    print(f"Blitting player at pit position: ({board.px}, {board.py})")
-
-                    # Reset player movement
-                    game_state.travel = 0
-
-                    # Blit the player on the pit tile
-                    board.blit_player(screen, game_state, 0)
-                    pygame.display.flip()
-
-                    # Fade out effect
-                    board.fade_out(game_state, screen, board.game_board_x, (board.game_board_y + board.offset_y))
-
-                    if game_state.lives <= 0:
-                        display_game_over(game_state)
-                        game_state.is_playing = False
-                    else:
-                        # Reset level
-                        game_state.new_level = True
-                        game_state.total_moves += game_state.moves
-                        game_state.moves = 0
-
-                        return False
-
-                    return True
-    return False
-
-# Show GAME OVER screen when out of lives
-def display_game_over(game_state):
-    screen = pygame.display.get_surface()
-    # Clear the screen
-    screen.fill((10, 10, 10))
-    pygame.display.set_caption('GAME OVER')
-    # Render "GAME OVER" text
-    game_over_text = dead_font.render('GAME OVER', True, (220, 0, 10))
-    game_over_center = game_over_text.get_rect(center=(screen.get_width() // 2, 200))
-    screen.blit(game_over_text, game_over_center)
-
-    # Update the display
-    pygame.display.flip()
-
-    # Wait for a few seconds before returning to the start screen
-    pygame.time.wait(3000)
-
 def main():
     # Initialize game components
     game_state = GameState()
@@ -675,8 +425,8 @@ def main():
                     game_state.debounce_timer -= 1
 
                 # Check level completion
-                if check_level_complete(board, game_state):
-                    handle_level_complete(board, game_board, game_state, screen, high_scores)
+                if game_state.check_level_complete(board):
+                    game_state.handle_level_complete(board, game_board, screen, high_scores)
                     if not game_state.is_playing:
                         high_scores.from_start_screen = False  # Set the flag to False
                         high_scores.display_scores(screen)
@@ -685,7 +435,7 @@ def main():
                     # Fade out effect
                     board.fade_out(game_state, screen, board.game_board_x, (board.game_board_y + board.offset_y))
 
-                if not game_state.player_in_pit and not check_level_complete(board, game_state):
+                if not game_state.player_in_pit and not game_state.check_level_complete(board):
                     # Set background color
                     game_board.fill((30, 30, 30))
 
