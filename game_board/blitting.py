@@ -989,7 +989,6 @@ class BoardElements():
         """Create a fade-in effect while re-blitting the game board and player."""
         if game_state.game == True:
             # Status bar
-            bar_rect = pygame.Rect(0, board.offset_y - board.offset_y, screen.get_width(), board.offset_y)
             font = pygame.font.SysFont('Lucida Console', 24)  # Font for UI text
             moves_text = font.render(f'Moves: {game_state.moves}', True, (255, 255, 255))
             total_moves_text = font.render(f'Total Moves: {game_state.total_moves}', True, (255, 255, 255))
@@ -997,7 +996,9 @@ class BoardElements():
         else:
             # Tutorial bar
             tutorial_font = pygame.font.SysFont('Lucida Console', 12)  # Font for tutorial text
-            tutorial_text = tutorial_font.render(f'{board.map_title[0][game_state.current_level]}', True, (255, 255, 255)) # Set status bar
+            tutorial_text = tutorial_font.render(f'{board.map_title[0][game_state.current_level]}', True, (255, 255, 255)) # Set window bar
+
+        bar_rect = pygame.Rect(0, board.offset_y - board.offset_y, screen.get_width(), board.offset_y)
 
         fade = pygame.Surface((width, height))
         fade.fill((10, 10, 10))
