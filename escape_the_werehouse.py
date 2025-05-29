@@ -27,7 +27,7 @@ except pygame.error as e:
     sys.exit(1)
 
 # Game constants
-FPS = 70
+FPS = 120
 DISTANCE = TILE_SIZE
 MOVEMENT_DELAY = 10  # Controls movement speed (higher = slower)
 ARROW_KEYS = {pygame.K_UP:    {'direction': 'up',    'travel': 1, 'search': 1},
