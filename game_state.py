@@ -73,8 +73,7 @@ class GameState:
     # Handle actions when a level is completed
     def handle_level_complete(self, board, game_board, high_scores):
         # Render one last frame with player on exit
-        game_board.fill((30, 30, 30))
-        self.__blit_level__(board, game_board)
+        self.__blit_level_elements__(game_board, board)
 
         # Show score for completed level
         if self.game:
@@ -228,8 +227,7 @@ class GameState:
                         board.px, board.py = x, y
 
                         game_board = pygame.display.get_surface()
-                        game_board.fill((30, 30, 30))
-                        self.__blit_level__(board, game_board)
+                        self.__blit_level_elements__(game_board, board)
 
                         # Debug statement to check player position
                         print(f"Blitting player at pit position: ({board.px}, {board.py})")
@@ -240,7 +238,7 @@ class GameState:
                         board.fade_out(self, game_board, board.game_board_x, (board.game_board_y + board.offset_y))
 
                         if self.lives <= 0:
-                            self.__display_game_over__()
+                            self.__display_game_over__(game_board)
                             self.is_playing = False
                         else:
                             # Reset level
@@ -254,7 +252,8 @@ class GameState:
                         return True
 
     # Blit the game board and boxes
-    def __blit_level__(self, board, game_board):
+    def __blit_level_elements__(self, game_board, board):
+        game_board.fill((30, 30, 30))
         board.blit_level(game_board)
         board.blit_box_1(game_board, 0, 0)
         board.blit_box_2(game_board, 0, 0)
@@ -266,8 +265,7 @@ class GameState:
         pygame.draw.rect(game_board, (50, 50, 50), bar_rect)  # Dark gray color for the bar
 
     # Show GAME OVER screen when out of lives
-    def __display_game_over__(self):
-        game_board = pygame.display.get_surface()
+    def __display_game_over__(self, game_board):
         # Clear the screen
         game_board.fill((10, 10, 10))
         pygame.display.set_caption('GAME OVER')
