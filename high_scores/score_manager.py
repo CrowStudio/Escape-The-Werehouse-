@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 import pygame
 
 class ScoreManager:
@@ -41,16 +42,37 @@ class ScoreManager:
         # Otherwise, it doesn't qualify as a high score.
         return False
 
-    # Load scores from a file, create the file if it doesn't exist
     def load_scores(self):
         # Get the directory of the current file
         dir_path = os.path.dirname(os.path.abspath(__file__))
+
+        # Navigate one level up and into the game_board/maps directory
+        game_maps_path = os.path.join(dir_path, '..', 'game_board', 'maps', 'game_maps.json')
+
+        # Load the game maps to calculate the total score
+        with open(game_maps_path, 'r') as maps_file:
+            game_maps = json.load(maps_file)
+
+        # Calculate the adjusted scores for each level
+        adjusted_scores = [
+            sum(level['score'] + 1 for level in game_maps['levels']),
+            sum(level['score'] + 2 for level in game_maps['levels']),
+            sum(level['score'] + 3 for level in game_maps['levels'])
+        ]
+
+        # Define the default scores with adjusted values
+        default_scores = [
+            (adjusted_scores[0], 'who'),
+            (adjusted_scores[1], 'are'),
+            (adjusted_scores[2], 'you')
+        ]
+
         # Construct the full path for the high_scores.py file
         file_path = os.path.join(dir_path, 'high_scores.py')
 
         if not os.path.exists(file_path):
             with open(file_path, 'w') as file:
-                file.write('SCORES = [(100, \'who\'), (200, \'are\'), (300, \'you\')]')
+                file.write(f'SCORES = {default_scores}')
 
         try:
             with open(file_path, 'r') as file:
@@ -62,7 +84,7 @@ class ScoreManager:
             print(f"Error loading scores: {e}")
 
         # Return default scores if loading fails
-        return [(100, 'who'), (200, 'are'), (300, 'you')]
+        return default_scores
 
     # Save the current scores to a file
     def save_scores(self):
