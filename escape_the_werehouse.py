@@ -1,7 +1,6 @@
 import sys
 import logging
 import pygame
-import subprocess
 from pickle import FALSE
 from game_board import BoardElements, TileType, TILE_SIZE
 import game_state
