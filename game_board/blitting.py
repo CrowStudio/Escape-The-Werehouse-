@@ -911,7 +911,7 @@ class BoardElements():
 
     def fade_out(self, game_state, game_board, width, height):
         """Create a fade-out effect."""
-        fade = pygame.Surface((width, height + self.offset_y))
+        fade = pygame.Surface((width, height))
         fade.fill((10, 10, 10))
 
         if game_state.lights_out:
@@ -950,7 +950,7 @@ class BoardElements():
 
     def fade_in(self, game_board, width, height, board, game_state):
         """Create a fade-in effect while re-blitting the game board and player."""
-        fade = pygame.Surface((width, height + self.offset_y))
+        fade = pygame.Surface((width, height))
         fade.fill((10, 10, 10))
 
         # Decrease alpha gradually from 255 (opaque) to 0 (transparent)
