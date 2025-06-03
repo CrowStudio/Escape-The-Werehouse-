@@ -3,10 +3,10 @@ import subprocess
 import pygame
 
 class StartMenu:
-    def __init__(self, game_state, board):
+    def __init__(self, level, game_state):
         # Initialize the start screen with necessary attributes
-        self.board = board
-        self.screen = board.game_board
+        self.level = level
+        self.screen = level.game_board
         self.game_state = game_state
         self.tutorial_checked = False  # Checkbox state for tutorial
         self.selected_level = 0  # Currently selected level
@@ -92,9 +92,9 @@ class StartMenu:
         if self.dropdown_open:
             # Determine which set of titles to use based on tutorial mode
             if self.tutorial_checked:
-                titles = self.board.map_title[0]
+                titles = self.level.map_title[0]
             else:
-                titles = self.board.map_title[1]
+                titles = self.level.map_title[1]
 
             lines = []  # Initialize a list to hold the lines of text for the dropdown
             max_line_width = self.screen.get_width() - 50  # Maximum width for a line of text
@@ -211,7 +211,7 @@ class StartMenu:
                 # Check if a level is selected from the dropdown
                 elif self.dropdown_open and 200 <= mouse_pos[0] <= 400 and 235 <= mouse_pos[1] <= 475:
                     level_index = (mouse_pos[1] - 235) // 32
-                    levels = self.board.no_of_levels[0] if self.tutorial_checked else self.board.no_of_levels[1]
+                    levels = self.level.no_of_levels[0] if self.tutorial_checked else self.level.no_of_levels[1]
                     if level_index < levels:
                         self.selected_level = level_index
                         self.dropdown_open = False
@@ -230,8 +230,8 @@ class StartMenu:
                     if dropdown_x <= mouse_pos[0] <= dropdown_x + max(self.dropdown_font.size(line)[0] for line in ["Lights OFF", "Arrow Up = Move Up", "Arrow Up = Move Facing Direction"]) + 80 and dropdown_y + 13 <= mouse_pos[1] <= dropdown_y + 38:
                         self.lights_off_checked = not self.lights_off_checked
                         self.game_state.lights_out = self.lights_off_checked
-                        self.board.blackout = self.game_state.lights_out
-                        print(f"Light toggled: {'OFF' if self.board.blackout else 'ON'}")
+                        self.level.blackout = self.game_state.lights_out
+                        print(f"Light toggled: {'OFF' if self.level.blackout else 'ON'}")
                         self.draw()
 
                     # Check if the "Arrow Up = Move Up" option is clicked

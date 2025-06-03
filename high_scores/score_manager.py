@@ -4,8 +4,8 @@ import json
 import pygame
 
 class ScoreManager:
-    def __init__(self, board):
-        self.board = board
+    def __init__(self, level):
+        self.level = level
 
         self.scores = self.load_scores()
         self.latest_score = None  # Track the latest added score
@@ -20,7 +20,6 @@ class ScoreManager:
         self.latest_score = (score, initials)  # Update the latest score
         self.save_scores()
 
-    # Check if the score is a high score
     def is_high_score(self, score):
         # If there are fewer than 3 high scores, the score qualifies automatically
         if len(self.scores) < 3:
@@ -29,20 +28,18 @@ class ScoreManager:
         # The list is sorted in ascending order (lower is better)
         third_place = self.scores[-1][0]
 
-        # If the new score is strictly better than (i.e. less than) the third place, it's a high score.
+        # If the new score is strictly better than (i.e., less than) the third place, it's a high score.
         if score < third_place:
             return True
 
-        # If the new score equals the third place score, only allow it if
-        # it also matches one of the top two scores that are strictly better.
-        # In other words, at least one of the top two scores must be strictly less than the new score.
-        elif score == third_place:
-            # Check for at least one score among the top two that's strictly less than the new score
-            if self.scores[0][0] < score or self.scores[1][0] < score:
+        # If the new score equals any of the existing high scores, and not equals third place it should qualify
+        for existing_score, _ in self.scores:
+            if score == existing_score and not score == third_place:
                 return True
 
         # Otherwise, it doesn't qualify as a high score.
         return False
+
 
     def load_scores(self):
         # Get the directory of the current file
@@ -98,17 +95,17 @@ class ScoreManager:
         with open(file_path, 'w') as file:
             file.write(f'SCORES = {self.scores}')
 
-    def display_scores(self, screen):
+    def display_scores(self):
         # Fill background with dark color
-        screen.fill((30, 30, 30))
+        self.level.game_board.fill((30, 30, 30))
 
         # Set window caption
         pygame.display.set_caption('High Scores')
 
         # Render the title at the top center
         title_text = self.hig_score_font.render('High Scores', True, (255, 215, 115))
-        title_rect = title_text.get_rect(center=(screen.get_width() // 2, 120))
-        screen.blit(title_text, title_rect)
+        title_rect = title_text.get_rect(center=(self.level.game_board.get_width() // 2, 120))
+        self.level.game_board.blit(title_text, title_rect)
 
         # Define spacing between columns
         spacing = 20
@@ -150,7 +147,7 @@ class ScoreManager:
         total_group_width = max_index_width + spacing + max_initials_width + spacing + max_score_width
 
         # Left position to center the group horizontally
-        left_x = (screen.get_width() - total_group_width) // 2
+        left_x = (self.level.game_board.get_width() - total_group_width) // 2
 
         # Now calculate the fixed x positions for each column:
         index_x = left_x
@@ -174,22 +171,22 @@ class ScoreManager:
                 index_shadow = self.hig_score_font.render(row["index_str"], True, (255, 215, 0))
                 initials_shadow = self.hig_score_font.render(row["initials_str"], True, (255, 215, 0))
                 score_shadow = self.hig_score_font.render(row["score_str"], True, (255, 215, 0))
-                screen.blit(index_shadow, (index_x + offset, y_pos + offset))
-                screen.blit(initials_shadow, (initials_x + offset, y_pos + offset))
-                screen.blit(score_shadow, (score_x + offset, y_pos + offset))
+                self.level.game_board.blit(index_shadow, (index_x + offset, y_pos + offset))
+                self.level.game_board.blit(initials_shadow, (initials_x + offset, y_pos + offset))
+                self.level.game_board.blit(score_shadow, (score_x + offset, y_pos + offset))
 
             # Blit the main texts in white.
-            screen.blit(row["index_surface"], (index_x, y_pos))
-            screen.blit(row["initials_surface"], (initials_x, y_pos))
-            screen.blit(row["score_surface"], (score_x, y_pos))
+            self.level.game_board.blit(row["index_surface"], (index_x, y_pos))
+            self.level.game_board.blit(row["initials_surface"], (initials_x, y_pos))
+            self.level.game_board.blit(row["score_surface"], (score_x, y_pos))
 
         # Optionally, display a 'Back' button if coming from the start screen
         if self.from_start_screen:
             back_button = pygame.Rect(200, 500, 200, 40)  # Adjusted back button position
-            pygame.draw.rect(screen, (255, 255, 255), back_button, 2)
+            pygame.draw.rect(self.level.game_board, (255, 255, 255), back_button, 2)
             back_text = self.font.render('Back', True, (255, 255, 255))
-            back_text_center = back_text.get_rect(center=(screen.get_width() // 2, 520))
-            screen.blit(back_text, back_text_center)
+            back_text_center = back_text.get_rect(center=(self.level.game_board.get_width() // 2, 520))
+            self.level.game_board.blit(back_text, back_text_center)
             pygame.display.flip()
         else:
             pygame.display.flip()
@@ -198,9 +195,9 @@ class ScoreManager:
 
 
     # Input box for entering initials after achieving a high score
-    def get_initials(self, screen):
+    def get_initials(self):
         input_box = pygame.Rect(0, 0, 140, 32)
-        input_box.center = (screen.get_width() // 2, 120)
+        input_box.center = (self.level.game_board.get_width() // 2, 120)
         color = pygame.Color('gold')
         active = True
         text = ''
@@ -221,24 +218,24 @@ class ScoreManager:
                             if len(text) < 3:
                                 text += event.unicode.upper()
 
-            screen.fill((30, 30, 30))
+            self.level.game_board.fill((30, 30, 30))
             # Show celebration text
             celebration_text = self.font.render('Congratulations!', True, (255, 255, 255))
-            celebration_center = celebration_text.get_rect(center=(screen.get_width() // 2, 30))
-            screen.blit(celebration_text, celebration_center)
+            celebration_center = celebration_text.get_rect(center=(self.level.game_board.get_width() // 2, 30))
+            self.level.game_board.blit(celebration_text, celebration_center)
             three_text = self.font.render('You made it to the top three!', True, (255, 255, 255))
-            three_center = three_text.get_rect(center=(screen.get_width() // 2, 60))
-            screen.blit(three_text, three_center)
+            three_center = three_text.get_rect(center=(self.level.game_board.get_width() // 2, 60))
+            self.level.game_board.blit(three_text, three_center)
 
             # Show prompt text
             prompt_text = self.font.render('Enter your initials:', True, (255, 255, 255))
-            prompt_center = prompt_text.get_rect(center=(screen.get_width() // 2, 90))
-            screen.blit(prompt_text, prompt_center)
+            prompt_center = prompt_text.get_rect(center=(self.level.game_board.get_width() // 2, 90))
+            self.level.game_board.blit(prompt_text, prompt_center)
 
             # Blit input text
             txt_surface = self.font.render(text, True, color)
             text_center = txt_surface.get_rect(center=input_box.center)
-            screen.blit(txt_surface, text_center)
+            self.level.game_board.blit(txt_surface, text_center)
 
             pygame.display.flip()
 

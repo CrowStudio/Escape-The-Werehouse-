@@ -208,10 +208,10 @@ class BoardElements():
         print("BoardElements instance created")  # Debug statement
 
         # Initialize game board size to default values
-        self.game_board_x = 600
-        self.game_board_y = 600
-        self.offset_y = 40
-        self.game_board = pygame.display.set_mode((self.game_board_x, (self.game_board_y + self.offset_y)))  # Set the screen size to 600x640
+        self.width = 600
+        self.height = 600
+        self.height_offset = 40
+        self.game_board = pygame.display.set_mode((self.width, (self.height + self.height_offset)))  # Set the screen size to 600x640
 
         # List of map titles
         self.map_title = map_title
@@ -244,7 +244,7 @@ class BoardElements():
         self.pit_box = []
 
         # Variable to keep track of Levels
-        self.lv = 0
+        self.index = 0
 
         # Variable to toggle blackout effect
         self.blackout = False
@@ -258,8 +258,8 @@ class BoardElements():
         # Calculate the dimensions of the game board
         max_x = max(pos[0] for pos in tiles) + TILE_SIZE
         max_y = max(pos[1] for pos in tiles) + TILE_SIZE
-        self.game_board_x = max_x
-        self.game_board_y = max_y
+        self.width = max_x
+        self.height = max_y
 
 
     # Blit start tile
@@ -355,17 +355,17 @@ class BoardElements():
             self.game_board.blit(gfx.no_exit, (pos))
 
 
-    # Setup tiles for Level n
-    def __create_level__(self, game_board, level_map):
+    # Setup tiles for level n
+    def __create_level__(self, level_map):
         '''__create_level__'''
         # For each coordinate in level_map
-        # - Set tiles depending on value of Game Board element
+        # - Set tiles depending on value of the level element
         for i in range(len(level_map)):
             # Genrate random floor and pit tile
             rand_floor = randrange(0, 40)
             rand_pit = randrange(0, 20)
 
-            # Set tile cooresponding to value of Game Board element
+            # Set tile cooresponding to value of the level element
             if level_map[i] == 0:
                 self.__start__(tiles[i])
 
@@ -393,7 +393,7 @@ class BoardElements():
             elif level_map[i] == 8:
                 self.__exit___(tiles[i])
 
-            # Append tile to list of elements for Level n
+            # Append tile to list of elements for level n
             self.elements.append([level_map[i], tiles[i], rand_floor, rand_pit])
 
 
@@ -472,42 +472,42 @@ class BoardElements():
         self.pit4 = True
 
 
-    # Blit tiles for Level n
+    # Blit tiles for level n
     def blit_level(self):
         '''blit_level'''
-        # For each element in list of Level elements
-        # - Blit tiles depending on value of Game Board element
+        # For each element in list of level elements
+        # - Blit tiles depending on value of the  level element
         for el in self.elements:
-            # Blit tile corresponding to value of Game Board element
+            # Blit tile corresponding to value of the level element
             if el[0] == 0:
-                self.__start__((el[1][0], el[1][1] + self.offset_y))
+                self.__start__((el[1][0], el[1][1] + self.height_offset))
 
             elif el[0] == 1:
-                self.__pit_1__((el[1][0], el[1][1] + self.offset_y), self.in_pit1)
+                self.__pit_1__((el[1][0], el[1][1] + self.height_offset), self.in_pit1)
 
             elif el[0] == 2:
-                self.__pit_2__((el[1][0], el[1][1] + self.offset_y), self.in_pit2)
+                self.__pit_2__((el[1][0], el[1][1] + self.height_offset), self.in_pit2)
 
             elif el[0] == 3:
-                self.__pit_3__((el[1][0], el[1][1] + self.offset_y), self.in_pit3, el[3])
+                self.__pit_3__((el[1][0], el[1][1] + self.height_offset), self.in_pit3, el[3])
 
             elif el[0] == 4:
-                self.__pit_4__((el[1][0], el[1][1] + self.offset_y), self.in_pit4, el[3])
+                self.__pit_4__((el[1][0], el[1][1] + self.height_offset), self.in_pit4, el[3])
 
             elif el[0] == 5:
-                self.__pit_as_wall__((el[1][0], el[1][1] + self.offset_y))
+                self.__pit_as_wall__((el[1][0], el[1][1] + self.height_offset))
 
             elif el[0] == 6:
-                self.__floor__((el[1][0], el[1][1] + self.offset_y), el[2])
+                self.__floor__((el[1][0], el[1][1] + self.height_offset), el[2])
 
             elif el[0] == 7:
-                self.__wall__((el[1][0], el[1][1] + self.offset_y))
+                self.__wall__((el[1][0], el[1][1] + self.height_offset))
 
             elif el[0] == 8:
-                self.__exit___((el[1][0], el[1][1] + self.offset_y))
+                self.__exit___((el[1][0], el[1][1] + self.height_offset))
 
-    # Setup of new Level
-    def generate_level(self, game_board, game_state, new_level, option):
+    # Setup of new level
+    def generate_level(self, game_state, new_level, option):
         '''generate_level'''
         # If new_level equals True
         # - Reset elements list and setup tiles,
@@ -516,24 +516,24 @@ class BoardElements():
         if new_level:
             self.elements = []
             print(f'Length of Level Map: {len(level_map)}')
-            self.__create_level__(game_board, level_map[option][self.lv])
-            # self.update_game_board_size(level_map[option][self.lv])
+            self.__create_level__(level_map[option][self.index])
+            # self.update_game_board_size(level_map[option][self.index])
             self.box = []
             self.pit_box = []
             self.__create_boxes__(gfx.boxes)
 
-            # Debug statements to check the values of option, self.lv, and positions
-            print(f'Option: {option}, Level: {self.lv}')
+            # Debug statements to check the values of option, self.index, and positions
+            print(f'Option: {option}, Level: {self.index}')
             print(f'Length of positions: {len(positions)}')
             print(f'Length of positions[option]: {len(positions[option]) if option < len(positions) else "Option out of range"}')
 
-            self.__place_boxes_player_and_reset_pits_and_exit__(active_boxes[option][self.lv],
-                                                                positions[option][self.lv],
-                                                                player_start[option][self.lv],
-                                                                active_exit[option][self.lv])
+            self.__place_boxes_player_and_reset_pits_and_exit__(active_boxes[option][self.index],
+                                                                positions[option][self.index],
+                                                                player_start[option][self.index],
+                                                                active_exit[option][self.index])
 
-            game_state.facing_direction = player_direction[option][self.lv]
-            print(f"Player Directions: {player_direction[option][self.lv]}")
+            game_state.facing_direction = player_direction[option][self.index]
+            print(f"Player Directions: {player_direction[option][self.index]}")
 
             if game_state.facing_direction == 'up':
                 self.current_beam_angle = math.atan2(-1, 0)
@@ -544,7 +544,7 @@ class BoardElements():
             elif game_state.facing_direction == 'right':
                 self.current_beam_angle = math.atan2(0, 1)
 
-            self.lv += 1
+            self.index += 1
 
             return False
 
@@ -557,17 +557,17 @@ class BoardElements():
             # If movement is Up or Down
             # - Blit box1 in direction of y corresponding of b1_move' value
             if b1_travel == 1 or b1_travel == 2:
-                self.game_board.blit(self.box[0][1], (self.b1x, b1_move + self.offset_y))
+                self.game_board.blit(self.box[0][1], (self.b1x, b1_move + self.height_offset))
 
             # Else if movement is Left or Right
             # - Blit box1 in direction of x corresponding of b1_move' value
             elif b1_travel == 3 or b1_travel == 4:
-                self.game_board.blit(self.box[0][1], (b1_move, self.b1y + self.offset_y))
+                self.game_board.blit(self.box[0][1], (b1_move, self.b1y + self.height_offset))
 
             # Else
             # - Blit position of box1
             else:
-                self.game_board.blit(self.box[0][1], (self.b1x, self.b1y + self.offset_y))
+                self.game_board.blit(self.box[0][1], (self.b1x, self.b1y + self.height_offset))
 
 
     # Blit box2
@@ -578,17 +578,17 @@ class BoardElements():
             # If movement is Up or Down
             # - Blit box2 in direction of y corresponding of b2_move' value
             if b2_travel == 1 or b2_travel == 2:
-                self.game_board.blit(self.box[1][1], (self.b2x, b2_move + self.offset_y))
+                self.game_board.blit(self.box[1][1], (self.b2x, b2_move + self.height_offset))
 
             # Else if movement is Left or Right
             # - Blit box2 in direction of x corresponding of b2_move' value
             elif b2_travel == 3 or b2_travel == 4:
-                self.game_board.blit(self.box[1][1], (b2_move, self.b2y + self.offset_y))
+                self.game_board.blit(self.box[1][1], (b2_move, self.b2y + self.height_offset))
 
             # Else
             # - Blit position of box2
             else:
-                self.game_board.blit(self.box[1][1], (self.b2x, self.b2y + self.offset_y))
+                self.game_board.blit(self.box[1][1], (self.b2x, self.b2y + self.height_offset))
 
 
 
@@ -600,17 +600,17 @@ class BoardElements():
             # If movement is Up or Down
             # - Blit box3 in direction of y corresponding of b3_move' value
             if b3_travel == 1 or b3_travel == 2:
-                self.game_board.blit(self.box[2][1], (self.b3x, b3_move + self.offset_y))
+                self.game_board.blit(self.box[2][1], (self.b3x, b3_move + self.height_offset))
 
             # Else if movement is Left or Right
             # - Blit box3 in direction of x corresponding of b3_move' value
             elif b3_travel == 3 or b3_travel == 4:
-                self.game_board.blit(self.box[2][1], (b3_move, self.b3y + self.offset_y))
+                self.game_board.blit(self.box[2][1], (b3_move, self.b3y + self.height_offset))
 
             # Else
             # - Blit position of box3
             else:
-                self.game_board.blit(self.box[2][1], (self.b3x, self.b3y + self.offset_y))
+                self.game_board.blit(self.box[2][1], (self.b3x, self.b3y + self.height_offset))
 
 
 
@@ -622,17 +622,17 @@ class BoardElements():
             # If movement is Up or Down
             # - Blit box4 in direction of y corresponding of b4_move' value
             if b4_travel == 1 or b4_travel == 2:
-                self.game_board.blit(self.box[3][1], (self.b4x, b4_move + self.offset_y))
+                self.game_board.blit(self.box[3][1], (self.b4x, b4_move + self.height_offset))
 
             # Else if movement is Left or Right
             # - Blit box4 in direction of x corresponding of b4_move' value
             elif b4_travel == 3 or b4_travel == 4:
-                self.game_board.blit(self.box[3][1], (b4_move, self.b4y + self.offset_y))
+                self.game_board.blit(self.box[3][1], (b4_move, self.b4y + self.height_offset))
 
             # Else
             # - Blit position of box4
             else:
-                self.game_board.blit(self.box[3][1], (self.b4x, self.b4y + self.offset_y))
+                self.game_board.blit(self.box[3][1], (self.b4x, self.b4y + self.height_offset))
 
 
 
@@ -644,50 +644,50 @@ class BoardElements():
             # If movement is Up
             # - Blit player in direction of y corresponding of p_move' value
             if game_state.travel == 1 and not game_state.is_pulling:
-                self.game_board.blit(gfx.player_up, (self.px, p_move + self.offset_y))
+                self.game_board.blit(gfx.player_up, (self.px, p_move + self.height_offset))
 
             # Else iff movement is Down
             # - Blit player in direction of y corresponding of p_move' value
             elif game_state.travel == 2 and not game_state.is_pulling:
-                self.game_board.blit(gfx.player_down, (self.px, p_move + self.offset_y))
+                self.game_board.blit(gfx.player_down, (self.px, p_move + self.height_offset))
 
             # Else iff movement is Left
             # - Blit player in direction of x corresponding of p_move' value
             elif game_state.travel == 3 and not game_state.is_pulling:
-                self.game_board.blit(gfx.player_left, (p_move, self.py + self.offset_y))
+                self.game_board.blit(gfx.player_left, (p_move, self.py + self.height_offset))
 
             # Else iff movement is Right
             # - Blit player in direction of x corresponding of p_move' value
             elif game_state.travel == 4 and not game_state.is_pulling:
-                self.game_board.blit(gfx.player_right, (p_move, self.py + self.offset_y))
+                self.game_board.blit(gfx.player_right, (p_move, self.py + self.height_offset))
 
             # Else
             # - Blit position of player
             else:
                 if game_state.lights_out:
                     if game_state.facing_direction == 'up':
-                        self.game_board.blit(gfx.player_up, (self.px, self.py + self.offset_y))
+                        self.game_board.blit(gfx.player_up, (self.px, self.py + self.height_offset))
                     elif game_state.facing_direction == 'down':
-                        self.game_board.blit(gfx.player_down, (self.px, self.py + self.offset_y))
+                        self.game_board.blit(gfx.player_down, (self.px, self.py + self.height_offset))
                     elif game_state.facing_direction == 'left':
-                        self.game_board.blit(gfx.player_left, (self.px, self.py + self.offset_y))
+                        self.game_board.blit(gfx.player_left, (self.px, self.py + self.height_offset))
                     elif game_state.facing_direction == 'right':
-                        self.game_board.blit(gfx.player_right, (self.px, self.py + self.offset_y))
+                        self.game_board.blit(gfx.player_right, (self.px, self.py + self.height_offset))
                 else:
-                    self.game_board.blit(gfx.player, (self.px, self.py + self.offset_y))
+                    self.game_board.blit(gfx.player, (self.px, self.py + self.height_offset))
         else:
             if game_state.facing_direction == 'up':
-                self.game_board.blit(gfx.player_up, (self.px, self.py + self.offset_y))
+                self.game_board.blit(gfx.player_up, (self.px, self.py + self.height_offset))
             elif game_state.facing_direction == 'down':
-                self.game_board.blit(gfx.player_down, (self.px, self.py + self.offset_y))
+                self.game_board.blit(gfx.player_down, (self.px, self.py + self.height_offset))
             elif game_state.facing_direction == 'left':
-                self.game_board.blit(gfx.player_left, (self.px, self.py + self.offset_y))
+                self.game_board.blit(gfx.player_left, (self.px, self.py + self.height_offset))
             elif game_state.facing_direction == 'right':
-                self.game_board.blit(gfx.player_right, (self.px, self.py + self.offset_y))
+                self.game_board.blit(gfx.player_right, (self.px, self.py + self.height_offset))
 
 
 
-    # Blit Game Level score
+    # Blit level score
     def blit_stars(self, game_state):
         '''blit_stars'''
         # Set least movements for three stars
@@ -696,15 +696,15 @@ class BoardElements():
         # Blit stars depending on number of moves
         if game_state.moves <= self.top_score:
             # Blit 3 highlighted Stars
-            self.game_board.blit(gfx.stars[3], (186, 155 - self.offset_y))
+            self.game_board.blit(gfx.stars[3], (186, 155 - self.height_offset))
 
         elif game_state.moves > self.top_score and game_state.moves <= (self.top_score + 2):
             # Blit 2 highlighted Stars
-            self.game_board.blit(gfx.stars[2], (186, 155 - self.offset_y))
+            self.game_board.blit(gfx.stars[2], (186, 155 - self.height_offset))
 
         else:
             # Blit 1 highlighted Star
-            self.game_board.blit(gfx.stars[1], (186, 155 - self.offset_y))
+            self.game_board.blit(gfx.stars[1], (186, 155 - self.height_offset))
 
         # Update all changes to display
         pygame.display.update()
@@ -727,7 +727,7 @@ class BoardElements():
         '''
         if self.blackout:
             # Create a mask for the game board with per-pixel alpha.
-            mask = pygame.Surface((self.game_board_x, self.game_board_y + self.offset_y), pygame.SRCALPHA)
+            mask = pygame.Surface((self.width, self.height + self.height_offset), pygame.SRCALPHA)
             # Start with nearly full opacity
             mask.fill((0, 0, 0, 249))  # Semi-transparent black overlay.
 
@@ -737,7 +737,7 @@ class BoardElements():
 
             # Determine the player's center.
             player_center_x = self.px + (TILE_SIZE // 2)
-            player_center_y = self.py + (TILE_SIZE // 2) + self.offset_y  # Add the offset here
+            player_center_y = self.py + (TILE_SIZE // 2) + self.height_offset  # Add the offset here
             player_center = (player_center_x, player_center_y)
 
             target_angle = None
@@ -796,7 +796,6 @@ class BoardElements():
                 # Create a polygon for this slice. Its angular width is the same as the beam_angle,
                 # but we draw an annular arc from slice_start to slice_end.
                 steps = 60  # Smoother curve for this slice.
-                arc_points = []
                 left_edge_angle = direction_angle - (beam_angle / 2)
                 right_edge_angle = direction_angle + (beam_angle / 2)
                 angle_step = (right_edge_angle - left_edge_angle) / steps
@@ -827,9 +826,9 @@ class BoardElements():
             # Finally, blit the mask onto the game board.
             self.game_board.blit(mask, (0, 0))
 
-    def flicker_effect(self, game_board, game_state, board):
+    def flicker_effect(self, game_state):
         if self.blackout:
-            game_board.fill((30, 30, 30))
+            self.game_board.fill((30, 30, 30))
 
             # Define the base pattern of on/off durations in seconds
             base_pattern = [
@@ -863,10 +862,10 @@ class BoardElements():
                     first_iteration = False
                 else:
                     # Apply the on time with a mask of lower opacity
-                    mask = pygame.Surface((self.game_board_x, self.game_board_y + self.offset_y), pygame.SRCALPHA)
+                    mask = pygame.Surface((self.width, self.height + self.height_offset), pygame.SRCALPHA)
                     mask.fill((0, 0, 0, 76))  # Lower opacity
                     self.__blit_level_elements__(game_state)
-                    game_board.blit(mask, (0, 0))
+                    self.game_board.blit(mask, (0, 0))
 
                     if game_state.game == True:
                         # Render Status bar
@@ -878,15 +877,15 @@ class BoardElements():
                     time.sleep(on_time)
 
                 # Apply the off time with a mask of higher opacity
-                mask = pygame.Surface((self.game_board_x, self.game_board_y + self.offset_y), pygame.SRCALPHA)
+                mask = pygame.Surface((self.width, self.height + self.height_offset), pygame.SRCALPHA)
                 mask.fill((0, 0, 0, 249))  # Higher opacity
-                game_board.fill((30, 30, 30))
+                self.game_board.fill((30, 30, 30))
                 self.blit_level()
                 self.blit_box_1(0, 0)
                 self.blit_box_2(0, 0)
                 self.blit_box_3(0, 0)
                 self.blit_box_4(0, 0)
-                game_board.blit(mask, (0, 0))
+                self.game_board.blit(mask, (0, 0))
 
                 if game_state.game == True:
                     # render Status bar
@@ -905,9 +904,9 @@ class BoardElements():
             self.apply_blackout(game_state)
             pygame.display.update()
 
-    def fade_out(self, game_state, game_board, width, height):
+    def fade_out(self, game_state):
         """Create a fade-out effect."""
-        fade = pygame.Surface((width, height))
+        fade = pygame.Surface((self.width, (self.height + self.height_offset)))
         fade.fill((10, 10, 10))
 
         if game_state.lights_out:
@@ -925,7 +924,7 @@ class BoardElements():
 
         for alpha in range(start_alpha, end_alpha, inc_alpha):  # Increase alpha gradually
             fade.set_alpha(alpha)
-            game_board.blit(fade, (0, 0))
+            self.game_board.blit(fade, (0, 0))
             pygame.display.update()
             if alpha == 0:
                 pygame.time.wait(init)
@@ -935,10 +934,10 @@ class BoardElements():
             # Render the warning text
             font = pygame.font.SysFont('Arial Black', 42)
             warning_text = font.render("Watch out for those pits!", True, (220, 0, 10))  # Red text
-            warning_text_rect = warning_text.get_rect(center=(width // 2, 200))
+            warning_text_rect = warning_text.get_rect(center=(self.width // 2, 200))
 
             # Blit the warning text
-            game_board.blit(warning_text, warning_text_rect)
+            self.game_board.blit(warning_text, warning_text_rect)
             pygame.display.update()
 
             # Wait for a moment to let the player read the warning
@@ -946,7 +945,7 @@ class BoardElements():
 
     def fade_in(self, game_state):
         """Create a fade-in effect while re-blitting the game board and player."""
-        fade = pygame.Surface((self.game_board_x, (self.game_board_y + self.offset_y)))
+        fade = pygame.Surface((self.width, (self.height + self.height_offset)))
         fade.fill((10, 10, 10))
 
         # Decrease alpha gradually from 255 (opaque) to 0 (transparent)
@@ -973,7 +972,7 @@ class BoardElements():
         total_moves_text = font.render(f'Total Moves: {game_state.total_moves}', True, (255, 255, 255))
         lives_text = font.render(f'Lives: {game_state.lives}', True, (255, 255, 255))
 
-        bar_rect = pygame.Rect(0, self.offset_y - self.offset_y, self.game_board.get_width(), self.offset_y)
+        bar_rect = pygame.Rect(0, self.height_offset - self.height_offset, self.game_board.get_width(), self.height_offset)
 
         pygame.display.set_caption(f'Escape the Werehouse! - {self.map_title[1][game_state.current_level]}')
         pygame.draw.rect(self.game_board, (50, 50, 50), bar_rect)  # Dark gray color for the bar
@@ -986,7 +985,7 @@ class BoardElements():
         tutorial_font = pygame.font.SysFont('Lucida Console', 12)  # Font for tutorial text
         tutorial_text = tutorial_font.render(f'{self.map_title[0][game_state.current_level]}', True, (255, 255, 255)) # Set window bar
 
-        bar_rect = pygame.Rect(0, self.offset_y - self.offset_y, self.game_board.get_width(), self.offset_y)
+        bar_rect = pygame.Rect(0, self.height_offset - self.height_offset, self.game_board.get_width(), self.height_offset)
 
         pygame.display.set_caption(f'Escape the Werehouse! - Tutorial {game_state.current_level + 1}')
         pygame.draw.rect(self.game_board, (50, 50, 50), bar_rect)  # Dark gray color for the bar
