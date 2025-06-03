@@ -4,7 +4,9 @@ import json
 import pygame
 
 class ScoreManager:
-    def __init__(self):
+    def __init__(self, board):
+        self.board = board
+
         self.scores = self.load_scores()
         self.latest_score = None  # Track the latest added score
         self.from_start_screen = False  # Initialize the flag

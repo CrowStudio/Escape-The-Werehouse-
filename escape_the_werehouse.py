@@ -302,53 +302,53 @@ def move_player_and_boxes(board, audio, game_state):
         # Check for box behind player and move it to current player position first
         if (behind_x, behind_y) == (board.b1x, board.b1y) and board.box1:
             board.b1x, board.b1y = x, y  # Move box to current player position
-            game_state.check_box_in_pit(board, 1, x, y)
+            game_state.check_box_in_pit(1, x, y)
             audio.play_sound('move')
         elif (behind_x, behind_y) == (board.b2x, board.b2y) and board.box2:
             board.b2x, board.b2y = x, y  # Move box to current player position
-            game_state.check_box_in_pit(board, 2, x, y)
+            game_state.check_box_in_pit(2, x, y)
             audio.play_sound('move')
         elif (behind_x, behind_y) == (board.b3x, board.b3y) and board.box3:
             board.b3x, board.b3y = x, y  # Move box to current player position
-            game_state.check_box_in_pit(board, 3, x, y)
+            game_state.check_box_in_pit(3, x, y)
             audio.play_sound('move')
         elif (behind_x, behind_y) == (board.b4x, board.b4y) and board.box4:
             board.b4x, board.b4y = x, y  # Move box to current player position
-            game_state.check_box_in_pit(board, 4, x, y)
+            game_state.check_box_in_pit(4, x, y)
             audio.play_sound('move')
     else:
         # Handle pushing boxes
         if (new_x, new_y) == (board.b1x, board.b1y) and board.box1:
             board.b1x = new_x + (new_x - x)
             board.b1y = new_y + (new_y - y)
-            if game_state.check_box_in_pit(board, 1, board.b1x, board.b1y):
+            if game_state.check_box_in_pit(1, board.b1x, board.b1y):
                 audio.play_sound('fall')
             else:
                 audio.play_sound('move')
         elif (new_x, new_y) == (board.b2x, board.b2y) and board.box2:
             board.b2x = new_x + (new_x - x)
             board.b2y = new_y + (new_y - y)
-            if game_state.check_box_in_pit(board, 2, board.b2x, board.b2y):
+            if game_state.check_box_in_pit(2, board.b2x, board.b2y):
                 audio.play_sound('fall')
             else:
                 audio.play_sound('move')
         elif (new_x, new_y) == (board.b3x, board.b3y) and board.box3:
             board.b3x = new_x + (new_x - x)
             board.b3y = new_y + (new_y - y)
-            if game_state.check_box_in_pit(board, 3, board.b3x, board.b3y):
+            if game_state.check_box_in_pit(3, board.b3x, board.b3y):
                 audio.play_sound('fall')
             else:
                 audio.play_sound('move')
         elif (new_x, new_y) == (board.b4x, board.b4y) and board.box4:
             board.b4x = new_x + (new_x - x)
             board.b4y = new_y + (new_y - y)
-            if game_state.check_box_in_pit(board, 4, board.b4x, board.b4y):
+            if game_state.check_box_in_pit(4, board.b4x, board.b4y):
                 audio.play_sound('fall')
             else:
                 audio.play_sound('move')
 
     # Check if player falls into pit
-    if game_state.check_player_in_pit(board, new_x, new_y, audio):
+    if game_state.check_player_in_pit(new_x, new_y, audio):
         return False  # Movement was valid but player fell
 
     # Move player to new position
@@ -359,12 +359,12 @@ def move_player_and_boxes(board, audio, game_state):
 
 def main():
     # Initialize game components
-    game_state = GameState()
     board = BoardElements()
     audio = AudioManager()
-    high_scores = ScoreManager()
+    game_state = GameState(board)
+    high_scores = ScoreManager(board)
+    start_menu = StartMenu(game_state, board)
     game_board = pygame.display.set_mode((board.game_board_x, (board.game_board_y + board.offset_y)))  # Set the screen size to 600x640
-    start_menu = StartMenu(game_board, game_state, high_scores, board)
 
     clock = pygame.time.Clock()
     show_start_screen = True
@@ -412,7 +412,7 @@ def main():
 
                     game_board.fill((30, 30, 30))
                     # Fade in effect after resetting the level
-                    board.fade_in(game_board, board.game_board_x, (board.game_board_y + board.offset_y), board, game_state)
+                    board.fade_in(game_state)
 
                     # Apply flickering effect if lights are off
                     if game_state.lights_out:
@@ -430,8 +430,8 @@ def main():
                     game_state.debounce_timer -= 1
 
                 # Check level completion
-                if game_state.check_level_complete(board):
-                    game_state.handle_level_complete(board, game_board, high_scores)
+                if game_state.check_level_complete():
+                    game_state.handle_level_complete(high_scores)
                     if not game_state.is_playing:
                         high_scores.from_start_screen = False  # Set the flag to False
                         high_scores.display_scores(game_board)
@@ -440,29 +440,29 @@ def main():
                     # Fade out effect
                     board.fade_out(game_state, game_board, board.game_board_x, (board.game_board_y + board.offset_y))
 
-                if not game_state.player_in_pit and not game_state.check_level_complete(board):
+                if not game_state.player_in_pit and not game_state.check_level_complete():
                     # Set background color
                     game_board.fill((30, 30, 30))
 
                     # Render the rest of the game elements
-                    board.blit_level(game_board)
-                    board.blit_box_1(game_board, 0, 0)
-                    board.blit_box_2(game_board, 0, 0)
-                    board.blit_box_3(game_board, 0, 0)
-                    board.blit_box_4(game_board, 0, 0)
+                    board.blit_level()
+                    board.blit_box_1(0, 0)
+                    board.blit_box_2(0, 0)
+                    board.blit_box_3(0, 0)
+                    board.blit_box_4(0, 0)
 
                     # Render player with direction
                     if game_state.travel in [1, 2]:
-                        board.blit_player(game_board, game_state, board.py)
+                        board.blit_player(game_state, board.py)
                     elif game_state.travel in [3, 4]:
-                        board.blit_player(game_board, game_state, board.px)
+                        board.blit_player(game_state, board.px)
                     else:
-                        board.blit_player(game_board, game_state, 0)
+                        board.blit_player(game_state, 0)
 
                     # Apply blackout effect
-                    board.apply_blackout(game_board, game_state)
+                    board.apply_blackout(game_state)
 
-                    game_state.draw_status_bar(board, game_board)
+                    game_state.draw_status_bar()
 
                     pygame.display.flip()
                     # Cap frame rate

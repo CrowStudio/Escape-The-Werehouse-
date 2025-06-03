@@ -3,12 +3,11 @@ import subprocess
 import pygame
 
 class StartMenu:
-    def __init__(self, screen, game_state, high_scores, board):
+    def __init__(self, game_state, board):
         # Initialize the start screen with necessary attributes
-        self.screen = screen
-        self.game_state = game_state
-        self.high_scores = high_scores
         self.board = board
+        self.screen = board.game_board
+        self.game_state = game_state
         self.tutorial_checked = False  # Checkbox state for tutorial
         self.selected_level = 0  # Currently selected level
         self.show_high_scores = False  # Flag to show high scores
