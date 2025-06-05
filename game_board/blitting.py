@@ -246,9 +246,6 @@ class BoardElements():
         # Variable to keep track of Levels
         self.index = 0
 
-        # Variable to toggle blackout effect
-        self.blackout = False
-
         # Default initial beam angle
         self.current_beam_angle = -1.55
 
@@ -725,184 +722,182 @@ class BoardElements():
         Apply blackout with a flashlight beam effect that smoothly rotates to
         a new direction before the player moves and has a rounded outer edge.
         '''
-        if self.blackout:
-            # Create a mask for the game board with per-pixel alpha.
-            mask = pygame.Surface((self.width, self.height + self.height_offset), pygame.SRCALPHA)
-            # Start with nearly full opacity
-            mask.fill((0, 0, 0, 249))  # Semi-transparent black overlay.
+        # Create a mask for the game board with per-pixel alpha.
+        mask = pygame.Surface((self.width, self.height + self.height_offset), pygame.SRCALPHA)
+        # Start with nearly full opacity
+        mask.fill((0, 0, 0, 249))  # Semi-transparent black overlay.
 
-            # Flashlight parameters.
-            beam_length = int(2 * TILE_SIZE)        # How far the beam extends.
-            beam_angle = math.radians(60)           # Total angular width of the beam (60°)
+        # Flashlight parameters.
+        beam_length = int(2 * TILE_SIZE)        # How far the beam extends.
+        beam_angle = math.radians(60)           # Total angular width of the beam (60°)
 
-            # Determine the player's center.
-            player_center_x = self.px + (TILE_SIZE // 2)
-            player_center_y = self.py + (TILE_SIZE // 2) + self.height_offset  # Add the offset here
-            player_center = (player_center_x, player_center_y)
+        # Determine the player's center.
+        player_center_x = self.px + (TILE_SIZE // 2)
+        player_center_y = self.py + (TILE_SIZE // 2) + self.height_offset  # Add the offset here
+        player_center = (player_center_x, player_center_y)
 
-            target_angle = None
-            # Define a mapping of directions to their corresponding angles
-            direction_to_angle = {
-                'up': math.atan2(-1, 0),
-                'down': math.atan2(1, 0),
-                'left': math.atan2(0, -1),
-                'right': math.atan2(0, 1)
-            }
+        target_angle = None
+        # Define a mapping of directions to their corresponding angles
+        direction_to_angle = {
+            'up': math.atan2(-1, 0),
+            'down': math.atan2(1, 0),
+            'left': math.atan2(0, -1),
+            'right': math.atan2(0, 1)
+        }
 
-            # Determine the target angle based on the game state
-            if game_state.is_pulling:
-                # Map travel directions to opposite angles when pulling
-                travel_to_opposite = {1: 'down', 2: 'up', 3: 'right', 4: 'left'}
-                if game_state.direction in travel_to_opposite:
-                    target_angle = direction_to_angle[travel_to_opposite[game_state.direction]]
-            elif game_state.is_searching:
-                # Map search directions to angles
-                search_to_direction = {1: 'up', 2: 'down', 3: 'left', 4: 'right'}
-                if game_state.search in search_to_direction:
-                    target_angle = direction_to_angle[search_to_direction[game_state.search]]
+        # Determine the target angle based on the game state
+        if game_state.is_pulling:
+            # Map travel directions to opposite angles when pulling
+            travel_to_opposite = {1: 'down', 2: 'up', 3: 'right', 4: 'left'}
+            if game_state.direction in travel_to_opposite:
+                target_angle = direction_to_angle[travel_to_opposite[game_state.direction]]
+        elif game_state.is_searching:
+            # Map search directions to angles
+            search_to_direction = {1: 'up', 2: 'down', 3: 'left', 4: 'right'}
+            if game_state.search in search_to_direction:
+                target_angle = direction_to_angle[search_to_direction[game_state.search]]
+        else:
+            if game_state.normal_movement:
+                # Map travel directions to angles when normal_movement is True
+                travel_to_direction = {1: 'up', 2: 'down', 3: 'left', 4: 'right'}
+                if game_state.travel in travel_to_direction:
+                    target_angle = direction_to_angle[travel_to_direction[game_state.travel]]
             else:
-                if game_state.normal_movement:
-                    # Map travel directions to angles when normal_movement is True
-                    travel_to_direction = {1: 'up', 2: 'down', 3: 'left', 4: 'right'}
-                    if game_state.travel in travel_to_direction:
-                        target_angle = direction_to_angle[travel_to_direction[game_state.travel]]
-                else:
-                    # Use the facing direction to determine the angle
-                    target_angle = direction_to_angle[game_state.facing_direction]
+                # Use the facing direction to determine the angle
+                target_angle = direction_to_angle[game_state.facing_direction]
 
-            smoothing_factor = game_state.search_speed  # 1 is fastest, lower is slower rotation/not full rotation in one go.
-            if target_angle is not None:
-                self.current_beam_angle = self.__lerp_angle__(self.current_beam_angle, target_angle, smoothing_factor)
-            direction_angle = self.current_beam_angle
+        smoothing_factor = game_state.search_speed  # 1 is fastest, lower is slower rotation/not full rotation in one go.
+        if target_angle is not None:
+            self.current_beam_angle = self.__lerp_angle__(self.current_beam_angle, target_angle, smoothing_factor)
+        direction_angle = self.current_beam_angle
 
-            # Instead of one polygon with a sharp boundary,
-            # build up a series of translucent slices for a gradient edge.
-            # The inner slices will be fully transparent out to some fraction of the beam_length,
-            # and the outer slices will gradually blend.
-            slices = 60  # Number of slices for transitioning the gradient.
-            inner_ratio = 0.2  # Fraction of the beam that is fully transparent (hard cutout).
-            # Loop over slices from inner to outer edge.
-            for i in range(slices):
-                # Compute a normalized value [0,1] for this slice.
-                slice_norm = i / float(slices - 1)
-                # Determine the start and end distances of this slice.
-                # Slices start at inner_ratio * beam_length and extend to full beam_length.
-                slice_start = inner_ratio * beam_length + slice_norm * (beam_length * (1 - inner_ratio))
-                slice_end = inner_ratio * beam_length + (slice_norm + 1.0/slices) * (beam_length * (1 - inner_ratio))
-                # Compute the transparency based on slice position.
-                # Slices closer to the inner area are more transparent (alpha=0)
-                # outer slices are less transparent.
-                alpha = int(255 * slice_norm)
-                # Create a polygon for this slice. Its angular width is the same as the beam_angle,
-                # but we draw an annular arc from slice_start to slice_end.
-                steps = 60  # Smoother curve for this slice.
-                left_edge_angle = direction_angle - (beam_angle / 2)
-                right_edge_angle = direction_angle + (beam_angle / 2)
-                angle_step = (right_edge_angle - left_edge_angle) / steps
-                # Create points for the outer boundary of the slice.
-                outer_points = []
-                for j in range(steps + 1):
-                    angle = left_edge_angle + j * angle_step
-                    x = player_center_x + slice_end * math.cos(angle)
-                    y = player_center_y + slice_end * math.sin(angle)
-                    outer_points.append((x, y))
-                # Create points for the inner boundary (in reverse order so polygon is closed).
-                inner_points = []
-                for j in range(steps + 1):
-                    angle = right_edge_angle - j * angle_step
-                    x = player_center_x + slice_start * math.cos(angle)
-                    y = player_center_y + slice_start * math.sin(angle)
-                    inner_points.append((x, y))
-                # Combine into one polygon.
-                polygon_points = outer_points + inner_points
-                # Draw this polygon onto the mask with full transparency.
-                # We subtract from the base overlay by drawing a polygon with low alpha.
-                # Here, the color (0,0,0,alpha) means we are “erasing” that portion of the darkness.
-                pygame.draw.polygon(mask, (0, 0, 0, alpha), polygon_points)
+        # Instead of one polygon with a sharp boundary,
+        # build up a series of translucent slices for a gradient edge.
+        # The inner slices will be fully transparent out to some fraction of the beam_length,
+        # and the outer slices will gradually blend.
+        slices = 60  # Number of slices for transitioning the gradient.
+        inner_ratio = 0.2  # Fraction of the beam that is fully transparent (hard cutout).
+        # Loop over slices from inner to outer edge.
+        for i in range(slices):
+            # Compute a normalized value [0,1] for this slice.
+            slice_norm = i / float(slices - 1)
+            # Determine the start and end distances of this slice.
+            # Slices start at inner_ratio * beam_length and extend to full beam_length.
+            slice_start = inner_ratio * beam_length + slice_norm * (beam_length * (1 - inner_ratio))
+            slice_end = inner_ratio * beam_length + (slice_norm + 1.0/slices) * (beam_length * (1 - inner_ratio))
+            # Compute the transparency based on slice position.
+            # Slices closer to the inner area are more transparent (alpha=0)
+            # outer slices are less transparent.
+            alpha = int(255 * slice_norm)
+            # Create a polygon for this slice. Its angular width is the same as the beam_angle,
+            # but we draw an annular arc from slice_start to slice_end.
+            steps = 60  # Smoother curve for this slice.
+            left_edge_angle = direction_angle - (beam_angle / 2)
+            right_edge_angle = direction_angle + (beam_angle / 2)
+            angle_step = (right_edge_angle - left_edge_angle) / steps
+            # Create points for the outer boundary of the slice.
+            outer_points = []
+            for j in range(steps + 1):
+                angle = left_edge_angle + j * angle_step
+                x = player_center_x + slice_end * math.cos(angle)
+                y = player_center_y + slice_end * math.sin(angle)
+                outer_points.append((x, y))
+            # Create points for the inner boundary (in reverse order so polygon is closed).
+            inner_points = []
+            for j in range(steps + 1):
+                angle = right_edge_angle - j * angle_step
+                x = player_center_x + slice_start * math.cos(angle)
+                y = player_center_y + slice_start * math.sin(angle)
+                inner_points.append((x, y))
+            # Combine into one polygon.
+            polygon_points = outer_points + inner_points
+            # Draw this polygon onto the mask with full transparency.
+            # We subtract from the base overlay by drawing a polygon with low alpha.
+            # Here, the color (0,0,0,alpha) means we are “erasing” that portion of the darkness.
+            pygame.draw.polygon(mask, (0, 0, 0, alpha), polygon_points)
 
-            # You can also draw a central circle if you want the beam to be more rounded at the origin.
-            inner_circle_radius = int(inner_ratio * beam_length)
-            pygame.draw.circle(mask, (0, 0, 0, 0), player_center, inner_circle_radius)
-            # Finally, blit the mask onto the game board.
-            self.game_board.blit(mask, (0, 0))
+        # You can also draw a central circle if you want the beam to be more rounded at the origin.
+        inner_circle_radius = int(inner_ratio * beam_length)
+        pygame.draw.circle(mask, (0, 0, 0, 0), player_center, inner_circle_radius)
+        # Finally, blit the mask onto the game board.
+        self.game_board.blit(mask, (0, 0))
 
     def flicker_effect(self, game_state):
-        if self.blackout:
-            self.game_board.fill((30, 30, 30))
+        self.game_board.fill((30, 30, 30))
 
-            # Define the base pattern of on/off durations in seconds
-            base_pattern = [
-                (0.8, 0.2),
-                (0.15, 0.05),
-                (0.3, 0.05),
-                (0.035, 0.05),
-                (0.015, 0.01)
-            ]
+        # Define the base pattern of on/off durations in seconds
+        base_pattern = [
+            (0.8, 0.2),
+            (0.15, 0.05),
+            (0.3, 0.05),
+            (0.035, 0.05),
+            (0.015, 0.01)
+        ]
 
-            first_iteration = True  # Flag to track the first iteration
+        first_iteration = True  # Flag to track the first iteration
 
-            # Loop through the base pattern and apply random variations
-            for on_time, off_time in base_pattern:
-                # Apply slight random variations to the on and off times
-                on_time = max(0.015, on_time + random.uniform(-0.05, 0.05))
-                off_time = max(0.01, off_time + random.uniform(-0.05, 0.05))
+        # Loop through the base pattern and apply random variations
+        for on_time, off_time in base_pattern:
+            # Apply slight random variations to the on and off times
+            on_time = max(0.015, on_time + random.uniform(-0.05, 0.05))
+            off_time = max(0.01, off_time + random.uniform(-0.05, 0.05))
 
-                if first_iteration:
-                    # First iteration: no mask
-                    self.__blit_level_elements__(game_state)
+            if first_iteration:
+                # First iteration: no mask
+                self.__blit_level_elements__(game_state)
 
-                    if game_state.game == True:
-                        # Render Status bar
-                        self.__render_status_bar__(game_state)
-                    else:
-                        # Render Tutorial bar
-                        self. __render_tutorial_bar__(game_state)
-                    pygame.display.update()
-                    time.sleep(on_time)
-                    first_iteration = False
+                if game_state.game == True:
+                    # Render Status bar
+                    self.__render_status_bar__(game_state)
                 else:
-                    # Apply the on time with a mask of lower opacity
-                    mask = pygame.Surface((self.width, self.height + self.height_offset), pygame.SRCALPHA)
-                    mask.fill((0, 0, 0, 76))  # Lower opacity
-                    self.__blit_level_elements__(game_state)
-                    self.game_board.blit(mask, (0, 0))
-
-                    if game_state.game == True:
-                        # Render Status bar
-                        self.__render_status_bar__(game_state)
-                    else:
-                        # Render Tutorial bar
-                        self. __render_tutorial_bar__(game_state)
-                    pygame.display.update()
-                    time.sleep(on_time)
-
-                # Apply the off time with a mask of higher opacity
+                    # Render Tutorial bar
+                    self. __render_tutorial_bar__(game_state)
+                pygame.display.update()
+                time.sleep(on_time)
+                first_iteration = False
+            else:
+                # Apply the on time with a mask of lower opacity
                 mask = pygame.Surface((self.width, self.height + self.height_offset), pygame.SRCALPHA)
-                mask.fill((0, 0, 0, 249))  # Higher opacity
-                self.game_board.fill((30, 30, 30))
-                self.blit_level()
-                self.blit_box_1(0, 0)
-                self.blit_box_2(0, 0)
-                self.blit_box_3(0, 0)
-                self.blit_box_4(0, 0)
+                mask.fill((0, 0, 0, 76))  # Lower opacity
+                self.__blit_level_elements__(game_state)
                 self.game_board.blit(mask, (0, 0))
 
                 if game_state.game == True:
-                    # render Status bar
+                    # Render Status bar
                     self.__render_status_bar__(game_state)
                 else:
-                    # render Tutorial bar
+                    # Render Tutorial bar
                     self. __render_tutorial_bar__(game_state)
                 pygame.display.update()
-                time.sleep(off_time)
+                time.sleep(on_time)
 
-            # Add a delay before turning on the flashlight beam
-            flashligtht_on_delay = 0.7 + random.uniform(-0.2, 0.3)
-            time.sleep(flashligtht_on_delay)
+            # Apply the off time with a mask of higher opacity
+            mask = pygame.Surface((self.width, self.height + self.height_offset), pygame.SRCALPHA)
+            mask.fill((0, 0, 0, 249))  # Higher opacity
+            self.game_board.fill((30, 30, 30))
+            self.blit_level()
+            self.blit_box_1(0, 0)
+            self.blit_box_2(0, 0)
+            self.blit_box_3(0, 0)
+            self.blit_box_4(0, 0)
+            self.game_board.blit(mask, (0, 0))
 
-            # Turn on the flashlight beam
-            self.apply_blackout(game_state)
+            if game_state.game == True:
+                # render Status bar
+                self.__render_status_bar__(game_state)
+            else:
+                # render Tutorial bar
+                self. __render_tutorial_bar__(game_state)
             pygame.display.update()
+            time.sleep(off_time)
+
+        # Add a delay before turning on the flashlight beam
+        flashligtht_on_delay = 0.7 + random.uniform(-0.2, 0.3)
+        time.sleep(flashligtht_on_delay)
+
+        # Turn on the flashlight beam
+        self.apply_blackout(game_state)
+        pygame.display.update()
 
     def fade_out(self, game_state):
         """Create a fade-out effect."""

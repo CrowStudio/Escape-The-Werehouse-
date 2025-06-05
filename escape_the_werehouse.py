@@ -413,7 +413,7 @@ def main():
                     # Fade in effect after resetting the level
                     level.fade_in(game_state)
 
-                    # Apply flickering effect if lights are off
+                    # Apply flickering effect if lights are out
                     if game_state.lights_out:
                         level.flicker_effect(game_state)
 
@@ -458,8 +458,9 @@ def main():
                     else:
                         level.blit_player(game_state, 0)
 
-                    # Apply blackout effect
-                    level.apply_blackout(game_state)
+                    # Apply blackout effect if lights are out
+                    if game_state.lights_out:
+                        level.apply_blackout(game_state)
 
                     game_state.draw_status_bar()
 
