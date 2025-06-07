@@ -1,9 +1,8 @@
-import sys
-import logging
 import pygame
+import logging
+import sys
 from pickle import FALSE
 from game_board import BoardElements, TileType, TILE_SIZE
-import game_state
 from sound import AudioManager
 from high_scores import ScoreManager
 from start_screen import StartMenu

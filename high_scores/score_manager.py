@@ -1,7 +1,8 @@
+import pygame
+import json
 import os
 import sys
-import json
-import pygame
+
 
 class ScoreManager:
     def __init__(self, level):

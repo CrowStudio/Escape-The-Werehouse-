@@ -1,11 +1,10 @@
 import pygame
-import time
-import math
-import random
-from random import randrange
-from game_board.elements import gfx
 import json
+import math
 import os
+from random import randrange
+import time
+from game_board.elements import gfx
 
 TILE_SIZE = 100
 
