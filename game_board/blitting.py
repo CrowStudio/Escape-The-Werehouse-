@@ -2,6 +2,7 @@ import pygame
 import json
 import math
 import os
+import random
 from random import randrange
 import time
 from game_board.elements import gfx
@@ -260,383 +261,246 @@ class BoardElements():
 
     # Blit start tile
     def __start__(self, pos):
-        '''__start__'''
-        self.game_board.blit(gfx.start, (pos))
-
+        self.game_board.blit(gfx.start, pos)
 
     # Blit floor tile
     def __floor__(self, pos, i):
-        '''__floor__'''
-        self.game_board.blit(gfx.floor[i], (pos))
-
+        self.game_board.blit(gfx.floor[i], pos)
 
     # Blit wall tile
     def __wall__(self, pos):
-        '''__wall__'''
-        self.game_board.blit(gfx.wall, (pos))
-
+        self.game_board.blit(gfx.wall, pos)
 
     # Blit pit1 tile
     def __pit_1__(self, pos, box):
-        '''__pit_1__'''
-        # If Pit active
-        # - Blit pit1 
-        if self.pit1:
-            self.game_board.blit(gfx.pit, (pos))
-
-        # Else
-        # - Blit box_n's box_in_pit
-        else:
-            self.game_board.blit(gfx.boxes[self.pit_box[box - 1]], (pos))
-
+        self._pit_common(pos, box, pit_index=1, eye_index=None)
 
     # Blit pit2 tile
     def __pit_2__(self, pos, box):
-        '''__pit_2__'''
-        # If Pit active
-        # - Blit pit2
-        if self.pit2:
-            self.game_board.blit(gfx.pit, (pos))
-
-        # Else
-        # - Blit box_n's box_in_pit
-        else:
-            self.game_board.blit(gfx.boxes[self.pit_box[box - 1]], (pos))
-
+        self._pit_common(pos, box, pit_index=2, eye_index=None)
 
     # Blit pit3 tile
     def __pit_3__(self, pos, box, i):
-        '''__pit_3__'''
-        # If Pit active
-        # - Blit pit3
-        if self.pit3:
-            self.game_board.blit(gfx.pit_crazy[i], (pos))
-
-        # Else
-        # - Blit box_n's box_in_pit
-        else:
-            self.game_board.blit(gfx.boxes[self.pit_box[box - 1]], (pos))
+        self._pit_common(pos, box, pit_index=3, eye_index=i)
 
     # Blit pit4 tile
     def __pit_4__(self, pos, box, i):
-        '''__pit_4__'''
-        # If Pit active
-        # - Blit pit4
-        if self.pit4:
-            self.game_board.blit(gfx.pit_evil[i], (pos))
-
-        # Else
-        # - Blit box_n's box_in_pit
-        else:
-            self.game_board.blit(gfx.boxes[self.pit_box[box - 1]], (pos))
-
+        self._pit_common(pos, box, pit_index=4, eye_index=i)
 
     # Blit pit_as_wall tile
     def __pit_as_wall__(self, pos):
-        '''__pit_as_wall__'''
-        self.game_board.blit(gfx.pit, (pos))
-
+        # identical to a “dead” pit
+        self.game_board.blit(gfx.pit, pos)
 
     # Blit exit tile
     def __exit___(self, pos):
-        '''__exit___'''
         # If Exit is active
         # - Blit exit
         if self.exit:
-            self.game_board.blit(gfx.exit, (pos))
-
+            self.game_board.blit(gfx.exit, pos)
         # Else
         # - Blit no_exit
         else:
-            self.game_board.blit(gfx.no_exit, (pos))
+            self.game_board.blit(gfx.no_exit, pos)
+
+    # Internal helper for pits 1-4
+    def _pit_common(self, pos, box, pit_index, eye_index):
+        active = getattr(self, f'pit{pit_index}')
+        if active:
+            # Pick correct pit graphic
+            if pit_index in (1, 2):
+                surf = gfx.pit
+            elif pit_index == 3:
+                surf = gfx.pit_crazy[eye_index]
+            else:
+                surf = gfx.pit_evil[eye_index]
+            self.game_board.blit(surf, pos)
+        else:
+            # Blit box in pit
+            bx = self.pit_box[box - 1]
+            self.game_board.blit(gfx.boxes[bx], pos)
 
 
     # Setup tiles for level n
-    def __create_level__(self, level_maps):
-        '''__create_level__'''
+    def __create_level__(self, level_map):
+        self.elements.clear()
         # For each coordinate in level_maps
         # - Set tiles depending on value of the level element
-        for i in range(len(level_maps)):
-            # Genrate random floor and pit tile
+        for i, element in enumerate(level_map):
+            pos        = tiles[i]
             rand_floor = randrange(0, 40)
-            rand_pit = randrange(0, 20)
-
-            # Set tile cooresponding to value of the level element
-            if level_maps[i] == 0:
-                self.__start__(tiles[i])
-
-            elif level_maps[i] == 1:
-                self.__floor__(tiles[i], rand_floor)
-
-            elif level_maps[i] == 2:
-                self.__wall__(tiles[i])
-
-            elif level_maps[i] == 3:
-                self.__pit_1__(tiles[i], self.in_pit1)
-
-            elif level_maps[i] == 4:
-                self.__pit_2__(tiles[i], self.in_pit2)
-
-            elif level_maps[i] == 5:
-                self.__pit_3__(tiles[i], self.in_pit3, rand_pit)
-
-            elif level_maps[i] == 6:
-                self.__pit_4__(tiles[i], self.in_pit4, rand_pit)
-
-            elif level_maps[i] == 7:
-                self.__pit_as_wall__(tiles[i])
-
-            elif level_maps[i] == 8:
-                self.__exit___(tiles[i])
-
-            # Append tile to list of elements for level n
-            self.elements.append([level_maps[i], tiles[i], rand_floor, rand_pit])
+            rand_pit   = randrange(0, 20)
+            # store exactly the tuple [element, pos, rand_floor, rand_pit]
+            self.elements.append([element, pos, rand_floor, rand_pit])
 
 
     # Setup of Boxes graphics
     def __create_boxes__(self, level_boxes):
-        '''__create_boxes__'''
-        # Generate random Box
-        rand = randrange(1, 8, 2)
-        # Set graphic for random Box
-        rand_box = [rand, level_boxes[rand]]
-        # Set box_in_pit to coorespond to Box graphic
-        rand_pit_box = (rand - 1)
+        """
+        Pick four random odd indices in the range 1..7 **with replacement**.
+        This will genuinely randomize each of the 4 graphics, possibly with repeats.
+        """
+        self.box.clear()
+        self.pit_box.clear()
 
-        # Append graphics for Box to list of Boxes
-        self.box.append(rand_box)
-        self.pit_box.append(rand_pit_box)
-
-        # Set counter to 1
-        r = 1
-
-        # While counter is less than 4
-        while r < 4:
+        count = 0
+        while count < 4:
             # Generate new random Box
-            rand = randrange(1, 8, 2)
-            # Set graphic for random Box
-            rand_box = [rand, level_boxes[rand]]
+            rand = randrange(1, 8, 2)  # picks 1,3,5,7 at random
+            self.box.append([rand, level_boxes[rand]])
             # Set box_in_pit to coorespond to Box graphic
-            rand_pit_box = (rand - 1)
+            self.pit_box.append(rand - 1)
+            count += 1
 
-            # If Box not in list of Boxes
-            # - Set graphics for Box to list of Boxes
-            if rand_box not in self.box:
-                self.pit_box.append(rand_pit_box)
-                self.box.append(rand_box)
 
-                # Increase counter
-                r += 1
-        
-    # Place Boxes, Player, and reset Pits
-    def __place_boxes_player_and_reset_pits_and_exit__(self, active_boxes, positions, player_start, active_exit):
-        '''__place_boxes_player_and_reset_pits__'''
-        # Activate/inactivate box1
-        self.box1 = active_boxes[0]
-        # Set startpoint for box1
-        self.b1x, self.b1y = positions[0]
-        print(f"Box 1: Active={self.box1}, Position={(self.b1x, self.b1y)}")  # Debug statement
+    # Place Boxes, Player, reset Pits, and Exit
+    def __place_boxes_player_and_reset_pits_and_exit__(self,
+                active_boxes, positions, player_start, active_exit):
+        self.box1, (self.b1x, self.b1y) = active_boxes[0], positions[0]
+        self.box2, (self.b2x, self.b2y) = active_boxes[1], positions[1]
+        self.box3, (self.b3x, self.b3y) = active_boxes[2], positions[2]
+        self.box4, (self.b4x, self.b4y) = active_boxes[3], positions[3]
 
-        # Activate/inactivate box2
-        self.box2 = active_boxes[1]
-        # Set startpoint for box2
-        self.b2x, self.b2y = positions[1]
-        print(f"Box 2: Active={self.box2}, Position={(self.b2x, self.b2y)}")  # Debug statement
-
-        # Activate/inactivate box3
-        self.box3 = active_boxes[2]
-        # Set startpoint for box3
-        self.b3x, self.b3y = positions[2]
-        print(f"Box 3: Active={self.box3}, Position={(self.b3x, self.b3y)}")  # Debug statement
-
-        # Activate/inactivate box4
-        self.box4 = active_boxes[3]
-        # Set startpoint for box4
-        self.b4x, self.b4y = positions[3]
-        print(f"Box 4: Active={self.box4}, Position={(self.b4x, self.b4y)}")  # Debug statement
-
-        # Set startpoint for Player
         self.px, self.py = player_start
-
-        # Activate/inactivate exit
+        self.pit1 = self.pit2 = self.pit3 = self.pit4 = True
         self.exit = active_exit
 
-        # Set all Pits to active
-        self.pit1 = True
-        self.pit2 = True
-        self.pit3 = True
-        self.pit4 = True
 
-
-    # Blit tiles for level n
+    # Blit tiles for level n with the help of dispatch
     def blit_level(self):
-        '''blit_level'''
-        # For each element in list of level elements
-        # - Blit tiles depending on value of the  level element
-        for el in self.elements:
-            # Blit tile corresponding to value of the level element
-            if el[0] == 0:
-                self.__start__((el[1][0], el[1][1] + self.height_offset))
+        # dispatch: tile_code → (method, args...)
+        dispatch = {
+            0: (self.__start__,         ()),
+            1: (self.__pit_1__,         ('in_pit1', None)),
+            2: (self.__pit_2__,         ('in_pit2', None)),
+            3: (self.__pit_3__,         ('in_pit3', 'eyes')),
+            4: (self.__pit_4__,         ('in_pit4', 'eyes')),
+            5: (self.__pit_as_wall__,   ()),
+            6: (self.__floor__,         ('floor',)),
+            7: (self.__wall__,          ()),
+            8: (self.__exit___,         ())
+        }
 
-            elif el[0] == 1:
-                self.__pit_1__((el[1][0], el[1][1] + self.height_offset), self.in_pit1)
+        for element, pos, rand_floor, rand_pit in self.elements:
+            method, args = dispatch[element]
+            x, y = pos[0], pos[1] + self.height_offset
 
-            elif el[0] == 2:
-                self.__pit_2__((el[1][0], el[1][1] + self.height_offset), self.in_pit2)
+            # unwrap args tuple into the correct call
+            if not args:
+                method((x, y))
+            elif args == ('floor',):
+                method((x, y), rand_floor)
+            elif args == ('in_pit1', None):
+                method((x, y), self.in_pit1)
+            elif args == ('in_pit2', None):
+                method((x, y), self.in_pit2)
+            elif args == ('in_pit3', 'eyes'):
+                method((x, y), self.in_pit3, rand_pit)
+            elif args == ('in_pit4', 'eyes'):
+                method((x, y), self.in_pit4, rand_pit)
 
-            elif el[0] == 3:
-                self.__pit_3__((el[1][0], el[1][1] + self.height_offset), self.in_pit3, el[3])
-
-            elif el[0] == 4:
-                self.__pit_4__((el[1][0], el[1][1] + self.height_offset), self.in_pit4, el[3])
-
-            elif el[0] == 5:
-                self.__pit_as_wall__((el[1][0], el[1][1] + self.height_offset))
-
-            elif el[0] == 6:
-                self.__floor__((el[1][0], el[1][1] + self.height_offset), el[2])
-
-            elif el[0] == 7:
-                self.__wall__((el[1][0], el[1][1] + self.height_offset))
-
-            elif el[0] == 8:
-                self.__exit___((el[1][0], el[1][1] + self.height_offset))
 
     # Setup of new level
     def generate_level(self, game_state, new_level, option):
-        '''generate_level'''
-        # If new_level equals True
-        # - Reset elements list and setup tiles,
-        #   reset box and pit_box list and Pits then place Boxes and Player,
-        #   increase level counter, and set new_level to False
-        if new_level:
-            self.elements = []
-            print(f'Length of Level Map: {len(level_maps)}')
-            self.__create_level__(level_maps[option][self.index])
-            # self.update_game_board_size(level_maps[option][self.index])
-            self.box = []
-            self.pit_box = []
-            self.__create_boxes__(gfx.boxes)
+        if not new_level:
+            return True
 
-            # Debug statements to check the values of option, self.index, and positions
-            print(f'Option: {option}, Level: {self.index}')
-            print(f'Length of positions: {len(positions)}')
-            print(f'Length of positions[option]: {len(positions[option]) if option < len(positions) else "Option out of range"}')
+        # Reset element table & create new
+        self.__create_level__(level_maps[option][self.index])
 
-            self.__place_boxes_player_and_reset_pits_and_exit__(active_boxes[option][self.index],
-                                                                positions[option][self.index],
-                                                                player_start[option][self.index],
-                                                                active_exit[option][self.index])
+        # Reset Boxes & Pits
+        self.__create_boxes__(gfx.boxes)
 
-            game_state.facing_direction = player_direction[option][self.index]
-            print(f"Player Directions: {player_direction[option][self.index]}")
+        # Debug prints
+        print(f'Option={option}, Level={self.index}')
+        print(f'positions count={len(positions[option])}')
 
-            if game_state.facing_direction == 'up':
-                self.current_beam_angle = math.atan2(-1, 0)
-            elif game_state.facing_direction == 'down':
-                self.current_beam_angle = math.atan2(1, 0)
-            elif game_state.facing_direction == 'left':
-                self.current_beam_angle = math.atan2(0, -1)
-            elif game_state.facing_direction == 'right':
-                self.current_beam_angle = math.atan2(0, 1)
+        # Place boxes, rest Player and Exit
+        self.__place_boxes_player_and_reset_pits_and_exit__(
+            active_boxes[option][self.index],
+            positions[option][self.index],
+            player_start[option][self.index],
+            active_exit[option][self.index]
+        )
 
-            self.index += 1
+        # Facing & beam angle
+        game_state.facing_direction = player_direction[option][self.index]
+        fd = game_state.facing_direction
+        if   fd == 'up':    ang = math.atan2(-1, 0)
+        elif fd == 'down':  ang = math.atan2( 1, 0)
+        elif fd == 'left':  ang = math.atan2( 0, -1)
+        else:               ang = math.atan2( 0, 1)
+        self.current_beam_angle = ang
 
-            return False
+        self.index += 1
+        return False
 
 
-    # Blit box1
+    # Generic box blitter
+    def blit_box(self, index, travel, move):
+        """
+        Generic blitter for box at self.box[index],
+        ground‐truth positions self.b{n}x/y, active flag self.box{n}.
+        """
+        active = getattr(self, f'box{index + 1}')
+        if not active:
+            return
+
+        # Pick sprite
+        sprite = self.box[index][1]
+
+        # Movement in y axis
+        if travel in (1, 2):
+            x = getattr(self, f'b{index + 1}x')
+            y = move + self.height_offset
+
+        # Movement in x axis
+        elif travel in (3, 4):
+            x = move
+            y = getattr(self, f'b{index + 1}y') + self.height_offset
+
+        # No movement
+        else:
+            x = getattr(self, f'b{index + 1}x')
+            y = getattr(self, f'b{index + 1}y') + self.height_offset
+
+        self.game_board.blit(sprite, (x, y))
+
+
+    # Blit Boxes 1-4 with the help of the generic blit_box()
     def blit_box_1(self, b1_travel, b1_move):
         '''blit_box_1'''
-        # If box1 is active
-        if self.box1:
-            # If movement is Up or Down
-            # - Blit box1 in direction of y corresponding of b1_move' value
-            if b1_travel == 1 or b1_travel == 2:
-                self.game_board.blit(self.box[0][1], (self.b1x, b1_move + self.height_offset))
+        self.blit_box(0, b1_travel, b1_move)
 
-            # Else if movement is Left or Right
-            # - Blit box1 in direction of x corresponding of b1_move' value
-            elif b1_travel == 3 or b1_travel == 4:
-                self.game_board.blit(self.box[0][1], (b1_move, self.b1y + self.height_offset))
-
-            # Else
-            # - Blit position of box1
-            else:
-                self.game_board.blit(self.box[0][1], (self.b1x, self.b1y + self.height_offset))
-
-
-    # Blit box2
     def blit_box_2(self, b2_travel, b2_move):
         '''blit_box2'''
-        # If box2 is active
-        if self.box2:
-            # If movement is Up or Down
-            # - Blit box2 in direction of y corresponding of b2_move' value
-            if b2_travel == 1 or b2_travel == 2:
-                self.game_board.blit(self.box[1][1], (self.b2x, b2_move + self.height_offset))
+        self.blit_box(1, b2_travel, b2_move)
 
-            # Else if movement is Left or Right
-            # - Blit box2 in direction of x corresponding of b2_move' value
-            elif b2_travel == 3 or b2_travel == 4:
-                self.game_board.blit(self.box[1][1], (b2_move, self.b2y + self.height_offset))
-
-            # Else
-            # - Blit position of box2
-            else:
-                self.game_board.blit(self.box[1][1], (self.b2x, self.b2y + self.height_offset))
-
-
-
-    # Blit box3
     def blit_box_3(self, b3_travel, b3_move):
         '''blit_box3'''
-        # If box3 is active
-        if self.box3:
-            # If movement is Up or Down
-            # - Blit box3 in direction of y corresponding of b3_move' value
-            if b3_travel == 1 or b3_travel == 2:
-                self.game_board.blit(self.box[2][1], (self.b3x, b3_move + self.height_offset))
+        self.blit_box(2, b3_travel, b3_move)
 
-            # Else if movement is Left or Right
-            # - Blit box3 in direction of x corresponding of b3_move' value
-            elif b3_travel == 3 or b3_travel == 4:
-                self.game_board.blit(self.box[2][1], (b3_move, self.b3y + self.height_offset))
-
-            # Else
-            # - Blit position of box3
-            else:
-                self.game_board.blit(self.box[2][1], (self.b3x, self.b3y + self.height_offset))
-
-
-
-    # Blit box4
     def blit_box_4(self, b4_travel, b4_move):
         '''blit_box4'''
-        # If box4 is active
-        if self.box4:
-            # If movement is Up or Down
-            # - Blit box4 in direction of y corresponding of b4_move' value
-            if b4_travel == 1 or b4_travel == 2:
-                self.game_board.blit(self.box[3][1], (self.b4x, b4_move + self.height_offset))
-
-            # Else if movement is Left or Right
-            # - Blit box4 in direction of x corresponding of b4_move' value
-            elif b4_travel == 3 or b4_travel == 4:
-                self.game_board.blit(self.box[3][1], (b4_move, self.b4y + self.height_offset))
-
-            # Else
-            # - Blit position of box4
-            else:
-                self.game_board.blit(self.box[3][1], (self.b4x, self.b4y + self.height_offset))
-
+        self.blit_box(3, b4_travel, b4_move)
 
 
     # Blit player
     def blit_player(self, game_state, p_move):
         '''blit_player'''
-        # If play equals True
-        if self.play and game_state.normal_movement:
+        # If lights out or Up is moving direction
+        # - Blit facing direction of player
+        if game_state.lights_out or not game_state.normal_movement:
+            if game_state.facing_direction == 'up':
+                self.game_board.blit(gfx.player_up, (self.px, self.py + self.height_offset))
+            elif game_state.facing_direction == 'down':
+                self.game_board.blit(gfx.player_down, (self.px, self.py + self.height_offset))
+            elif game_state.facing_direction == 'left':
+                self.game_board.blit(gfx.player_left, (self.px, self.py + self.height_offset))
+            elif game_state.facing_direction == 'right':
+                self.game_board.blit(gfx.player_right, (self.px, self.py + self.height_offset))
+
+        else:
             # If movement is Up
             # - Blit player in direction of y corresponding of p_move' value
             if game_state.travel == 1 and not game_state.is_pulling:
@@ -657,55 +521,32 @@ class BoardElements():
             elif game_state.travel == 4 and not game_state.is_pulling:
                 self.game_board.blit(gfx.player_right, (p_move, self.py + self.height_offset))
 
-            # Else
-            # - Blit position of player
+            # - Blit no player with no travel
             else:
-                if game_state.lights_out:
-                    if game_state.facing_direction == 'up':
-                        self.game_board.blit(gfx.player_up, (self.px, self.py + self.height_offset))
-                    elif game_state.facing_direction == 'down':
-                        self.game_board.blit(gfx.player_down, (self.px, self.py + self.height_offset))
-                    elif game_state.facing_direction == 'left':
-                        self.game_board.blit(gfx.player_left, (self.px, self.py + self.height_offset))
-                    elif game_state.facing_direction == 'right':
-                        self.game_board.blit(gfx.player_right, (self.px, self.py + self.height_offset))
-                else:
-                    self.game_board.blit(gfx.player, (self.px, self.py + self.height_offset))
-        else:
-            if game_state.facing_direction == 'up':
-                self.game_board.blit(gfx.player_up, (self.px, self.py + self.height_offset))
-            elif game_state.facing_direction == 'down':
-                self.game_board.blit(gfx.player_down, (self.px, self.py + self.height_offset))
-            elif game_state.facing_direction == 'left':
-                self.game_board.blit(gfx.player_left, (self.px, self.py + self.height_offset))
-            elif game_state.facing_direction == 'right':
-                self.game_board.blit(gfx.player_right, (self.px, self.py + self.height_offset))
+                self.game_board.blit(gfx.player, (self.px, self.py + self.height_offset))
 
 
-
-    # Blit level score
+    # Blit level score (stars), identical logic but shorter
     def blit_stars(self, game_state):
         '''blit_stars'''
-        # Set least movements for three stars
-        self.top_score = level_score[0][game_state.current_level]
+        least_moves = level_score[0][game_state.current_level]
 
         # Blit stars depending on number of moves
-        if game_state.moves <= self.top_score:
-            # Blit 3 highlighted Stars
-            self.game_board.blit(gfx.stars[3], (186, 155 - self.height_offset))
-
-        elif game_state.moves > self.top_score and game_state.moves <= (self.top_score + 2):
-            # Blit 2 highlighted Stars
-            self.game_board.blit(gfx.stars[2], (186, 155 - self.height_offset))
-
+        if game_state.moves <= least_moves:
+            # Set 3 highlighted Stars
+            count = 3
+        elif game_state.moves <= least_moves + 2:
+            # Set 2 highlighted Stars
+            count = 2
         else:
-            # Blit 1 highlighted Star
-            self.game_board.blit(gfx.stars[1], (186, 155 - self.height_offset))
+            # Set 1 highlighted Star
+            count = 1
 
-        # Update all changes to display
+        # Blit numbers of highlighted Stars
+        self.game_board.blit(gfx.stars[count], (186, 155 - self.height_offset))
         pygame.display.update()
-        # Pause for 3 seconds to show Stars
-        time.sleep(3)
+        # Pause for 2 seconds to show Stars
+        time.sleep(2)
 
 
     def __lerp_angle__(self, current, target, factor):
