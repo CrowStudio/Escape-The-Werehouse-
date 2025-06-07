@@ -65,7 +65,7 @@ class LevelEditor:
         self.current_tile = 'FLOOR'
         self.placed_tiles = self.initialize_placed_tiles()
         self.cell_size = 600 // max(self.rows, self.cols)
-        self.file_path = os.path.join(os.path.dirname(__file__), 'game_board', 'maps', 'game_maps.json')
+        self.file_path = os.path.join(os.path.dirname(__file__), 'game_board', 'stages','level_maps', 'maps_stage_1.json')
         self.initialize_pygame()
         self.initialize_floor_indices()
         self.initialize_under_tiles()

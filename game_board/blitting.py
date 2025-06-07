@@ -81,21 +81,21 @@ tiles = (
 
 # Set paths for level data
 script_dir = os.path.dirname(os.path.abspath(__file__))
-tutorial_path = os.path.join(script_dir, 'maps/tutorial_maps.json')
-game_path = os.path.join(script_dir, 'maps/game_maps.json')
+tutorial_path = os.path.join(script_dir, 'stages/level_maps/tutorial_maps.json')
+maps_stage_1_path = os.path.join(script_dir, 'stages\level_maps\maps_stage_1.json')
 
 # Load the tutorial maps
 with open(tutorial_path, 'r') as file:
     tutorial_data = json.load(file)
 
 # Load the game maps
-with open(game_path, 'r') as file:
-    game_data = json.load(file)
+with open(maps_stage_1_path, 'r') as file:
+    stage_1_level_data = json.load(file)
 
 # Initiate variables to store levels from the JSON data
-tutorial_map = []
-game_map =[]
-level_map = []
+tutorial_maps = []
+stage_maps =[]
+level_maps = []
 
 tutorial_title = []
 game_title =[]
@@ -127,7 +127,7 @@ level_score = []
 # Add the tutorial maps
 for level in tutorial_data['levels']:
     # Create the level map
-    tutorial_map.append([tutorial_data['game_board_elements'][item] for row in level['map'] for item in row])
+    tutorial_maps.append([tutorial_data['game_board_elements'][item] for row in level['map'] for item in row])
     # Extract other level data
     tutorial_title.append(level['title'])
     tutorial_active_boxes.append(level['active_boxes'])
@@ -145,9 +145,9 @@ for level in tutorial_data['levels']:
     tutorial_active_exit.append(level['exit_active'])
 
 # Add the game maps
-for level in game_data['levels']:
+for level in stage_1_level_data['levels']:
     # Create the level map
-    game_map.append([game_data['game_board_elements'][item] for row in level['map'] for item in row])
+    stage_maps.append([stage_1_level_data['game_board_elements'][item] for row in level['map'] for item in row])
 
     # Extract other level data
     game_title.append(level['title'])
@@ -167,9 +167,9 @@ for level in game_data['levels']:
     game_score.append(level['score'])
 
 # Update the level variables
-level_map.append(tutorial_map)
-level_map.append(game_map)
-print(f'level_map: {level_map}')
+level_maps.append(tutorial_maps)
+level_maps.append(stage_maps)
+print(f'level_maps: {level_maps}')
 
 map_title.append(tutorial_title)
 map_title.append(game_title)
@@ -217,8 +217,8 @@ class BoardElements():
         self.map_title = map_title
 
         # Variable to keep track of numbers of Levels
-        self.no_of_levels = [sum(type(i) == type([]) for i in level_map[0])]
-        self.no_of_levels.append(sum(type(i) == type([]) for i in level_map[1]))
+        self.no_of_levels = [sum(type(i) == type([]) for i in level_maps[0])]
+        self.no_of_levels.append(sum(type(i) == type([]) for i in level_maps[1]))
 
         # Variable to tell if Player finished the Game or fell into a Pit
         self.play = True
@@ -250,7 +250,7 @@ class BoardElements():
         self.current_beam_angle = -1.55
 
 
-    def update_game_board_size(self, level_map):
+    def update_game_board_size(self, level_maps):
         '''Update game board size based on level map'''
         # Calculate the dimensions of the game board
         max_x = max(pos[0] for pos in tiles) + TILE_SIZE
@@ -353,45 +353,45 @@ class BoardElements():
 
 
     # Setup tiles for level n
-    def __create_level__(self, level_map):
+    def __create_level__(self, level_maps):
         '''__create_level__'''
-        # For each coordinate in level_map
+        # For each coordinate in level_maps
         # - Set tiles depending on value of the level element
-        for i in range(len(level_map)):
+        for i in range(len(level_maps)):
             # Genrate random floor and pit tile
             rand_floor = randrange(0, 40)
             rand_pit = randrange(0, 20)
 
             # Set tile cooresponding to value of the level element
-            if level_map[i] == 0:
+            if level_maps[i] == 0:
                 self.__start__(tiles[i])
 
-            elif level_map[i] == 1:
+            elif level_maps[i] == 1:
                 self.__floor__(tiles[i], rand_floor)
 
-            elif level_map[i] == 2:
+            elif level_maps[i] == 2:
                 self.__wall__(tiles[i])
 
-            elif level_map[i] == 3:
+            elif level_maps[i] == 3:
                 self.__pit_1__(tiles[i], self.in_pit1)
 
-            elif level_map[i] == 4:
+            elif level_maps[i] == 4:
                 self.__pit_2__(tiles[i], self.in_pit2)
 
-            elif level_map[i] == 5:
+            elif level_maps[i] == 5:
                 self.__pit_3__(tiles[i], self.in_pit3, rand_pit)
 
-            elif level_map[i] == 6:
+            elif level_maps[i] == 6:
                 self.__pit_4__(tiles[i], self.in_pit4, rand_pit)
 
-            elif level_map[i] == 7:
+            elif level_maps[i] == 7:
                 self.__pit_as_wall__(tiles[i])
 
-            elif level_map[i] == 8:
+            elif level_maps[i] == 8:
                 self.__exit___(tiles[i])
 
             # Append tile to list of elements for level n
-            self.elements.append([level_map[i], tiles[i], rand_floor, rand_pit])
+            self.elements.append([level_maps[i], tiles[i], rand_floor, rand_pit])
 
 
     # Setup of Boxes graphics
@@ -512,9 +512,9 @@ class BoardElements():
         #   increase level counter, and set new_level to False
         if new_level:
             self.elements = []
-            print(f'Length of Level Map: {len(level_map)}')
-            self.__create_level__(level_map[option][self.index])
-            # self.update_game_board_size(level_map[option][self.index])
+            print(f'Length of Level Map: {len(level_maps)}')
+            self.__create_level__(level_maps[option][self.index])
+            # self.update_game_board_size(level_maps[option][self.index])
             self.box = []
             self.pit_box = []
             self.__create_boxes__(gfx.boxes)

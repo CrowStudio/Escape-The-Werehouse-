@@ -46,17 +46,17 @@ class ScoreManager:
         dir_path = os.path.dirname(os.path.abspath(__file__))
 
         # Navigate one level up and into the game_board/maps directory
-        game_maps_path = os.path.join(dir_path, '..', 'game_board', 'maps', 'game_maps.json')
+        maps_stage_1_path = os.path.join(dir_path, '..', 'game_board', 'stages', 'level_maps', 'maps_stage_1.json')
 
         # Load the game maps to calculate the total score
-        with open(game_maps_path, 'r') as maps_file:
-            game_maps = json.load(maps_file)
+        with open(maps_stage_1_path, 'r') as maps_file:
+            maps_stage_1 = json.load(maps_file)
 
         # Calculate the adjusted scores for each level
         adjusted_scores = [
-            sum(level['score'] + 1 for level in game_maps['levels']),
-            sum(level['score'] + 2 for level in game_maps['levels']),
-            sum(level['score'] + 3 for level in game_maps['levels'])
+            sum(level['score'] + 1 for level in maps_stage_1['levels']),
+            sum(level['score'] + 2 for level in maps_stage_1['levels']),
+            sum(level['score'] + 3 for level in maps_stage_1['levels'])
         ]
 
         # Define the default scores with adjusted values
