@@ -176,34 +176,11 @@ def move_in_facing_direction(game_state, movement):
 
 # Check if move is valid
 def is_valid_move(level, new_x, new_y, game_state):
-    if new_x < 0 or new_x >= BasicTile.BOARD_WIDTH or new_y < 0 or new_y >= BasicTile.BOARD_HEIGHT:
-        return False
+    # Check for game board edges
+    level.is_within_game_board(new_x, new_y)
 
     # Check if the target position contains a valid tile
-    valid_move = False
-    for element in level.elements:
-        if element[1] == (new_x, new_y):
-            # Check for valid tiles including EXIT and PITS
-            if element[0] == BasicTile.EXIT and level.exit:  # Allow exit only if active
-                valid_move = True
-                break
-            elif element[0] == BasicTile.START or element[0] == BasicTile.FLOOR:
-                valid_move = True
-                break
-            elif element[0] == BasicTile.PIT1 and (not level.pit1 or not game_state.is_pulling):
-                valid_move = True  # Allow movement onto pit if not pulling  or pit is filled
-                break
-            elif element[0] == BasicTile.PIT2 and (not level.pit2 or not game_state.is_pulling):
-                valid_move = True
-                break
-            elif element[0] == BasicTile.PIT3 and (not level.pit3 or not game_state.is_pulling):
-                valid_move = True
-                break
-            elif element[0] == BasicTile.PIT4 and (not level.pit4 or not game_state.is_pulling):
-                valid_move = True
-                break
-            elif element[0] in [BasicTile.WALL, BasicTile.PIT_WALL]:
-                return False
+    valid_move = level.validate_move(new_x, new_y, game_state)
 
     if not valid_move:
         return False
@@ -252,14 +229,7 @@ def is_valid_move(level, new_x, new_y, game_state):
             push_y = new_y + (new_y - level.py)
 
             # Check if push position is valid
-            push_valid = False
-            for element in level.elements:
-                if element[1] == (push_x, push_y):
-                    if element[0] in [BasicTile.START, BasicTile.FLOOR, BasicTile.EXIT,
-                                    BasicTile.PIT1, BasicTile.PIT2, BasicTile.PIT3, BasicTile.PIT4]:
-                        push_valid = True
-                    elif element[0] in [BasicTile.WALL, BasicTile.PIT_WALL]:
-                        return False
+            push_valid = level.validate_push(push_x, push_y)
 
             if not push_valid:
                 return False

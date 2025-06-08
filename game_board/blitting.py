@@ -364,6 +364,40 @@ class BoardElements():
         self.index += 1
         return False
 
+    # Move within game board
+    def is_within_game_board(self, new_x, new_y):
+        if new_x < 0 or new_x >= BasicTile.BOARD_WIDTH or new_y < 0 or new_y >= BasicTile.BOARD_HEIGHT:
+            return False
+
+    # Validate movement
+    def validate_move(self, new_x, new_y, game_state):
+        for element in self.elements:
+            if element[1] == (new_x, new_y):
+                # Check for valid tiles including EXIT and PITS
+                if element[0] == BasicTile.EXIT and self.exit:  # Allow exit only if active
+                    return True
+                elif element[0] == BasicTile.START or element[0] == BasicTile.FLOOR:
+                    return True
+                elif element[0] == BasicTile.PIT1 and (not self.pit1 or not game_state.is_pulling):
+                    return True
+                elif element[0] == BasicTile.PIT2 and (not self.pit2 or not game_state.is_pulling):
+                    return True
+                elif element[0] == BasicTile.PIT3 and (not self.pit3 or not game_state.is_pulling):
+                    return True
+                elif element[0] == BasicTile.PIT4 and (not self.pit4 or not game_state.is_pulling):
+                    return True
+                elif element[0] in [BasicTile.WALL, BasicTile.PIT_WALL]:
+                    return False
+
+    # Validate push
+    def validate_push(self, push_x, push_y):
+        for element in self.elements:
+            if element[1] == (push_x, push_y):
+                if element[0] in [BasicTile.START, BasicTile.FLOOR, BasicTile.EXIT,
+                                BasicTile.PIT1, BasicTile.PIT2, BasicTile.PIT3, BasicTile.PIT4]:
+                    return True
+                elif element[0] in [BasicTile.WALL, BasicTile.PIT_WALL]:
+                    return False
 
     # Generic box blitter
     def blit_box(self, index, travel, move):
