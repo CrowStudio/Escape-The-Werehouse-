@@ -147,10 +147,9 @@ class BoardElements():
         self.stageOne = StageOne()
 
         # Initialize game board size to default values
-        self.width = 600
-        self.height = 600
-        self.height_offset = 40
-        self.game_board = pygame.display.set_mode((self.width, (self.height + self.height_offset)))  # Set the screen size to 600x640
+        self.width = BasicTile.BOARD_WIDTH
+        self.height = BasicTile.BOARD_HEIGHT
+        self.game_board = pygame.display.set_mode((self.width, (self.height)))  # Set the screen size to 600x640
 
         # List of map titles
         self.map_title = map_title
@@ -187,15 +186,6 @@ class BoardElements():
 
         # Default initial beam angle
         self.current_beam_angle = -1.55
-
-
-    def update_game_board_size(self, level_maps):
-        '''Update game board size based on level map'''
-        # Calculate the dimensions of the game board
-        max_x = max(pos[0] for pos in tiles) + BasicTile.SIZE
-        max_y = max(pos[1] for pos in tiles) + BasicTile.SIZE
-        self.width = max_x
-        self.height = max_y
 
 
     # Blit start tile
@@ -322,7 +312,7 @@ class BoardElements():
 
         for element, pos, rand_floor, rand_pit in self.elements:
             method, args = dispatch[element]
-            x, y = pos[0], pos[1] + self.height_offset
+            x, y = pos[0], pos[1] + BasicTile.HEIGHT_OFFSET
 
             # unwrap args tuple into the correct call
             if not args:
@@ -391,17 +381,17 @@ class BoardElements():
         # Movement in y axis
         if travel in (1, 2):
             x = getattr(self, f'b{index + 1}x')
-            y = move + self.height_offset
+            y = move + BasicTile.HEIGHT_OFFSET
 
         # Movement in x axis
         elif travel in (3, 4):
             x = move
-            y = getattr(self, f'b{index + 1}y') + self.height_offset
+            y = getattr(self, f'b{index + 1}y') + BasicTile.HEIGHT_OFFSET
 
         # No movement
         else:
             x = getattr(self, f'b{index + 1}x')
-            y = getattr(self, f'b{index + 1}y') + self.height_offset
+            y = getattr(self, f'b{index + 1}y') + BasicTile.HEIGHT_OFFSET
 
         self.game_board.blit(sprite, (x, y))
 
@@ -431,38 +421,38 @@ class BoardElements():
         # - Blit facing direction of player
         if game_state.lights_out or not game_state.normal_movement:
             if game_state.facing_direction == 'up':
-                self.game_board.blit(gfx.player_up, (self.px, self.py + self.height_offset))
+                self.game_board.blit(gfx.player_up, (self.px, self.py + BasicTile.HEIGHT_OFFSET))
             elif game_state.facing_direction == 'down':
-                self.game_board.blit(gfx.player_down, (self.px, self.py + self.height_offset))
+                self.game_board.blit(gfx.player_down, (self.px, self.py + BasicTile.HEIGHT_OFFSET))
             elif game_state.facing_direction == 'left':
-                self.game_board.blit(gfx.player_left, (self.px, self.py + self.height_offset))
+                self.game_board.blit(gfx.player_left, (self.px, self.py + BasicTile.HEIGHT_OFFSET))
             elif game_state.facing_direction == 'right':
-                self.game_board.blit(gfx.player_right, (self.px, self.py + self.height_offset))
+                self.game_board.blit(gfx.player_right, (self.px, self.py + BasicTile.HEIGHT_OFFSET))
 
         else:
             # If movement is Up
             # - Blit player in direction of y corresponding of p_move' value
             if game_state.travel == 1 and not game_state.is_pulling:
-                self.game_board.blit(gfx.player_up, (self.px, p_move + self.height_offset))
+                self.game_board.blit(gfx.player_up, (self.px, p_move + BasicTile.HEIGHT_OFFSET))
 
             # Else iff movement is Down
             # - Blit player in direction of y corresponding of p_move' value
             elif game_state.travel == 2 and not game_state.is_pulling:
-                self.game_board.blit(gfx.player_down, (self.px, p_move + self.height_offset))
+                self.game_board.blit(gfx.player_down, (self.px, p_move + BasicTile.HEIGHT_OFFSET))
 
             # Else iff movement is Left
             # - Blit player in direction of x corresponding of p_move' value
             elif game_state.travel == 3 and not game_state.is_pulling:
-                self.game_board.blit(gfx.player_left, (p_move, self.py + self.height_offset))
+                self.game_board.blit(gfx.player_left, (p_move, self.py + BasicTile.HEIGHT_OFFSET))
 
             # Else iff movement is Right
             # - Blit player in direction of x corresponding of p_move' value
             elif game_state.travel == 4 and not game_state.is_pulling:
-                self.game_board.blit(gfx.player_right, (p_move, self.py + self.height_offset))
+                self.game_board.blit(gfx.player_right, (p_move, self.py + BasicTile.HEIGHT_OFFSET))
 
             # - Blit no player with no travel
             else:
-                self.game_board.blit(gfx.player, (self.px, self.py + self.height_offset))
+                self.game_board.blit(gfx.player, (self.px, self.py + BasicTile.HEIGHT_OFFSET))
 
 
     # Blit level score (stars), identical logic but shorter
@@ -482,7 +472,7 @@ class BoardElements():
             count = 1
 
         # Blit numbers of highlighted Stars
-        self.game_board.blit(gfx.stars[count], (186, 155 - self.height_offset))
+        self.game_board.blit(gfx.stars[count], (186, 155 - BasicTile.HEIGHT_OFFSET))
         pygame.display.update()
         # Pause for 2 seconds to show Stars
         time.sleep(2)
@@ -502,7 +492,7 @@ class BoardElements():
         a new direction before the player moves and has a rounded outer edge.
         '''
         # Create a mask for the game board with per-pixel alpha.
-        mask = pygame.Surface((self.width, self.height + self.height_offset), pygame.SRCALPHA)
+        mask = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
         # Start with nearly full opacity
         mask.fill((0, 0, 0, 249))  # Semi-transparent black overlay.
 
@@ -512,7 +502,7 @@ class BoardElements():
 
         # Determine the player's center.
         player_center_x = self.px + (BasicTile.SIZE // 2)
-        player_center_y = self.py + (BasicTile.SIZE // 2) + self.height_offset  # Add the offset here
+        player_center_y = self.py + (BasicTile.SIZE // 2) + BasicTile.HEIGHT_OFFSET  # Add the offset here
         player_center = (player_center_x, player_center_y)
 
         target_angle = None
@@ -636,7 +626,7 @@ class BoardElements():
                 first_iteration = False
             else:
                 # Apply the on time with a mask of lower opacity
-                mask = pygame.Surface((self.width, self.height + self.height_offset), pygame.SRCALPHA)
+                mask = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
                 mask.fill((0, 0, 0, 76))  # Lower opacity
                 self.__blit_level_elements__(game_state)
                 self.game_board.blit(mask, (0, 0))
@@ -651,7 +641,7 @@ class BoardElements():
                 time.sleep(on_time)
 
             # Apply the off time with a mask of higher opacity
-            mask = pygame.Surface((self.width, self.height + self.height_offset), pygame.SRCALPHA)
+            mask = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
             mask.fill((0, 0, 0, 249))  # Higher opacity
             self.game_board.fill((30, 30, 30))
             self.blit_level()
@@ -680,7 +670,7 @@ class BoardElements():
 
     def fade_out(self, game_state):
         """Create a fade-out effect."""
-        fade = pygame.Surface((self.width, (self.height + self.height_offset)))
+        fade = pygame.Surface((self.width, self.height))
         fade.fill((10, 10, 10))
 
         if game_state.lights_out:
@@ -719,7 +709,7 @@ class BoardElements():
 
     def fade_in(self, game_state):
         """Create a fade-in effect while re-blitting the game board and player."""
-        fade = pygame.Surface((self.width, (self.height + self.height_offset)))
+        fade = pygame.Surface((self.width, self.height))
         fade.fill((10, 10, 10))
 
         # Decrease alpha gradually from 255 (opaque) to 0 (transparent)
@@ -746,7 +736,7 @@ class BoardElements():
         total_moves_text = font.render(f'Total Moves: {game_state.total_moves}', True, (255, 255, 255))
         lives_text = font.render(f'Lives: {game_state.lives}', True, (255, 255, 255))
 
-        bar_rect = pygame.Rect(0, self.height_offset - self.height_offset, self.game_board.get_width(), self.height_offset)
+        bar_rect = pygame.Rect(0, 0, self.game_board.get_width(), BasicTile.HEIGHT_OFFSET)
 
         pygame.display.set_caption(f'Escape the Werehouse! - {self.map_title[1][game_state.current_level]}')
         pygame.draw.rect(self.game_board, (50, 50, 50), bar_rect)  # Dark gray color for the bar
@@ -759,7 +749,7 @@ class BoardElements():
         tutorial_font = pygame.font.SysFont('Lucida Console', 12)  # Font for tutorial text
         tutorial_text = tutorial_font.render(f'{self.map_title[0][game_state.current_level]}', True, (255, 255, 255)) # Set window bar
 
-        bar_rect = pygame.Rect(0, self.height_offset - self.height_offset, self.game_board.get_width(), self.height_offset)
+        bar_rect = pygame.Rect(0, 0, self.game_board.get_width(), BasicTile.HEIGHT_OFFSET)
 
         pygame.display.set_caption(f'Escape the Werehouse! - Tutorial {game_state.current_level + 1}')
         pygame.draw.rect(self.game_board, (50, 50, 50), bar_rect)  # Dark gray color for the bar

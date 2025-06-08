@@ -39,7 +39,7 @@ class GameState:
 
     def draw_status_bar(self):
         # Draw the status bar at the top
-        bar_rect = pygame.Rect(0, self.level.height_offset - self.level.height_offset, self.level.game_board.get_width(), self.level.height_offset)
+        bar_rect = pygame.Rect(0, 0, BasicTile.BOARD_WIDTH, BasicTile.HEIGHT_OFFSET)
         pygame.draw.rect(self.level.game_board, (50, 50, 50), bar_rect)  # Dark gray color for the bar
 
         # Set caption and render the text inside the status bar
@@ -82,7 +82,7 @@ class GameState:
             pygame.display.set_caption(f'Escape the Werehouse!')
 
             # Draw the status bar at the top
-            bar_rect = pygame.Rect(0, self.level.height_offset - self.level.height_offset, self.level.game_board.get_width(), self.level.height_offset)
+            bar_rect = pygame.Rect(0, 0, BasicTile.BOARD_WIDTH, BasicTile.HEIGHT_OFFSET)
             pygame.draw.rect(self.level.game_board, (50, 50, 50), bar_rect)  # Dark gray color for the bar
 
             # Render the text inside the bar
@@ -250,7 +250,7 @@ class GameState:
         self.level.blit_box_4(0, 0)
         self.level.blit_player(self, 0)
         # Draw the status bar at the top
-        bar_rect = pygame.Rect(0, self.level.height_offset - self.level.height_offset, self.level.game_board.get_width(), self.level.height_offset)
+        bar_rect = pygame.Rect(0, 0, BasicTile.BOARD_WIDTH, BasicTile.HEIGHT_OFFSET)
         pygame.draw.rect(self.level.game_board, (50, 50, 50), bar_rect)  # Dark gray color for the bar
 
     # Show GAME OVER screen when out of lives

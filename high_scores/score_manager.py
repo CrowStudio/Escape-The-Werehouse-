@@ -2,6 +2,7 @@ import pygame
 import json
 import os
 import sys
+from game_board.basic_tile import BasicTile
 
 
 class ScoreManager:
@@ -105,7 +106,7 @@ class ScoreManager:
 
         # Render the title at the top center
         title_text = self.hig_score_font.render('High Scores', True, (255, 215, 115))
-        title_rect = title_text.get_rect(center=(self.level.game_board.get_width() // 2, 120))
+        title_rect = title_text.get_rect(center=(BasicTile.BOARD_WIDTH // 2, 120))
         self.level.game_board.blit(title_text, title_rect)
 
         # Define spacing between columns
@@ -148,7 +149,7 @@ class ScoreManager:
         total_group_width = max_index_width + spacing + max_initials_width + spacing + max_score_width
 
         # Left position to center the group horizontally
-        left_x = (self.level.game_board.get_width() - total_group_width) // 2
+        left_x = (BasicTile.BOARD_WIDTH - total_group_width) // 2
 
         # Now calculate the fixed x positions for each column:
         index_x = left_x
@@ -186,7 +187,7 @@ class ScoreManager:
             back_button = pygame.Rect(200, 500, 200, 40)  # Adjusted back button position
             pygame.draw.rect(self.level.game_board, (255, 255, 255), back_button, 2)
             back_text = self.font.render('Back', True, (255, 255, 255))
-            back_text_center = back_text.get_rect(center=(self.level.game_board.get_width() // 2, 520))
+            back_text_center = back_text.get_rect(center=(BasicTile.BOARD_WIDTH // 2, 520))
             self.level.game_board.blit(back_text, back_text_center)
             pygame.display.flip()
         else:
@@ -198,7 +199,7 @@ class ScoreManager:
     # Input box for entering initials after achieving a high score
     def get_initials(self):
         input_box = pygame.Rect(0, 0, 140, 32)
-        input_box.center = (self.level.game_board.get_width() // 2, 120)
+        input_box.center = (BasicTile.BOARD_WIDTH // 2, 120)
         color = pygame.Color('gold')
         active = True
         text = ''
@@ -222,15 +223,15 @@ class ScoreManager:
             self.level.game_board.fill((30, 30, 30))
             # Show celebration text
             celebration_text = self.font.render('Congratulations!', True, (255, 255, 255))
-            celebration_center = celebration_text.get_rect(center=(self.level.game_board.get_width() // 2, 30))
+            celebration_center = celebration_text.get_rect(center=(BasicTile.BOARD_WIDTH // 2, 30))
             self.level.game_board.blit(celebration_text, celebration_center)
             three_text = self.font.render('You made it to the top three!', True, (255, 255, 255))
-            three_center = three_text.get_rect(center=(self.level.game_board.get_width() // 2, 60))
+            three_center = three_text.get_rect(center=(BasicTile.BOARD_WIDTH // 2, 60))
             self.level.game_board.blit(three_text, three_center)
 
             # Show prompt text
             prompt_text = self.font.render('Enter your initials:', True, (255, 255, 255))
-            prompt_center = prompt_text.get_rect(center=(self.level.game_board.get_width() // 2, 90))
+            prompt_center = prompt_text.get_rect(center=(BasicTile.BOARD_WIDTH // 2, 90))
             self.level.game_board.blit(prompt_text, prompt_center)
 
             # Blit input text

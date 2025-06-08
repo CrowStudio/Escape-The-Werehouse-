@@ -1,8 +1,11 @@
 # Tile type enumeration
 class BasicTile:
-    SIZE = 100      # Pixel width of the squared basic tile
-    NUM_COLS  = 6   # Number of tiles for the X axis
-    NUM_ROWS  = 6   # Number of tiles for the Y axis
+    SIZE            = 100      # Pixel width of the squared basic tile
+    NUM_COLS        = 6   # Number of tiles for the X axis
+    NUM_ROWS        = 6   # Number of tiles for the Y axis
+    BOARD_WIDTH     = SIZE * NUM_COLS
+    HEIGHT_OFFSET   = 40
+    BOARD_HEIGHT    = (SIZE * NUM_ROWS) + HEIGHT_OFFSET
 
     START = 0
     PIT1 = 1

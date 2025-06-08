@@ -176,7 +176,7 @@ def move_in_facing_direction(game_state, movement):
 
 # Check if move is valid
 def is_valid_move(level, new_x, new_y, game_state):
-    if new_x < 0 or new_x >= 600 or new_y < 0 or new_y >= 600:
+    if new_x < 0 or new_x >= BasicTile.BOARD_WIDTH or new_y < 0 or new_y >= BasicTile.BOARD_HEIGHT:
         return False
 
     # Check if the target position contains a valid tile
@@ -280,13 +280,13 @@ def move_player_and_boxes(level, audio, game_state):
 
     # Calculate target position (exactly one tile)
     if game_state.direction == 'up':
-        new_y = y - 100  # Move exactly one tile up
+        new_y = y - BasicTile.SIZE  # Move exactly one tile up
     elif game_state.direction == 'down':
-        new_y = y + 100  # Move exactly one tile down
+        new_y = y + BasicTile.SIZE  # Move exactly one tile down
     elif game_state.direction == 'left':
-        new_x = x - 100  # Move exactly one tile left
+        new_x = x - BasicTile.SIZE  # Move exactly one tile left
     elif game_state.direction == 'right':
-        new_x = x + 100  # Move exactly one tile right
+        new_x = x + BasicTile.SIZE  # Move exactly one tile right
 
     # First check if the move is valid
     if not is_valid_move(level, new_x, new_y, game_state):
