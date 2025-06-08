@@ -5,18 +5,15 @@ import os
 import random
 from random import randrange
 import time
+from game_board.basic_tile import BasicTile
 from game_board.elements import gfx
 from game_board.stages import StageOne
 
-TILE_SIZE = 100   # Pixel width of squared tile
-NUM_COLS  = 6     # Number of tiles for the X axis
-NUM_ROWS  = 6     # Number of tiles for the Y axis
-
 # Generate a flat list in row-major order:
 tiles = [
-    (col * TILE_SIZE, row * TILE_SIZE)
-    for row in range(NUM_ROWS)
-    for col in range(NUM_COLS)
+    (col * BasicTile.SIZE, row * BasicTile.SIZE)
+    for row in range(BasicTile.NUM_ROWS)
+    for col in range( BasicTile.NUM_COLS)
 ]
 
 # Set paths for level data
@@ -147,7 +144,7 @@ class BoardElements():
         '''__init__'''
         print("BoardElements instance created")  # Debug statement
 
-        self.stage_1 = StageOne()
+        self.stageOne = StageOne()
 
         # Initialize game board size to default values
         self.width = 600
@@ -195,8 +192,8 @@ class BoardElements():
     def update_game_board_size(self, level_maps):
         '''Update game board size based on level map'''
         # Calculate the dimensions of the game board
-        max_x = max(pos[0] for pos in tiles) + TILE_SIZE
-        max_y = max(pos[1] for pos in tiles) + TILE_SIZE
+        max_x = max(pos[0] for pos in tiles) + BasicTile.SIZE
+        max_y = max(pos[1] for pos in tiles) + BasicTile.SIZE
         self.width = max_x
         self.height = max_y
 
@@ -510,12 +507,12 @@ class BoardElements():
         mask.fill((0, 0, 0, 249))  # Semi-transparent black overlay.
 
         # Flashlight parameters.
-        beam_length = int(2 * TILE_SIZE)        # How far the beam extends.
+        beam_length = int(2 * BasicTile.SIZE)        # How far the beam extends.
         beam_angle = math.radians(60)           # Total angular width of the beam (60°)
 
         # Determine the player's center.
-        player_center_x = self.px + (TILE_SIZE // 2)
-        player_center_y = self.py + (TILE_SIZE // 2) + self.height_offset  # Add the offset here
+        player_center_x = self.px + (BasicTile.SIZE // 2)
+        player_center_y = self.py + (BasicTile.SIZE // 2) + self.height_offset  # Add the offset here
         player_center = (player_center_x, player_center_y)
 
         target_angle = None

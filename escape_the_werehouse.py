@@ -1,8 +1,8 @@
 import pygame
 import logging
 import sys
-from pickle import FALSE
-from game_board import BoardElements, TileType, TILE_SIZE
+from game_board.blitting import BoardElements
+from game_board.basic_tile import BasicTile
 from sound import AudioManager
 from high_scores import ScoreManager
 from start_screen import StartMenu
@@ -22,7 +22,7 @@ except pygame.error as e:
 
 # Game constants
 FPS = 120
-DISTANCE = TILE_SIZE
+DISTANCE = BasicTile.SIZE
 MOVEMENT_DELAY = 10  # Controls movement speed (higher = slower)
 ARROW_KEYS = {pygame.K_UP:    {'direction': 'up',    'travel': 1, 'search': 1},
               pygame.K_DOWN:  {'direction': 'down',  'travel': 2, 'search': 2},
@@ -184,25 +184,25 @@ def is_valid_move(level, new_x, new_y, game_state):
     for element in level.elements:
         if element[1] == (new_x, new_y):
             # Check for valid tiles including EXIT and PITS
-            if element[0] == TileType.EXIT and level.exit:  # Allow exit only if active
+            if element[0] == BasicTile.EXIT and level.exit:  # Allow exit only if active
                 valid_move = True
                 break
-            elif element[0] == TileType.START or element[0] == TileType.FLOOR:
+            elif element[0] == BasicTile.START or element[0] == BasicTile.FLOOR:
                 valid_move = True
                 break
-            elif element[0] == TileType.PIT1 and (not level.pit1 or not game_state.is_pulling):
+            elif element[0] == BasicTile.PIT1 and (not level.pit1 or not game_state.is_pulling):
                 valid_move = True  # Allow movement onto pit if not pulling  or pit is filled
                 break
-            elif element[0] == TileType.PIT2 and (not level.pit2 or not game_state.is_pulling):
+            elif element[0] == BasicTile.PIT2 and (not level.pit2 or not game_state.is_pulling):
                 valid_move = True
                 break
-            elif element[0] == TileType.PIT3 and (not level.pit3 or not game_state.is_pulling):
+            elif element[0] == BasicTile.PIT3 and (not level.pit3 or not game_state.is_pulling):
                 valid_move = True
                 break
-            elif element[0] == TileType.PIT4 and (not level.pit4 or not game_state.is_pulling):
+            elif element[0] == BasicTile.PIT4 and (not level.pit4 or not game_state.is_pulling):
                 valid_move = True
                 break
-            elif element[0] in [TileType.WALL, TileType.PIT_WALL]:
+            elif element[0] in [BasicTile.WALL, BasicTile.PIT_WALL]:
                 return False
 
     if not valid_move:
@@ -255,10 +255,10 @@ def is_valid_move(level, new_x, new_y, game_state):
             push_valid = False
             for element in level.elements:
                 if element[1] == (push_x, push_y):
-                    if element[0] in [TileType.START, TileType.FLOOR, TileType.EXIT,
-                                    TileType.PIT1, TileType.PIT2, TileType.PIT3, TileType.PIT4]:
+                    if element[0] in [BasicTile.START, BasicTile.FLOOR, BasicTile.EXIT,
+                                    BasicTile.PIT1, BasicTile.PIT2, BasicTile.PIT3, BasicTile.PIT4]:
                         push_valid = True
-                    elif element[0] in [TileType.WALL, TileType.PIT_WALL]:
+                    elif element[0] in [BasicTile.WALL, BasicTile.PIT_WALL]:
                         return False
 
             if not push_valid:

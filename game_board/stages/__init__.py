@@ -1,1 +1,1 @@
-from game_board.stages.stage_1 import stage_1
+from game_board.stages.stage_1 import StageOne
