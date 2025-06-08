@@ -2,7 +2,7 @@ import pygame
 import json
 import os
 
-class stage_1:
+class StageOne():
     '''stage 1'''
     def __inti__(self):
         # Set paths for level data
@@ -16,21 +16,13 @@ class stage_1:
 
         # Initiate variables to store levels from the JSON data
         self.stage_maps =[]
-
         self.map_title =[]
-
         self.active_boxes = []
-
         self.box_positions = []
-
         self.player_start = []
-
         self.player_direction = []
-
         self.active_exit = []
-
         self.level_score = []
-        
         self.levle_maps
         
         # Add the game maps

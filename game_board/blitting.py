@@ -6,6 +6,7 @@ import random
 from random import randrange
 import time
 from game_board.elements import gfx
+from game_board.stages import StageOne
 
 TILE_SIZE = 100   # Pixel width of squared tile
 NUM_COLS  = 6     # Number of tiles for the X axis
@@ -146,6 +147,8 @@ class BoardElements():
         '''__init__'''
         print("BoardElements instance created")  # Debug statement
 
+        self.stage_1 = StageOne()
+
         # Initialize game board size to default values
         self.width = 600
         self.height = 600
@@ -232,7 +235,7 @@ class BoardElements():
         self.game_board.blit(gfx.pit, pos)
 
     # Blit exit tile
-    def __exit___(self, pos):
+    def __exit__(self, pos):
         # If Exit is active
         # - Blit exit
         if self.exit:
@@ -317,7 +320,7 @@ class BoardElements():
             5: (self.__pit_as_wall__,   ()),
             6: (self.__floor__,         ('floor',)),
             7: (self.__wall__,          ()),
-            8: (self.__exit___,         ())
+            8: (self.__exit__,         ())
         }
 
         for element, pos, rand_floor, rand_pit in self.elements:
