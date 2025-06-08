@@ -65,7 +65,7 @@ def handle_input(keys, level, game_state, audio):
 
     return False
 
-def process_arrow_keys(keys, game_state, level):
+def process_arrow_keys(keys, game_state):
     """
     Process arrow key inputs for player movement and direction changes.
     """

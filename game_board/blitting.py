@@ -232,7 +232,7 @@ class BoardElements():
         else:
             self.game_board.blit(Sprite.NO_EXIT, pos)
 
-    # Internal helper for pits 1-4
+    # Helper for pits 1-4
     def __pit_common__(self, pos, box, pit_index, eye_index):
         active = getattr(self, f'pit{pit_index}')
         if active:
@@ -430,7 +430,7 @@ class BoardElements():
         self.game_board.blit(sprite, (x, y))
 
 
-    # Blit Boxes 1-4 with the help of the generic blit_box()
+    # Wrapper to blit Boxes 1-4 with the help of the generic blit_box()
     def blit_box_1(self, b1_travel, b1_move):
         '''blit_box_1'''
         self.blit_box(0, b1_travel, b1_move)
