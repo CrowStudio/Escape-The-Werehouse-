@@ -48,7 +48,7 @@ class ScoreManager:
         dir_path = os.path.dirname(os.path.abspath(__file__))
 
         # Navigate one level up and into the game_board/maps directory
-        maps_stage_1_path = os.path.join(dir_path, '..', 'game_board', 'stages', 'level_maps', 'maps_stage_1.json')
+        maps_stage_1_path = os.path.join(dir_path, '..', 'game_board', 'stages', 'level_maps', 'stage_1_maps.json')
 
         # Load the game maps to calculate the total score
         with open(maps_stage_1_path, 'r') as maps_file:

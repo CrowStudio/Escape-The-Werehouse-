@@ -19,7 +19,7 @@ tiles = [
 # Set paths for level data
 script_dir = os.path.dirname(os.path.abspath(__file__))
 tutorial_path = os.path.join(script_dir, 'stages/level_maps/tutorial_maps.json')
-maps_stage_1_path = os.path.join(script_dir, 'stages\level_maps\maps_stage_1.json')
+maps_stage_1_path = os.path.join(script_dir, 'stages\level_maps\stage_1_maps.json')
 
 # Load the tutorial maps
 with open(tutorial_path, 'r') as file:

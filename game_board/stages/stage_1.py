@@ -5,7 +5,7 @@ from game_board.basic_tile import BasicTile
 
 # Set paths for level data
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-STAGE_1_PATH = os.path.join(SCRIPT_DIR, 'level_maps\maps_stage_1.json')
+STAGE_1_PATH = os.path.join(SCRIPT_DIR, 'level_maps\stage_1_maps.json')
 
 # Load the game maps
 with open(STAGE_1_PATH, 'r') as file:
