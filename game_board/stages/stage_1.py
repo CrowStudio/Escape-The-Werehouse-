@@ -4,12 +4,12 @@ import os
 from game_board.basic_tile import BasicTile
 
 # Set paths for level data
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-STAGE_1_PATH = os.path.join(SCRIPT_DIR, 'level_maps\stage_1_maps.json')
+DIR_PATH = os.path.dirname(os.path.abspath(__file__))
+STAGE_1_PATH = os.path.join(DIR_PATH, 'level_maps\stage_1_maps.json')
 
 # Load the game maps
 with open(STAGE_1_PATH, 'r') as file:
-    LEVEL_DATA = json.load(file)
+    STAGE_DATA = json.load(file)
 
 class StageOne():
     '''stage 1'''
@@ -25,9 +25,9 @@ class StageOne():
         self.level_score = []
         
         # Add the game maps
-        for level in LEVEL_DATA['levels']:
+        for level in STAGE_DATA['levels']:
             # Create the level map
-            self.stage_maps.append([LEVEL_DATA['game_board_elements'][item] for row in level['map'] for item in row])
+            self.stage_maps.append([STAGE_DATA['game_board_elements'][item] for row in level['map'] for item in row])
 
             # Extract other level data
             self.map_title.append(level['title'])

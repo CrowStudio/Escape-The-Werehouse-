@@ -17,17 +17,17 @@ tiles = [
 ]
 
 # Set paths for level data
-script_dir = os.path.dirname(os.path.abspath(__file__))
-tutorial_path = os.path.join(script_dir, 'stages/level_maps/tutorial_maps.json')
-maps_stage_1_path = os.path.join(script_dir, 'stages\level_maps\stage_1_maps.json')
+DIR_PATH = os.path.dirname(os.path.abspath(__file__))
+TUTORIAL_PATH = os.path.join(DIR_PATH, 'stages/level_maps/tutorial_maps.json')
+STAGE_1_PATH = os.path.join(DIR_PATH, 'stages\level_maps\stage_1_maps.json')
 
 # Load the tutorial maps
-with open(tutorial_path, 'r') as file:
-    tutorial_data = json.load(file)
+with open(TUTORIAL_PATH, 'r') as file:
+    TUTORIAL_DATA = json.load(file)
 
 # Load the game maps
-with open(maps_stage_1_path, 'r') as file:
-    stage_1_level_data = json.load(file)
+with open(STAGE_1_PATH, 'r') as file:
+    STAGE_1_DATA = json.load(file)
 
 # Initiate variables to store levels from the JSON data
 tutorial_maps = []
@@ -62,9 +62,9 @@ game_score = []
 level_score = []
 
 # Add the tutorial maps
-for level in tutorial_data['levels']:
+for level in TUTORIAL_DATA['levels']:
     # Create the level map
-    tutorial_maps.append([tutorial_data['game_board_elements'][item] for row in level['map'] for item in row])
+    tutorial_maps.append([TUTORIAL_DATA['game_board_elements'][item] for row in level['map'] for item in row])
     # Extract other level data
     tutorial_title.append(level['title'])
     tutorial_active_boxes.append(level['active_boxes'])
@@ -82,9 +82,9 @@ for level in tutorial_data['levels']:
     tutorial_active_exit.append(level['exit_active'])
 
 # Add the game maps
-for level in stage_1_level_data['levels']:
+for level in STAGE_1_DATA['levels']:
     # Create the level map
-    stage_maps.append([stage_1_level_data['game_board_elements'][item] for row in level['map'] for item in row])
+    stage_maps.append([STAGE_1_DATA['game_board_elements'][item] for row in level['map'] for item in row])
 
     # Extract other level data
     game_title.append(level['title'])
