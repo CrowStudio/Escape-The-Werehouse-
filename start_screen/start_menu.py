@@ -1,6 +1,6 @@
+import pygame
 import sys
 import subprocess
-import pygame
 
 class StartMenu:
     def __init__(self, level, game_state):

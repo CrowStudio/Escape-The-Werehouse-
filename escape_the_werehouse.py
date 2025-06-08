@@ -1,9 +1,8 @@
-import sys
-import logging
 import pygame
-from pickle import FALSE
-from game_board import BoardElements, TileType, TILE_SIZE
-import game_state
+import logging
+import sys
+from game_board.blitting import BoardElements
+from game_board.basic_tile import BasicTile
 from sound import AudioManager
 from high_scores import ScoreManager
 from start_screen import StartMenu
@@ -23,7 +22,7 @@ except pygame.error as e:
 
 # Game constants
 FPS = 120
-DISTANCE = TILE_SIZE
+DISTANCE = BasicTile.SIZE
 MOVEMENT_DELAY = 10  # Controls movement speed (higher = slower)
 ARROW_KEYS = {pygame.K_UP:    {'direction': 'up',    'travel': 1, 'search': 1},
               pygame.K_DOWN:  {'direction': 'down',  'travel': 2, 'search': 2},
@@ -66,7 +65,7 @@ def handle_input(keys, level, game_state, audio):
 
     return False
 
-def process_arrow_keys(keys, game_state, level):
+def process_arrow_keys(keys, game_state):
     """
     Process arrow key inputs for player movement and direction changes.
     """
@@ -177,34 +176,11 @@ def move_in_facing_direction(game_state, movement):
 
 # Check if move is valid
 def is_valid_move(level, new_x, new_y, game_state):
-    if new_x < 0 or new_x >= 600 or new_y < 0 or new_y >= 600:
-        return False
+    # Check for game board edges
+    level.is_within_game_board(new_x, new_y)
 
     # Check if the target position contains a valid tile
-    valid_move = False
-    for element in level.elements:
-        if element[1] == (new_x, new_y):
-            # Check for valid tiles including EXIT and PITS
-            if element[0] == TileType.EXIT and level.exit:  # Allow exit only if active
-                valid_move = True
-                break
-            elif element[0] == TileType.START or element[0] == TileType.FLOOR:
-                valid_move = True
-                break
-            elif element[0] == TileType.PIT1 and (not level.pit1 or not game_state.is_pulling):
-                valid_move = True  # Allow movement onto pit if not pulling  or pit is filled
-                break
-            elif element[0] == TileType.PIT2 and (not level.pit2 or not game_state.is_pulling):
-                valid_move = True
-                break
-            elif element[0] == TileType.PIT3 and (not level.pit3 or not game_state.is_pulling):
-                valid_move = True
-                break
-            elif element[0] == TileType.PIT4 and (not level.pit4 or not game_state.is_pulling):
-                valid_move = True
-                break
-            elif element[0] in [TileType.WALL, TileType.PIT_WALL]:
-                return False
+    valid_move = level.validate_move(new_x, new_y, game_state)
 
     if not valid_move:
         return False
@@ -253,14 +229,7 @@ def is_valid_move(level, new_x, new_y, game_state):
             push_y = new_y + (new_y - level.py)
 
             # Check if push position is valid
-            push_valid = False
-            for element in level.elements:
-                if element[1] == (push_x, push_y):
-                    if element[0] in [TileType.START, TileType.FLOOR, TileType.EXIT,
-                                    TileType.PIT1, TileType.PIT2, TileType.PIT3, TileType.PIT4]:
-                        push_valid = True
-                    elif element[0] in [TileType.WALL, TileType.PIT_WALL]:
-                        return False
+            push_valid = level.validate_push(push_x, push_y)
 
             if not push_valid:
                 return False
@@ -281,13 +250,13 @@ def move_player_and_boxes(level, audio, game_state):
 
     # Calculate target position (exactly one tile)
     if game_state.direction == 'up':
-        new_y = y - 100  # Move exactly one tile up
+        new_y = y - BasicTile.SIZE  # Move exactly one tile up
     elif game_state.direction == 'down':
-        new_y = y + 100  # Move exactly one tile down
+        new_y = y + BasicTile.SIZE  # Move exactly one tile down
     elif game_state.direction == 'left':
-        new_x = x - 100  # Move exactly one tile left
+        new_x = x - BasicTile.SIZE  # Move exactly one tile left
     elif game_state.direction == 'right':
-        new_x = x + 100  # Move exactly one tile right
+        new_x = x + BasicTile.SIZE  # Move exactly one tile right
 
     # First check if the move is valid
     if not is_valid_move(level, new_x, new_y, game_state):
@@ -413,7 +382,7 @@ def main():
                     # Fade in effect after resetting the level
                     level.fade_in(game_state)
 
-                    # Apply flickering effect if lights are off
+                    # Apply flickering effect if lights are out
                     if game_state.lights_out:
                         level.flicker_effect(game_state)
 
@@ -458,8 +427,9 @@ def main():
                     else:
                         level.blit_player(game_state, 0)
 
-                    # Apply blackout effect
-                    level.apply_blackout(game_state)
+                    # Apply blackout effect if lights are out
+                    if game_state.lights_out:
+                        level.apply_blackout(game_state)
 
                     game_state.draw_status_bar()
 

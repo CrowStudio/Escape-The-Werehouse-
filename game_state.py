@@ -1,5 +1,5 @@
 import pygame
-from game_board import TileType
+from game_board.basic_tile import BasicTile
 
 class GameState:
     def __init__(self, level):
@@ -39,7 +39,7 @@ class GameState:
 
     def draw_status_bar(self):
         # Draw the status bar at the top
-        bar_rect = pygame.Rect(0, self.level.height_offset - self.level.height_offset, self.level.game_board.get_width(), self.level.height_offset)
+        bar_rect = pygame.Rect(0, 0, BasicTile.BOARD_WIDTH, BasicTile.HEIGHT_OFFSET)
         pygame.draw.rect(self.level.game_board, (50, 50, 50), bar_rect)  # Dark gray color for the bar
 
         # Set caption and render the text inside the status bar
@@ -65,7 +65,7 @@ class GameState:
     def check_level_complete(self):
         # Check if player is on exit tile
         for element in self.level.elements:
-            if element[0] == TileType.EXIT:
+            if element[0] == BasicTile.EXIT:
                 if (self.level.px, self.level.py) == element[1]:  # Player position matches exit position
                     self.travel = 0
                     return True
@@ -82,7 +82,7 @@ class GameState:
             pygame.display.set_caption(f'Escape the Werehouse!')
 
             # Draw the status bar at the top
-            bar_rect = pygame.Rect(0, self.level.height_offset - self.level.height_offset, self.level.game_board.get_width(), self.level.height_offset)
+            bar_rect = pygame.Rect(0, 0, BasicTile.BOARD_WIDTH, BasicTile.HEIGHT_OFFSET)
             pygame.draw.rect(self.level.game_board, (50, 50, 50), bar_rect)  # Dark gray color for the bar
 
             # Render the text inside the bar
@@ -161,10 +161,10 @@ class GameState:
     def check_box_in_pit(self, box_num, bx, by):
         # Mapping of pit types to their corresponding attributes
         pit_mapping = {
-            TileType.PIT1: ('pit1', 'in_pit1'),
-            TileType.PIT2: ('pit2', 'in_pit2'),
-            TileType.PIT3: ('pit3', 'in_pit3'),
-            TileType.PIT4: ('pit4', 'in_pit4'),
+            BasicTile.PIT1: ('pit1', 'in_pit1'),
+            BasicTile.PIT2: ('pit2', 'in_pit2'),
+            BasicTile.PIT3: ('pit3', 'in_pit3'),
+            BasicTile.PIT4: ('pit4', 'in_pit4'),
         }
 
         # Iterate over the elements of the level
@@ -200,12 +200,12 @@ class GameState:
 
         for element in self.level.elements:
             if element[1] == (x, y):
-                if element[0] in [TileType.PIT1, TileType.PIT2, TileType.PIT3, TileType.PIT4]:
+                if element[0] in [BasicTile.PIT1, BasicTile.PIT2, BasicTile.PIT3, BasicTile.PIT4]:
                     # Check if pit is not filled (active)
-                    if ((element[0] == TileType.PIT1 and self.level.pit1) or
-                        (element[0] == TileType.PIT2 and self.level.pit2) or
-                        (element[0] == TileType.PIT3 and self.level.pit3) or
-                        (element[0] == TileType.PIT4 and self.level.pit4)):
+                    if ((element[0] == BasicTile.PIT1 and self.level.pit1) or
+                        (element[0] == BasicTile.PIT2 and self.level.pit2) or
+                        (element[0] == BasicTile.PIT3 and self.level.pit3) or
+                        (element[0] == BasicTile.PIT4 and self.level.pit4)):
                         # Player fell in pit
                         audio.play_sound('fall')
                         self.lives -= 1
@@ -250,7 +250,7 @@ class GameState:
         self.level.blit_box_4(0, 0)
         self.level.blit_player(self, 0)
         # Draw the status bar at the top
-        bar_rect = pygame.Rect(0, self.level.height_offset - self.level.height_offset, self.level.game_board.get_width(), self.level.height_offset)
+        bar_rect = pygame.Rect(0, 0, BasicTile.BOARD_WIDTH, BasicTile.HEIGHT_OFFSET)
         pygame.draw.rect(self.level.game_board, (50, 50, 50), bar_rect)  # Dark gray color for the bar
 
     # Show GAME OVER screen when out of lives
