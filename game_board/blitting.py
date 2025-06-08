@@ -6,7 +6,7 @@ import random
 from random import randrange
 import time
 from game_board.basic_tile import BasicTile
-from game_board.elements import gfx
+from game_board.elements import Sprite
 from game_board.stages import StageOne
 
 # Generate a flat list in row-major order:
@@ -190,64 +190,64 @@ class BoardElements():
 
     # Blit start tile
     def __start__(self, pos):
-        self.game_board.blit(gfx.start, pos)
+        self.game_board.blit(Sprite.START, pos)
 
     # Blit floor tile
     def __floor__(self, pos, i):
-        self.game_board.blit(gfx.floor[i], pos)
+        self.game_board.blit(Sprite.FLOOR[i], pos)
 
     # Blit wall tile
     def __wall__(self, pos):
-        self.game_board.blit(gfx.wall, pos)
+        self.game_board.blit(Sprite.WALL, pos)
 
     # Blit pit1 tile
     def __pit_1__(self, pos, box):
-        self._pit_common(pos, box, pit_index=1, eye_index=None)
+        self.__pit_common__(pos, box, pit_index=1, eye_index=None)
 
     # Blit pit2 tile
     def __pit_2__(self, pos, box):
-        self._pit_common(pos, box, pit_index=2, eye_index=None)
+        self.__pit_common__(pos, box, pit_index=2, eye_index=None)
 
     # Blit pit3 tile
     def __pit_3__(self, pos, box, i):
-        self._pit_common(pos, box, pit_index=3, eye_index=i)
+        self.__pit_common__(pos, box, pit_index=3, eye_index=i)
 
     # Blit pit4 tile
     def __pit_4__(self, pos, box, i):
-        self._pit_common(pos, box, pit_index=4, eye_index=i)
+        self.__pit_common__(pos, box, pit_index=4, eye_index=i)
 
     # Blit pit_as_wall tile
     def __pit_as_wall__(self, pos):
         # identical to a “dead” pit
-        self.game_board.blit(gfx.pit, pos)
+        self.game_board.blit(Sprite.PIT, pos)
 
     # Blit exit tile
     def __exit__(self, pos):
         # If Exit is active
         # - Blit exit
         if self.exit:
-            self.game_board.blit(gfx.exit, pos)
+            self.game_board.blit(Sprite.EXIT, pos)
         # Else
         # - Blit no_exit
         else:
-            self.game_board.blit(gfx.no_exit, pos)
+            self.game_board.blit(Sprite.NO_EXIT, pos)
 
     # Internal helper for pits 1-4
-    def _pit_common(self, pos, box, pit_index, eye_index):
+    def __pit_common__(self, pos, box, pit_index, eye_index):
         active = getattr(self, f'pit{pit_index}')
         if active:
             # Pick correct pit graphic
             if pit_index in (1, 2):
-                surf = gfx.pit
+                surf = Sprite.PIT
             elif pit_index == 3:
-                surf = gfx.pit_crazy[eye_index]
+                surf = Sprite.PIT_CRAZY[eye_index]
             else:
-                surf = gfx.pit_evil[eye_index]
+                surf = Sprite.PIT_EVIL[eye_index]
             self.game_board.blit(surf, pos)
         else:
             # Blit box in pit
             bx = self.pit_box[box - 1]
-            self.game_board.blit(gfx.boxes[bx], pos)
+            self.game_board.blit(Sprite.BOXES[bx], pos)
 
 
     # Setup tiles for level n
@@ -338,7 +338,7 @@ class BoardElements():
         self.__create_level__(level_maps[option][self.index])
 
         # Reset Boxes & Pits
-        self.__create_boxes__(gfx.boxes)
+        self.__create_boxes__(Sprite.BOXES)
 
         # Debug prints
         print(f'Option={option}, Level={self.index}')
@@ -455,38 +455,38 @@ class BoardElements():
         # - Blit facing direction of player
         if game_state.lights_out or not game_state.normal_movement:
             if game_state.facing_direction == 'up':
-                self.game_board.blit(gfx.player_up, (self.px, self.py + BasicTile.HEIGHT_OFFSET))
+                self.game_board.blit(Sprite.PLAYER_UP, (self.px, self.py + BasicTile.HEIGHT_OFFSET))
             elif game_state.facing_direction == 'down':
-                self.game_board.blit(gfx.player_down, (self.px, self.py + BasicTile.HEIGHT_OFFSET))
+                self.game_board.blit(Sprite.PLAYER_DOWN, (self.px, self.py + BasicTile.HEIGHT_OFFSET))
             elif game_state.facing_direction == 'left':
-                self.game_board.blit(gfx.player_left, (self.px, self.py + BasicTile.HEIGHT_OFFSET))
+                self.game_board.blit(Sprite.PLAYER_LEFT, (self.px, self.py + BasicTile.HEIGHT_OFFSET))
             elif game_state.facing_direction == 'right':
-                self.game_board.blit(gfx.player_right, (self.px, self.py + BasicTile.HEIGHT_OFFSET))
+                self.game_board.blit(Sprite.PLAYER_RIGHT, (self.px, self.py + BasicTile.HEIGHT_OFFSET))
 
         else:
             # If movement is Up
             # - Blit player in direction of y corresponding of p_move' value
             if game_state.travel == 1 and not game_state.is_pulling:
-                self.game_board.blit(gfx.player_up, (self.px, p_move + BasicTile.HEIGHT_OFFSET))
+                self.game_board.blit(Sprite.PLAYER_UP, (self.px, p_move + BasicTile.HEIGHT_OFFSET))
 
             # Else iff movement is Down
             # - Blit player in direction of y corresponding of p_move' value
             elif game_state.travel == 2 and not game_state.is_pulling:
-                self.game_board.blit(gfx.player_down, (self.px, p_move + BasicTile.HEIGHT_OFFSET))
+                self.game_board.blit(Sprite.PLAYER_DOWN, (self.px, p_move + BasicTile.HEIGHT_OFFSET))
 
             # Else iff movement is Left
             # - Blit player in direction of x corresponding of p_move' value
             elif game_state.travel == 3 and not game_state.is_pulling:
-                self.game_board.blit(gfx.player_left, (p_move, self.py + BasicTile.HEIGHT_OFFSET))
+                self.game_board.blit(Sprite.PLAYER_LEFT, (p_move, self.py + BasicTile.HEIGHT_OFFSET))
 
             # Else iff movement is Right
             # - Blit player in direction of x corresponding of p_move' value
             elif game_state.travel == 4 and not game_state.is_pulling:
-                self.game_board.blit(gfx.player_right, (p_move, self.py + BasicTile.HEIGHT_OFFSET))
+                self.game_board.blit(Sprite.PLAYER_RIGHT, (p_move, self.py + BasicTile.HEIGHT_OFFSET))
 
             # - Blit no player with no travel
             else:
-                self.game_board.blit(gfx.player, (self.px, self.py + BasicTile.HEIGHT_OFFSET))
+                self.game_board.blit(Sprite.PLAYER, (self.px, self.py + BasicTile.HEIGHT_OFFSET))
 
 
     # Blit level score (stars), identical logic but shorter
@@ -506,7 +506,7 @@ class BoardElements():
             count = 1
 
         # Blit numbers of highlighted Stars
-        self.game_board.blit(gfx.stars[count], (186, 155 - BasicTile.HEIGHT_OFFSET))
+        self.game_board.blit(Sprite.STARS[count], (186, 155 - BasicTile.HEIGHT_OFFSET))
         pygame.display.update()
         # Pause for 2 seconds to show Stars
         time.sleep(2)
