@@ -7,7 +7,6 @@ from random import randrange
 import time
 from game_board.basic_tile import BasicTile
 from game_board.elements import Sprite
-from game_board.stages import StageOne
 
 # Generate a flat list in row-major order:
 tiles = [
@@ -19,144 +18,134 @@ tiles = [
 # Set paths for level data
 DIR_PATH = os.path.dirname(os.path.abspath(__file__))
 TUTORIAL_PATH = os.path.join(DIR_PATH, 'stages/level_maps/tutorial_maps.json')
-STAGE_1_PATH = os.path.join(DIR_PATH, 'stages\level_maps\stage_1_maps.json')
 
 # Load the tutorial maps
 with open(TUTORIAL_PATH, 'r') as file:
     TUTORIAL_DATA = json.load(file)
 
-# Load the game maps
-with open(STAGE_1_PATH, 'r') as file:
-    STAGE_1_DATA = json.load(file)
 
-# Initiate variables to store levels from the JSON data
-tutorial_maps = []
-stage_maps =[]
-level_maps = []
-
-tutorial_title = []
-game_title =[]
-map_title = []
-
-tutorial_active_boxes = []
-game_active_boxes = []
-active_boxes = []
-
-tutorial_positions = []
-game_positions = []
-positions = []
-
-tutorial_player_start = []
-game_player_start = []
-player_start = []
-
-tutorial_player_direction = []
-game_player_direction = []
-player_direction = []
-
-tutorial_active_exit = []
-game_active_exit = []
-active_exit = []
-
-game_score = []
-level_score = []
-
-# Add the tutorial maps
-for level in TUTORIAL_DATA['levels']:
-    # Create the level map
-    tutorial_maps.append([TUTORIAL_DATA['game_board_elements'][item] for row in level['map'] for item in row])
-    # Extract other level data
-    tutorial_title.append(level['title'])
-    tutorial_active_boxes.append(level['active_boxes'])
-
-    # Convert box positions
-    box_positions = []
-    for pos in level['box_positions']:
-            box_positions.append(tuple(int(x * 100) for x in pos))
-    tutorial_positions.append(box_positions)
-
-    # Convert player start position
-    tutorial_player_start.append(tuple(int(x * 100) for x in level['player_start']))
-
-    tutorial_player_direction.append(level['player_direction'])
-    tutorial_active_exit.append(level['exit_active'])
-
-# Add the game maps
-for level in STAGE_1_DATA['levels']:
-    # Create the level map
-    stage_maps.append([STAGE_1_DATA['game_board_elements'][item] for row in level['map'] for item in row])
-
-    # Extract other level data
-    game_title.append(level['title'])
-    game_active_boxes.append(level['active_boxes'])
-
-    # Convert box positions
-    box_positions = []
-    for pos in level['box_positions']:
-            box_positions.append(tuple(int(x * 100) for x in pos))
-    game_positions.append(box_positions)
-
-    # Convert player start position
-    game_player_start.append(tuple(int(x * 100) for x in level['player_start']))
-
-    game_player_direction.append(level['player_direction'])
-    game_active_exit.append(level['exit_active'])
-    game_score.append(level['score'])
-
-# Update the level variables
-level_maps.append(tutorial_maps)
-level_maps.append(stage_maps)
-print(f'level_maps: {level_maps}')
-
-map_title.append(tutorial_title)
-map_title.append(game_title)
-print(f'\nmap_title: {map_title}')
-
-active_boxes.append(tutorial_active_boxes)
-active_boxes.append(game_active_boxes)
-print(f'\nactive_boxes: {active_boxes}')
-
-positions.append(tutorial_positions)
-positions.append(game_positions)
-print(f'\npositions: {positions}')
-
-player_start.append(tutorial_player_start)
-player_start.append(game_player_start)
-print(f'\nplayer_start: {player_start}')
-
-player_direction.append(tutorial_player_direction)
-player_direction.append(game_player_direction)
-print(f'\nplayer_direction: {player_direction}')
-
-active_exit.append(tutorial_active_exit)
-active_exit.append(game_active_exit)
-print(f'\nactive_exit: {active_exit}')
-
-level_score.append(game_score)
-print(f'\nlevel_score: {level_score}')
-
-
-# CLASS for setup of levels and blitting of game elements
+# CLASS for setup of levels and blitting of game
 class BoardElements():
     '''BoardElements'''
 
-    def __init__(self):
+    def __init__(self, STAGE_DATA):
         '''__init__'''
         print("BoardElements instance created")  # Debug statement
 
-        self.stageOne = StageOne()
+        # Initiate variables to store levels from the JSON data
+        self.tutorial_maps = []
+        self.stage_maps =[]
+        self.level_maps = []
+
+        self.tutorial_title = []
+        self.game_title =[]
+        self.map_title = []
+
+        self.tutorial_active_boxes = []
+        self.game_active_boxes = []
+        self.active_boxes = []
+
+        self.tutorial_positions = []
+        self.game_positions = []
+        self.positions = []
+
+        self.tutorial_player_start = []
+        self.game_player_start = []
+        self.player_start = []
+
+        self.tutorial_player_direction = []
+        self.game_player_direction = []
+        self.player_direction = []
+
+        self.tutorial_active_exit = []
+        self.game_active_exit = []
+        self.active_exit = []
+
+        self.game_score = []
+        self.level_score = []
+
+        # Always add the tutorial maps
+        for level in TUTORIAL_DATA['levels']:
+            # Create the level map
+            self.tutorial_maps.append([TUTORIAL_DATA['game_board_elements'][item] for row in level['map'] for item in row])
+            # Extract other level data
+            self.tutorial_title.append(level['title'])
+            self.tutorial_active_boxes.append(level['active_boxes'])
+
+            # Convert box positions
+            box_positions = []
+            for pos in level['box_positions']:
+                    box_positions.append(tuple(int(x * BasicTile.SIZE) for x in pos))
+            self.tutorial_positions.append(box_positions)
+
+            # Convert player start position
+            self.tutorial_player_start.append(tuple(int(x * BasicTile.SIZE) for x in level['player_start']))
+
+            self.tutorial_player_direction.append(level['player_direction'])
+            self.tutorial_active_exit.append(level['exit_active'])
+
+        # Add the stage maps
+        for level in STAGE_DATA['levels']:
+            # Create the level map
+            self.stage_maps.append([STAGE_DATA['game_board_elements'][item] for row in level['map'] for item in row])
+
+            # Extract other level data
+            self.game_title.append(level['title'])
+            self.game_active_boxes.append(level['active_boxes'])
+
+            # Convert box positions
+            box_positions = []
+            for pos in level['box_positions']:
+                    box_positions.append(tuple(int(x * BasicTile.SIZE) for x in pos))
+            self.game_positions.append(box_positions)
+
+            # Convert player start position
+            self.game_player_start.append(tuple(int(x * BasicTile.SIZE) for x in level['player_start']))
+
+            self.game_player_direction.append(level['player_direction'])
+            self.game_active_exit.append(level['exit_active'])
+            self.game_score.append(level['score'])
+
+        # Update the level variables
+        self.level_maps.append(self.tutorial_maps)
+        self.level_maps.append(self.stage_maps)
+        print(f'level_maps: {self.level_maps}')
+
+        self.map_title.append(self.tutorial_title)
+        self.map_title.append(self.game_title)
+        print(f'\nmap_title: {self.map_title}')
+
+        self.active_boxes.append(self.tutorial_active_boxes)
+        self.active_boxes.append(self.game_active_boxes)
+        print(f'\nactive_boxes: {self.active_boxes}')
+
+        self.positions.append(self.tutorial_positions)
+        self.positions.append(self.game_positions)
+        print(f'\npositions: {self.positions}')
+
+        self.player_start.append(self.tutorial_player_start)
+        self.player_start.append(self.game_player_start)
+        print(f'\nplayer_start: {self.player_start}')
+
+        self.player_direction.append(self.tutorial_player_direction)
+        self.player_direction.append(self.game_player_direction)
+        print(f'\nplayer_direction: {self.player_direction}')
+
+        self.active_exit.append(self.tutorial_active_exit)
+        self.active_exit.append(self.game_active_exit)
+        print(f'\nactive_exit: {self.active_exit}')
+
+        self.level_score.append(self.game_score)
+        print(f'\nlevel_score: {self.level_score}')
 
         # Initialize game board size to default values
         self.width = BasicTile.BOARD_WIDTH
         self.height = BasicTile.BOARD_HEIGHT
         self.game_board = pygame.display.set_mode((self.width, (self.height)))  # Set the screen size to 600x640
 
-        # List of map titles
-        self.map_title = map_title
-
         # Variable to keep track of numbers of Levels
-        self.no_of_levels = [sum(type(i) == type([]) for i in level_maps[0])]
-        self.no_of_levels.append(sum(type(i) == type([]) for i in level_maps[1]))
+        self.no_of_levels = [sum(type(i) == type([]) for i in self.level_maps[0])]
+        self.no_of_levels.append(sum(type(i) == type([]) for i in self.level_maps[1]))
 
         # Variable to tell if Player finished the Game or fell into a Pit
         self.play = True
@@ -251,11 +240,11 @@ class BoardElements():
 
 
     # Setup tiles for level n
-    def __create_level__(self, level_map):
+    def __create_level__(self, option):
         self.elements.clear()
         # For each coordinate in level_maps
         # - Set tiles depending on value of the level element
-        for i, element in enumerate(level_map):
+        for i, element in enumerate(self.level_maps[option][self.index]):
             pos        = tiles[i]
             rand_floor = randrange(0, 40)
             rand_pit   = randrange(0, 20)
@@ -283,50 +272,55 @@ class BoardElements():
 
 
     # Place Boxes, Player, reset Pits, and Exit
-    def __place_boxes_player_and_reset_pits_and_exit__(self,
-                active_boxes, positions, player_start, active_exit):
-        self.box1, (self.b1x, self.b1y) = active_boxes[0], positions[0]
-        self.box2, (self.b2x, self.b2y) = active_boxes[1], positions[1]
-        self.box3, (self.b3x, self.b3y) = active_boxes[2], positions[2]
-        self.box4, (self.b4x, self.b4y) = active_boxes[3], positions[3]
+    def __place_boxes_player_and_reset_pits_and_exit__(self, option):
+        self.box1, (self.b1x, self.b1y) = self.active_boxes[option][self.index][0], self.positions[option][self.index][0]
+        self.box2, (self.b2x, self.b2y) = self.active_boxes[option][self.index][1], self.positions[option][self.index][1]
+        self.box3, (self.b3x, self.b3y) = self.active_boxes[option][self.index][2], self.positions[option][self.index][2]
+        self.box4, (self.b4x, self.b4y) = self.active_boxes[option][self.index][3], self.positions[option][self.index][3]
 
-        self.px, self.py = player_start
+        self.px, self.py = self.player_start[option][self.index]
         self.pit1 = self.pit2 = self.pit3 = self.pit4 = True
-        self.exit = active_exit
+        self.exit = self.active_exit[option][self.index]
 
 
     # Blit tiles for level n with the help of dispatch
-    def blit_level(self):
-        # dispatch: tile_code → (method, args...)
+    def blit_basic_elements(self):
+        # dispatch: tile_code → (method, args_info)
         dispatch = {
-            0: (self.__start__,         ()),
-            1: (self.__pit_1__,         ('in_pit1', None)),
-            2: (self.__pit_2__,         ('in_pit2', None)),
-            3: (self.__pit_3__,         ('in_pit3', 'eyes')),
-            4: (self.__pit_4__,         ('in_pit4', 'eyes')),
-            5: (self.__pit_as_wall__,   ()),
-            6: (self.__floor__,         ('floor',)),
-            7: (self.__wall__,          ()),
-            8: (self.__exit__,         ())
+            0: (self.__start__, None),
+            1: (self.__pit_1__, 'in_pit1'),
+            2: (self.__pit_2__, 'in_pit2'),
+            3: (self.__pit_3__, 'in_pit3'),
+            4: (self.__pit_4__, 'in_pit4'),
+            5: (self.__pit_as_wall__, None),
+            6: (self.__floor__, 'floor'),
+            7: (self.__wall__, None),
+            8: (self.__exit__, None)
         }
 
         for element, pos, rand_floor, rand_pit in self.elements:
-            method, args = dispatch[element]
+            method, arg_info = dispatch[element]
             x, y = pos[0], pos[1] + BasicTile.HEIGHT_OFFSET
 
-            # unwrap args tuple into the correct call
-            if not args:
+            # Get additional arguments based on element type
+            args = self.__get_method_arguments__(element, rand_floor, rand_pit)
+
+            # Call the method with the appropriate arguments
+            if arg_info is None:
                 method((x, y))
-            elif args == ('floor',):
-                method((x, y), rand_floor)
-            elif args == ('in_pit1', None):
-                method((x, y), self.in_pit1)
-            elif args == ('in_pit2', None):
-                method((x, y), self.in_pit2)
-            elif args == ('in_pit3', 'eyes'):
-                method((x, y), self.in_pit3, rand_pit)
-            elif args == ('in_pit4', 'eyes'):
-                method((x, y), self.in_pit4, rand_pit)
+            else:
+                method((x, y), *args)
+
+    # Helper to unpack arguments for dispatcher
+    def __get_method_arguments__(self, element, rand_floor, rand_pit):
+        if element == 6:
+            return ((rand_floor,))
+        elif element in (3, 4):
+            return (getattr(self, f'in_pit{element}'), rand_pit)
+        elif element in (1, 2):
+            return (getattr(self, f'in_pit{element}'),)
+        else:
+            return ()
 
 
     # Setup of new level
@@ -335,25 +329,20 @@ class BoardElements():
             return True
 
         # Reset element table & create new
-        self.__create_level__(level_maps[option][self.index])
+        self.__create_level__(option)
 
         # Reset Boxes & Pits
         self.__create_boxes__(Sprite.BOXES)
 
         # Debug prints
         print(f'Option={option}, Level={self.index}')
-        print(f'positions count={len(positions[option])}')
+        print(f'positions count={len(self.positions[option])}')
 
         # Place boxes, rest Player and Exit
-        self.__place_boxes_player_and_reset_pits_and_exit__(
-            active_boxes[option][self.index],
-            positions[option][self.index],
-            player_start[option][self.index],
-            active_exit[option][self.index]
-        )
+        self.__place_boxes_player_and_reset_pits_and_exit__(option)
 
         # Facing & beam angle
-        game_state.facing_direction = player_direction[option][self.index]
+        game_state.facing_direction = self.player_direction[option][self.index]
         fd = game_state.facing_direction
         if   fd == 'up':    ang = math.atan2(-1, 0)
         elif fd == 'down':  ang = math.atan2( 1, 0)
@@ -492,7 +481,7 @@ class BoardElements():
     # Blit level score (stars), identical logic but shorter
     def blit_stars(self, game_state):
         '''blit_stars'''
-        least_moves = level_score[0][game_state.current_level]
+        least_moves = self.level_score[0][game_state.current_level]
 
         # Blit stars depending on number of moves
         if game_state.moves <= least_moves:
@@ -678,7 +667,7 @@ class BoardElements():
             mask = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
             mask.fill((0, 0, 0, 249))  # Higher opacity
             self.game_board.fill((30, 30, 30))
-            self.blit_level()
+            self.blit_basic_elements()
             self.blit_box_1(0, 0)
             self.blit_box_2(0, 0)
             self.blit_box_3(0, 0)
@@ -791,7 +780,7 @@ class BoardElements():
 
     def __blit_level_elements__(self, game_state):
         self.game_board.fill((30, 30, 30))
-        self.blit_level()
+        self.blit_basic_elements()
         self.blit_box_1(0, 0)
         self.blit_box_2(0, 0)
         self.blit_box_3(0, 0)

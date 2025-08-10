@@ -1,8 +1,8 @@
 import pygame
 import logging
 import sys
-from game_board.blitting import BoardElements
 from game_board.basic_tile import BasicTile
+from game_board.stage_wrapper import StageWrapper
 from sound import AudioManager
 from high_scores import ScoreManager
 from start_screen import StartMenu
@@ -21,7 +21,7 @@ except pygame.error as e:
     sys.exit(1)
 
 # Game constants
-FPS = 120
+FPS = 60
 DISTANCE = BasicTile.SIZE
 MOVEMENT_DELAY = 10  # Controls movement speed (higher = slower)
 ARROW_KEYS = {pygame.K_UP:    {'direction': 'up',    'travel': 1, 'search': 1},
@@ -50,7 +50,7 @@ def handle_input(keys, level, game_state, audio):
     game_state.prev_x, game_state.prev_y = level.px, level.py
 
     # Process arrow key inputs for player movement and direction changes
-    if process_arrow_keys(keys, game_state, level):
+    if process_arrow_keys(keys, game_state):
         # Attempt to move the player and boxes; if successful, increment the move count
         if move_player_and_boxes(level, audio, game_state):
             # Only increment the move count if the player's position has changed
@@ -328,7 +328,7 @@ def move_player_and_boxes(level, audio, game_state):
 
 def main():
     # Initialize game components
-    level = BoardElements()
+    level = StageWrapper()
     audio = AudioManager()
     game_state = GameState(level)
     high_scores = ScoreManager(level)
@@ -336,10 +336,6 @@ def main():
 
     clock = pygame.time.Clock()
     show_start_screen = True
-
-    # # Update the game board size based on the current level
-    # mode_index = 0 if game_state.game == False else 1
-    # level.update_game_board_size(level_map[mode_index][game_state.current_level])
 
     while True:
         if show_start_screen:

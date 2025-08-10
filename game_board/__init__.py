@@ -1,1 +1,2 @@
 from game_board.blitting import BoardElements
+from game_board.stage_wrapper import StageWrapper
