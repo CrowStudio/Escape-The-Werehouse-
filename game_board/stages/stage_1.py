@@ -14,7 +14,7 @@ with open(STAGE_1_PATH, 'r') as file:
 class StageOne(BoardElements):
     '''stage 1'''
     def __init__(self):
-        super().__init__(self, STAGE_DATA)
+        super().__init__(STAGE_DATA)
 
     def blit_level(self):
         super().blit_basic_elements()

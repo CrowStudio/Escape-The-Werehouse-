@@ -6,7 +6,7 @@ import random
 from random import randrange
 import time
 from game_board.basic_tile import BasicTile
-from game_board.elements import Sprite
+from game_board.elements.sprites import Sprite
 
 # Generate a flat list in row-major order:
 tiles = [
