@@ -5,7 +5,7 @@ from game_board.blitting import BoardElements
 
 # Set paths for level data
 DIR_PATH = os.path.dirname(os.path.abspath(__file__))
-STAGE_1_PATH = os.path.join(DIR_PATH, 'level_maps\stage_1_maps.json')
+STAGE_1_PATH = os.path.join(DIR_PATH, 'level_maps', 'stage_1_maps.json')
 
 # Load the game maps
 with open(STAGE_1_PATH, 'r') as file:

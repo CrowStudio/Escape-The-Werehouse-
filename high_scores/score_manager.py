@@ -8,7 +8,7 @@ from game_board.basic_tile import BasicTile
 DIR_PATH = os.path.dirname(os.path.abspath(__file__))
 
 # Navigate one level up and into the game_board\stages\level_maps\
-STAGE_1_PATH = os.path.join(DIR_PATH, '..', 'game_board\stages\level_maps\stage_1_maps.json')
+STAGE_1_PATH = os.path.join(DIR_PATH, '..', 'game_board', 'stages', 'level_maps', 'stage_1_maps.json')
 
 # Load the stage maps to be able to calculate the total score
 with open(STAGE_1_PATH, 'r') as maps_file:
