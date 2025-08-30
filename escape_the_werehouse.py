@@ -2,7 +2,7 @@ import pygame
 import logging
 import sys
 from game_board.basic_tile import BasicTile
-from game_board.stage_wrapper import StageWrapper
+from game_board.zone_level_wrapper import ZoneLevelWrapper
 from sound import AudioManager
 from high_scores import ScoreManager
 from start_screen import StartMenu
@@ -328,11 +328,11 @@ def move_player_and_boxes(level, audio, game_state):
 
 def main():
     # Initialize game components
-    stage_wrapper = StageWrapper()
+    level = ZoneLevelWrapper()
     audio = AudioManager()
-    game_state = GameState(stage_wrapper.current_stage)
-    high_scores = ScoreManager(stage_wrapper.current_stage)
-    start_menu = StartMenu(stage_wrapper.current_stage, game_state)
+    game_state = GameState(level.current_zone)
+    high_scores = ScoreManager(level.current_zone)
+    start_menu = StartMenu(level.current_zone, game_state)
 
     clock = pygame.time.Clock()
     show_start_screen = True
@@ -370,25 +370,24 @@ def main():
 
                 # Generate new level if needed
                 if game_state.new_level:
-                    print('wat???', game_state.current_level)
-                    stage_wrapper.current_stage.index = game_state.current_level
+                    level.current_zone.index = game_state.current_level
                     mode_index = 0 if game_state.game == False else 1
-                    game_state.new_level = stage_wrapper.current_stage.generate_level(game_state, True, mode_index)
+                    game_state.new_level = level.current_zone.generate_level(game_state, True, mode_index)
 
-                    stage_wrapper.current_stage.game_board.fill((30, 30, 30))
+                    level.current_zone.game_board.fill((30, 30, 30))
                     # Fade in effect after resetting the level
-                    stage_wrapper.current_stage.fade_in(game_state)
+                    level.current_zone.fade_in(game_state)
 
                     # Apply flickering effect if lights are out
                     if game_state.lights_out:
-                        stage_wrapper.current_stage.flicker_effect(game_state)
+                        level.current_zone.flicker_effect(game_state)
 
                     game_state.player_in_pit = False
 
                 # Handle input only if not in movement cooldown
                 if game_state.debounce_timer == 0:
                     keys = pygame.key.get_pressed()
-                    if handle_input(keys, stage_wrapper.current_stage, game_state, audio):
+                    if handle_input(keys, level.current_zone, game_state, audio):
                         game_state.debounce_timer = MOVEMENT_DELAY
 
                 else:
@@ -403,30 +402,30 @@ def main():
                         show_start_screen = True
 
                     # Fade out effect
-                    stage_wrapper.current_stage.fade_out(game_state)
+                    level.current_zone.fade_out(game_state)
 
                 if not game_state.player_in_pit and not game_state.check_level_complete():
                     # Set background color
-                    stage_wrapper.current_stage.game_board.fill((30, 30, 30))
+                    level.current_zone.game_board.fill((30, 30, 30))
 
                     # Render the rest of the game elements
-                    stage_wrapper.current_stage.blit_level()
-                    stage_wrapper.current_stage.blit_box_1(0, 0)
-                    stage_wrapper.current_stage.blit_box_2(0, 0)
-                    stage_wrapper.current_stage.blit_box_3(0, 0)
-                    stage_wrapper.current_stage.blit_box_4(0, 0)
+                    level.current_zone.blit_level()
+                    level.current_zone.blit_box_1(0, 0)
+                    level.current_zone.blit_box_2(0, 0)
+                    level.current_zone.blit_box_3(0, 0)
+                    level.current_zone.blit_box_4(0, 0)
 
                     # Render player with direction
                     if game_state.travel in [1, 2]:
-                        stage_wrapper.current_stage.blit_player(game_state, stage_wrapper.current_stage.py)
+                        level.current_zone.blit_player(game_state, level.current_zone.py)
                     elif game_state.travel in [3, 4]:
-                        stage_wrapper.current_stage.blit_player(game_state, stage_wrapper.current_stage.px)
+                        level.current_zone.blit_player(game_state, level.current_zone.px)
                     else:
-                        stage_wrapper.current_stage.blit_player(game_state, 0)
+                        level.current_zone.blit_player(game_state, 0)
 
                     # Apply blackout effect if lights are out
                     if game_state.lights_out:
-                        stage_wrapper.current_stage.apply_blackout(game_state)
+                        level.current_zone.apply_blackout(game_state)
 
                     game_state.draw_status_bar()
 

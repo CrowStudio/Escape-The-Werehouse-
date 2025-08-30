@@ -17,7 +17,7 @@ tiles = [
 
 # Set paths for level data
 DIR_PATH = os.path.dirname(os.path.abspath(__file__))
-TUTORIAL_PATH = os.path.join(DIR_PATH, 'stages/level_maps/tutorial_maps.json')
+TUTORIAL_PATH = os.path.join(DIR_PATH, 'zones','level_maps', 'tutorial_maps.json')
 
 # Load the tutorial maps
 with open(TUTORIAL_PATH, 'r') as file:
@@ -28,13 +28,13 @@ with open(TUTORIAL_PATH, 'r') as file:
 class BoardElements():
     '''BoardElements'''
 
-    def __init__(self, STAGE_DATA):
+    def __init__(self, ZONE_DATA):
         '''__init__'''
         print("BoardElements instance created")  # Debug statement
 
         # Initiate variables to store levels from the JSON data
         self.tutorial_maps = []
-        self.stage_maps =[]
+        self.zone_maps =[]
         self.level_maps = []
 
         self.tutorial_title = []
@@ -84,10 +84,10 @@ class BoardElements():
             self.tutorial_player_direction.append(level['player_direction'])
             self.tutorial_active_exit.append(level['exit_active'])
 
-        # Add the stage maps
-        for level in STAGE_DATA['levels']:
+        # Add the zone maps
+        for level in ZONE_DATA['levels']:
             # Create the level map
-            self.stage_maps.append([STAGE_DATA['game_board_elements'][item] for row in level['map'] for item in row])
+            self.zone_maps.append([ZONE_DATA['game_board_elements'][item] for row in level['map'] for item in row])
 
             # Extract other level data
             self.game_title.append(level['title'])
@@ -108,7 +108,7 @@ class BoardElements():
 
         # Update the level variables
         self.level_maps.append(self.tutorial_maps)
-        self.level_maps.append(self.stage_maps)
+        self.level_maps.append(self.zone_maps)
         print(f'level_maps: {self.level_maps}')
 
         self.map_title.append(self.tutorial_title)
@@ -336,7 +336,6 @@ class BoardElements():
 
         # Debug prints
         print(f'Option={option}, Level={self.index}')
-        print(f'positions count={len(self.positions[option])}')
 
         # Place boxes, rest Player and Exit
         self.__place_boxes_player_and_reset_pits_and_exit__(option)
