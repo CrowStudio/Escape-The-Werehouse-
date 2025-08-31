@@ -5,6 +5,7 @@ import os
 import random
 from random import randrange
 import time
+import game_board
 from game_board.basic_tile import BasicTile
 from game_board.elements.sprites import Sprite
 
@@ -34,11 +35,11 @@ class BasicBoardElements():
 
         # Initiate variables to store levels from the JSON data
         self.tutorial_maps = []
-        self.zone_maps =[]
+        self.zone_maps = []
         self.level_maps = []
 
         self.tutorial_title = []
-        self.game_title =[]
+        self.game_title = []
         self.map_title = []
 
         self.tutorial_active_boxes = []
@@ -299,6 +300,10 @@ class BasicBoardElements():
         }
 
         for element, pos, rand_floor, rand_pit in self.elements:
+            if not isinstance(element, int):
+            # Replace non-integer elements with a random floor
+                element = 6
+
             method, arg_info = dispatch[element]
             x, y = pos[0], pos[1] + BasicTile.HEIGHT_OFFSET
 

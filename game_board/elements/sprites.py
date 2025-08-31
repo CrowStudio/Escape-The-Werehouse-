@@ -1,4 +1,5 @@
 import pygame
+import os
 
 class Sprite:
 
@@ -52,6 +53,8 @@ class Sprite:
 
     EXIT = pygame.image.load('graphics/exit.png')
     NO_EXIT = pygame.image.load('graphics/exit_inactive.png')
+
+    WALL_SWITCH = pygame.image.load('graphics/wall_switch.png')
 
     BOXES = [pygame.image.load('graphics/box_in_pit.png'), pygame.image.load('graphics/box.png'),
             pygame.image.load('graphics/box_in_pit_return_.png'), pygame.image.load('graphics/box_return.png'),
