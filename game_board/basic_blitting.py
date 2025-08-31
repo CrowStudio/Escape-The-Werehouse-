@@ -24,13 +24,13 @@ with open(TUTORIAL_PATH, 'r') as file:
     TUTORIAL_DATA = json.load(file)
 
 
-# CLASS for setup of levels and blitting of game
-class BoardElements():
-    '''BoardElements'''
+# CLASS for setup of basic level variables and blitting of basic elements
+class BasicBoardElements():
+    '''BasicBoardElements'''
 
     def __init__(self, ZONE_DATA):
         '''__init__'''
-        print("BoardElements instance created")  # Debug statement
+        print("BasicBoardElements instance created")  # Debug statement
 
         # Initiate variables to store levels from the JSON data
         self.tutorial_maps = []
