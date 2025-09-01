@@ -174,7 +174,7 @@ class BasicBoardElements():
         # Variable to keep track of Levels
         self.index = 0
 
-        # Variable to store zone-specific element
+        # Variable to store zone-specific element (tile) to be handled by dynamic method __zone_element__(
         self.zone_element = ''
 
         # Default initial beam angle
@@ -226,7 +226,7 @@ class BasicBoardElements():
             self.game_board.blit(Sprite.NO_EXIT, pos)
 
     # Blit zone-specific tile
-    def __zone_tile__(self, pos, i, blit_zone_element):
+    def __zone_element__(self, pos, i, blit_zone_element):
         self.blit_zone_element(self.zone_element, pos, i)
 
     # Helper for pits 1-4
@@ -304,7 +304,7 @@ class BasicBoardElements():
             6: (self.__floor__, 'floor'),
             7: (self.__wall__, None),
             8: (self.__exit__, None),
-            9: (self.__zone_tile__, 'zone_element')
+            9: (self.__zone_element__, 'zone_element')
         }
 
         for element, pos, rand_floor, rand_pit in self.elements:
@@ -404,7 +404,7 @@ class BasicBoardElements():
                     return False
 
     # Generic box blitter
-    def blit_box(self, index, travel, move):
+    def __blit_box__(self, index, travel, move):
         """
         Generic blitter for box at self.box[index],
         ground‐truth positions self.b{n}x/y, active flag self.box{n}.
@@ -434,22 +434,22 @@ class BasicBoardElements():
         self.game_board.blit(sprite, (x, y))
 
 
-    # Wrapper to blit Boxes 1-4 with the help of the generic blit_box()
+    # Wrappers to blit Boxes 1-4 with the help of the generic blit_box()
     def blit_box_1(self, b1_travel, b1_move):
         '''blit_box_1'''
-        self.blit_box(0, b1_travel, b1_move)
+        self.__blit_box__(0, b1_travel, b1_move)
 
     def blit_box_2(self, b2_travel, b2_move):
         '''blit_box2'''
-        self.blit_box(1, b2_travel, b2_move)
+        self.__blit_box__(1, b2_travel, b2_move)
 
     def blit_box_3(self, b3_travel, b3_move):
         '''blit_box3'''
-        self.blit_box(2, b3_travel, b3_move)
+        self.__blit_box__(2, b3_travel, b3_move)
 
     def blit_box_4(self, b4_travel, b4_move):
         '''blit_box4'''
-        self.blit_box(3, b4_travel, b4_move)
+        self.__blit_box__(3, b4_travel, b4_move)
 
 
     # Blit player
