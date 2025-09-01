@@ -174,6 +174,9 @@ class BasicBoardElements():
         # Variable to keep track of Levels
         self.index = 0
 
+        # Variable to store zone-specific element
+        self.zone_element = ''
+
         # Default initial beam angle
         self.current_beam_angle = -1.55
 
@@ -221,6 +224,10 @@ class BasicBoardElements():
         # - Blit no_exit
         else:
             self.game_board.blit(Sprite.NO_EXIT, pos)
+
+    # Blit zone-specific tile
+    def __zone_tile__(self, pos, i, blit_zone_element):
+        self.blit_zone_element(self.zone_element, pos, i)
 
     # Helper for pits 1-4
     def __pit_common__(self, pos, box, pit_index, eye_index):
@@ -285,7 +292,7 @@ class BasicBoardElements():
 
 
     # Blit tiles for level n with the help of dispatch
-    def blit_basic_elements(self):
+    def blit_basic_elements(self, blit_zone_element=None):
         # dispatch: tile_code → (method, args_info)
         dispatch = {
             0: (self.__start__, None),
@@ -296,19 +303,21 @@ class BasicBoardElements():
             5: (self.__pit_as_wall__, None),
             6: (self.__floor__, 'floor'),
             7: (self.__wall__, None),
-            8: (self.__exit__, None)
+            8: (self.__exit__, None),
+            9: (self.__zone_tile__, 'zone_element')
         }
 
         for element, pos, rand_floor, rand_pit in self.elements:
+            # Take care of zone-specific elements (strings)
             if not isinstance(element, int):
-            # Replace non-integer elements with a random floor
-                element = 6
+                self.zone_element = element
+                element = 9
 
             method, arg_info = dispatch[element]
             x, y = pos[0], pos[1] + BasicTile.HEIGHT_OFFSET
 
             # Get additional arguments based on element type
-            args = self.__get_method_arguments__(element, rand_floor, rand_pit)
+            args = self.__get_method_arguments__(element, rand_floor, rand_pit, blit_zone_element)
 
             # Call the method with the appropriate arguments
             if arg_info is None:
@@ -317,9 +326,11 @@ class BasicBoardElements():
                 method((x, y), *args)
 
     # Helper to unpack arguments for dispatcher
-    def __get_method_arguments__(self, element, rand_floor, rand_pit):
-        if element == 6:
-            return ((rand_floor,))
+    def __get_method_arguments__(self, element, rand_floor, rand_pit, blit_zone_element):
+        if element == 9:
+            return (rand_floor, blit_zone_element)
+        elif element == 6:
+            return (rand_floor,)
         elif element in (3, 4):
             return (getattr(self, f'in_pit{element}'), rand_pit)
         elif element in (1, 2):
