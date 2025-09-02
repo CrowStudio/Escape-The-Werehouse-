@@ -19,5 +19,5 @@ class ZoneOne(BasicBoardElements):
     def blit_level(self, game_state):
         super().blit_basic_elements(game_state)
 
-    def check_boxes_with_zone_element(self, game_State, box_num, bx, by):
+    def check_boxes_with_zone_elements(self, game_State, box_num, bx, by):
         return False
