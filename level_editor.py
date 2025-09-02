@@ -1,5 +1,5 @@
 import pygame
-from game_board.elements import gfx
+from game_board.elements import Sprite
 import random
 from collections import deque
 import os
@@ -25,19 +25,19 @@ TILE_TYPES = {
 }
 
 TILE_IMAGES = {
-    'START': gfx.start,
+    'START': Sprite.START,
     'FLOOR': None,  # Will be randomly chosen when drawn
-    'WALL': gfx.wall,
-    'PIT1': gfx.pit,
-    'PIT2': gfx.pit,
-    'PIT3': gfx.pit,
-    'PIT4': gfx.pit,
-    'PIT_WALL': gfx.pit,
-    'EXIT': gfx.exit,
-    'BOX1': gfx.boxes[8],
-    'BOX2': gfx.boxes[9],
-    'BOX3': gfx.boxes[10],
-    'BOX4': gfx.boxes[11]
+    'WALL': Sprite.WALL,
+    'PIT1': Sprite.PIT,
+    'PIT2': Sprite.PIT,
+    'PIT3': Sprite.PIT,
+    'PIT4': Sprite.PIT,
+    'PIT_WALL': Sprite.PIT,
+    'EXIT': Sprite.EXIT,
+    'BOX1': Sprite.BOXES[8],
+    'BOX2': Sprite.BOXES[9],
+    'BOX3': Sprite.BOXES[10],
+    'BOX4': Sprite.BOXES[11]
 }
 
 TILE_BUTTON_COLORS = {
@@ -122,7 +122,7 @@ class LevelEditor:
         return tile_buttons
 
     def initialize_floor_indices(self):
-        self.floor_indices = [[random.randint(0, len(gfx.floor) - 1) for _ in range(self.cols)] for _ in range(self.rows)]
+        self.floor_indices = [[random.randint(0, len(Sprite.FLOOR) - 1) for _ in range(self.cols)] for _ in range(self.rows)]
 
     def initialize_under_tiles(self):
         self.under_tiles = [[None for _ in range(self.cols)] for _ in range(self.rows)]
@@ -403,12 +403,12 @@ class LevelEditor:
         if "BOX" in tile_type and self.under_tiles[row][col]:
             under_type = self.under_tiles[row][col]
             if under_type == 'FLOOR':
-                floor_image = gfx.floor[self.floor_indices[row][col]]
+                floor_image = Sprite.FLOOR[self.floor_indices[row][col]]
                 self.screen.blit(floor_image, (x0, y0))
             else:
                 self.screen.blit(TILE_IMAGES[under_type], (x0, y0))
         elif tile_type == 'FLOOR':
-            floor_image = gfx.floor[self.floor_indices[row][col]]
+            floor_image = Sprite.FLOOR[self.floor_indices[row][col]]
             self.screen.blit(floor_image, (x0, y0))
 
     def draw_top_tile(self, tile_type, x0, y0):
@@ -491,7 +491,7 @@ class LevelEditor:
     def handle_repeatable_tile_placement(self, row, col):
         self.level_map[row][col] = self.current_tile
         if self.current_tile == 'FLOOR':
-            self.floor_indices[row][col] = random.randint(0, len(gfx.floor) - 1)
+            self.floor_indices[row][col] = random.randint(0, len(Sprite.FLOOR) - 1)
 
     def add_pit_number(self, tile_type, x0, y0):
         number = tile_type[-1]
@@ -1009,7 +1009,7 @@ def generate_random_map(rows, cols, max_attempts=1000):
                     level_map[i][j] = 'FLOOR'
 
         if is_connected(level_map):
-            floor_indices = [[random.randint(0, len(gfx.floor) - 1) for _ in range(cols)] for _ in range(rows)]
+            floor_indices = [[random.randint(0, len(Sprite.FLOOR) - 1) for _ in range(cols)] for _ in range(rows)]
             return level_map, floor_indices
 
     level_map = [['WALL' for _ in range(cols)] for _ in range(rows)]
@@ -1019,7 +1019,7 @@ def generate_random_map(rows, cols, max_attempts=1000):
                 level_map[i][j] = 'WALL'
             else:
                 level_map[i][j] = 'FLOOR'
-    floor_indices = [[random.randint(0, len(gfx.floor) - 1) for _ in range(cols)] for _ in range(rows)]
+    floor_indices = [[random.randint(0, len(Sprite.FLOOR) - 1) for _ in range(cols)] for _ in range(rows)]
     return level_map, floor_indices
 
 def main():
