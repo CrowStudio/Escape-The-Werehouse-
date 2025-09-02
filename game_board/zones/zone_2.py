@@ -89,5 +89,5 @@ class ZoneTwo(BasicBoardElements):
     def validate_push(self, push_x, push_y, game_state):
         return super().validate_push(push_x, push_y, game_state, is_zone_element_valid=self.is_zone_element_valid)
 
-    def check_boxes_with_zone_elements(self, game_State, box_num, bx, by):
+    def check_boxes_with_zone_elements(self, game_state, box_num, bx, by):
         return False
