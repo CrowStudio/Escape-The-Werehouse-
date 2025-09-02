@@ -226,8 +226,8 @@ class BasicBoardElements():
             self.game_board.blit(Sprite.NO_EXIT, pos)
 
     # Blit zone-specific tile
-    def __zone_element__(self, pos, i, blit_zone_element):
-        self.blit_zone_element(self.zone_element, pos, i)
+    def __zone_element__(self, pos, i, game_state, blit_zone_element):
+        self.blit_zone_element(self.zone_element, pos, i, game_state)
 
     # Helper for pits 1-4
     def __pit_common__(self, pos, box, pit_index, eye_index):
@@ -292,7 +292,7 @@ class BasicBoardElements():
 
 
     # Blit tiles for level n with the help of dispatch
-    def blit_basic_elements(self, blit_zone_element=None):
+    def blit_basic_elements(self, game_state, blit_zone_element=None):
         # dispatch: tile_code → (method, args_info)
         dispatch = {
             0: (self.__start__, None),
@@ -317,7 +317,7 @@ class BasicBoardElements():
             x, y = pos[0], pos[1] + BasicTile.HEIGHT_OFFSET
 
             # Get additional arguments based on element type
-            args = self.__get_method_arguments__(element, rand_floor, rand_pit, blit_zone_element)
+            args = self.__get_method_arguments__(element, rand_floor, rand_pit, game_state, blit_zone_element)
 
             # Call the method with the appropriate arguments
             if arg_info is None:
@@ -326,9 +326,9 @@ class BasicBoardElements():
                 method((x, y), *args)
 
     # Helper to unpack arguments for dispatcher
-    def __get_method_arguments__(self, element, rand_floor, rand_pit, blit_zone_element):
+    def __get_method_arguments__(self, element, rand_floor, rand_pit, game_state, blit_zone_element):
         if element == 9:
-            return (rand_floor, blit_zone_element)
+            return (rand_floor, game_state, blit_zone_element)
         elif element == 6:
             return (rand_floor,)
         elif element in (3, 4):
@@ -374,7 +374,7 @@ class BasicBoardElements():
             return False
 
     # Validate movement
-    def validate_move(self, new_x, new_y, game_state):
+    def validate_move(self, new_x, new_y, game_state, is_zone_element_valid=None):
         for element in self.elements:
             if element[1] == (new_x, new_y):
                 # Check for valid tiles including EXIT and PITS
@@ -392,9 +392,11 @@ class BasicBoardElements():
                     return True
                 elif element[0] in [BasicTile.WALL, BasicTile.PIT_WALL]:
                     return False
+                else:
+                    return is_zone_element_valid(element, game_state)
 
     # Validate push
-    def validate_push(self, push_x, push_y):
+    def validate_push(self, push_x, push_y, game_state, is_zone_element_valid=None):
         for element in self.elements:
             if element[1] == (push_x, push_y):
                 if element[0] in [BasicTile.START, BasicTile.FLOOR, BasicTile.EXIT,
@@ -402,6 +404,8 @@ class BasicBoardElements():
                     return True
                 elif element[0] in [BasicTile.WALL, BasicTile.PIT_WALL]:
                     return False
+                else:
+                    return is_zone_element_valid(element, game_state)
 
     # Generic box blitter
     def __blit_box__(self, index, travel, move):
@@ -795,7 +799,7 @@ class BasicBoardElements():
 
     def __blit_level_elements__(self, game_state):
         self.game_board.fill((30, 30, 30))
-        self.blit_basic_elements()
+        self.blit_basic_elements(game_state)
         self.blit_box_1(0, 0)
         self.blit_box_2(0, 0)
         self.blit_box_3(0, 0)

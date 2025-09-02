@@ -229,7 +229,8 @@ def is_valid_move(level, new_x, new_y, game_state):
             push_y = new_y + (new_y - level.py)
 
             # Check if push position is valid
-            push_valid = level.validate_push(push_x, push_y)
+            push_valid = level.validate_push(push_x, push_y, game_state)
+            print(push_valid)
 
             if not push_valid:
                 return False
@@ -409,7 +410,7 @@ def main():
                     level.current_zone.game_board.fill((30, 30, 30))
 
                     # Render the rest of the game elements
-                    level.current_zone.blit_level()
+                    level.current_zone.blit_level(game_state)
                     level.current_zone.blit_box_1(0, 0)
                     level.current_zone.blit_box_2(0, 0)
                     level.current_zone.blit_box_3(0, 0)

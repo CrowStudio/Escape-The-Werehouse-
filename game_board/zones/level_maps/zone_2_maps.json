@@ -9,7 +9,14 @@
     "FLOOR": 6,
     "WALL": 7,
     "EXIT": 8,
-    "WALL_SWITCH": "Z1"
+    "WALL_SWITCH_UP_1": "Z1-U1",
+    "WALL_SWITCH_DOWN_1": "Z1-D1",
+    "WALL_SWITCH_LEFT_1": "Z1-L1",
+    "WALL_SWITCH_RIGHT_1": "Z1-R1",
+    "FLOOR_SWITCH_1": "Z2-1",
+    "TRAP_DOOR_1": "Z3-1",
+    "SLIDING_DOOR_HORIZONTAL_1": "Z4-H1",
+    "SLIDING_DOOR_VERTICAL_1": "Z4-V1"
   },
     "levels": [
         {
@@ -17,53 +24,53 @@
             "title": "Blocked 2",
             "map": [
               [
-                "WALL_SWITCH",
                 "FLOOR",
                 "FLOOR",
+                "WALL_SWITCH_RIGHT_1",
                 "WALL",
                 "EXIT",
                 "FLOOR"
               ],
+              [
+                "PIT1",
+                "WALL",
+                "WALL",
+                "WALL",
+                "WALL",
+                "FLOOR"
+              ],
+              [
+                "FLOOR",
+                "SLIDING_DOOR_VERTICAL_1",
+                "FLOOR",
+                "FLOOR",
+                "FLOOR",
+                "PIT4"
+              ],
+              [
+                "SLIDING_DOOR_HORIZONTAL_1",
+                "WALL",
+                "FLOOR",
+                "FLOOR",
+                "FLOOR",
+                "WALL"
+              ],
                 [
-                    "PIT1",
-                    "WALL",
-                    "WALL",
-                    "WALL",
-                    "WALL",
-                    "FLOOR"
-                ],
-                [
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "PIT4"
-                ],
-                [
                     "FLOOR",
                     "WALL",
                     "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "WALL"
-                ],
-                [
-                    "FLOOR",
-                    "WALL",
-                    "FLOOR",
-                    "FLOOR",
-                    "WALL",
-                    "WALL"
-                ],
-                [
-                    "START",
-                    "WALL",
-                    "WALL",
                     "FLOOR",
                     "WALL",
                     "WALL"
-                ]
+                ],
+              [
+                "START",
+                "WALL",
+                "WALL",
+                "WALL_SWITCH_DOWN_1",
+                "WALL",
+                "WALL"
+              ]
             ],
             "active_boxes": [
                 true,
@@ -74,7 +81,7 @@
             "box_positions": [
                 [
                     0,
-                    3
+                    4
                 ],
                 [
                     3,

@@ -101,7 +101,31 @@ class Sprite:
     EXIT = pygame.image.load(os.path.join(graphics_dir, 'exit.png'))
     NO_EXIT = pygame.image.load(os.path.join(graphics_dir, 'exit_inactive.png'))
 
-    WALL_SWITCH = pygame.image.load(os.path.join(graphics_dir, 'wall_switch.png'))
+    WALL_SWITCH_UP_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_up.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_up.png'))
+    ]
+    WALL_SWITCH_DOWN_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_down.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_down.png'))
+    ]
+    WALL_SWITCH_LEFT_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_left.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_left.png'))
+    ]
+    WALL_SWITCH_RIGHT_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_right.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_right.png'))
+    ]
+
+    SLIDING_DOOR_HORIZONTAL_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_CLOSED_horizontal.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_OPEN_horizontal.png'))
+    ]
+    SLIDING_DOOR_VERTICAL_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_CLOSED_vertical.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_OPEN_vertical.png'))
+    ]
 
     BOXES = [
         pygame.image.load(os.path.join(graphics_dir, 'box_in_pit.png')),
