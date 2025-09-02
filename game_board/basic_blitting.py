@@ -172,7 +172,7 @@ class BasicBoardElements():
         self.pit_box = []
 
         # Variable to keep track of Levels
-        self.index = 0
+        self.level_index = 0
 
         # Variable to store zone-specific element (tile) to be handled by dynamic method __zone_element__(
         self.zone_element = ''
@@ -252,7 +252,7 @@ class BasicBoardElements():
         self.elements.clear()
         # For each coordinate in level_maps
         # - Set tiles depending on value of the level element
-        for i, element in enumerate(self.level_maps[option][self.index]):
+        for i, element in enumerate(self.level_maps[option][self.level_index]):
             pos        = tiles[i]
             rand_floor = randrange(0, 40)
             rand_pit   = randrange(0, 20)
@@ -281,14 +281,14 @@ class BasicBoardElements():
 
     # Place Boxes, Player, reset Pits, and Exit
     def __place_boxes_player_and_reset_elements__(self, option):
-        self.box1, (self.b1x, self.b1y) = self.active_boxes[option][self.index][0], self.positions[option][self.index][0]
-        self.box2, (self.b2x, self.b2y) = self.active_boxes[option][self.index][1], self.positions[option][self.index][1]
-        self.box3, (self.b3x, self.b3y) = self.active_boxes[option][self.index][2], self.positions[option][self.index][2]
-        self.box4, (self.b4x, self.b4y) = self.active_boxes[option][self.index][3], self.positions[option][self.index][3]
+        self.box1, (self.b1x, self.b1y) = self.active_boxes[option][self.level_index][0], self.positions[option][self.level_index][0]
+        self.box2, (self.b2x, self.b2y) = self.active_boxes[option][self.level_index][1], self.positions[option][self.level_index][1]
+        self.box3, (self.b3x, self.b3y) = self.active_boxes[option][self.level_index][2], self.positions[option][self.level_index][2]
+        self.box4, (self.b4x, self.b4y) = self.active_boxes[option][self.level_index][3], self.positions[option][self.level_index][3]
 
-        self.px, self.py = self.player_start[option][self.index]
+        self.px, self.py = self.player_start[option][self.level_index]
         self.pit1 = self.pit2 = self.pit3 = self.pit4 = True
-        self.exit = self.active_exit[option][self.index]
+        self.exit = self.active_exit[option][self.level_index]
 
 
     # Blit tiles for level n with the help of dispatch
@@ -351,13 +351,13 @@ class BasicBoardElements():
         self.__create_boxes__(Sprite.BOXES)
 
         # Debug prints
-        print(f'Option={option}, Level={self.index}')
+        print(f'Option={option}, Level={self.level_index}')
 
         # Place boxes, rest Player and Exit
         self.__place_boxes_player_and_reset_elements__(option)
 
         # Facing & beam angle
-        game_state.facing_direction = self.player_direction[option][self.index]
+        game_state.facing_direction = self.player_direction[option][self.level_index]
         fd = game_state.facing_direction
         if   fd == 'up':    ang = math.atan2(-1, 0)
         elif fd == 'down':  ang = math.atan2( 1, 0)
@@ -365,7 +365,7 @@ class BasicBoardElements():
         else:               ang = math.atan2( 0, 1)
         self.current_beam_angle = ang
 
-        self.index += 1
+        self.level_index += 1
         return False
 
     # Move within game board

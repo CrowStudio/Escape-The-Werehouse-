@@ -379,7 +379,7 @@ def main():
 
                 # Generate new level if needed
                 if game_state.new_level:
-                    level.current_zone.index = game_state.current_level
+                    level.current_zone.level_index = game_state.current_level
                     mode_index = 0 if game_state.game == False else 1
                     game_state.new_level = level.current_zone.generate_level(game_state, True, mode_index)
 
