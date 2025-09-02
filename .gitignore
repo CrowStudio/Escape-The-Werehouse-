@@ -4,3 +4,8 @@ __pycache__
 high_scores.py
 *~
 .vs/
+
+
+build/
+escape_the_werehouse.spec
+dist/

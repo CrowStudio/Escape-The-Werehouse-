@@ -7,12 +7,12 @@ from game_board.basic_tile import BasicTile
 # Set paths for level data
 DIR_PATH = os.path.dirname(os.path.abspath(__file__))
 
-# Navigate one level up and into the game_board\stages\level_maps\
-STAGE_1_PATH = os.path.join(DIR_PATH, '..', 'game_board\stages\level_maps\stage_1_maps.json')
+# Navigate one level up and into the game_board\zones\level_maps\
+ZONE_1_PATH = os.path.join(DIR_PATH, '..', 'game_board', 'zones', 'level_maps', 'zone_1_maps.json')
 
-# Load the stage maps to be able to calculate the total score
-with open(STAGE_1_PATH, 'r') as maps_file:
-    STAGE_1_DATA = json.load(maps_file)
+# Load the zone maps to be able to calculate the total score
+with open(ZONE_1_PATH, 'r') as maps_file:
+    ZONE_1_DATA = json.load(maps_file)
 
 # Set path for the high_scores.py file
 HIGH_SCORE_PATH = os.path.join(DIR_PATH, 'high_scores.py')
@@ -58,9 +58,9 @@ class ScoreManager:
     def load_scores(self):
         # Calculate the adjusted scores for each level
         adjusted_scores = [
-            sum(level['score'] + 1 for level in STAGE_1_DATA['levels']),
-            sum(level['score'] + 2 for level in STAGE_1_DATA['levels']),
-            sum(level['score'] + 3 for level in STAGE_1_DATA['levels'])
+            sum(level['score'] + 1 for level in ZONE_1_DATA['levels']),
+            sum(level['score'] + 2 for level in ZONE_1_DATA['levels']),
+            sum(level['score'] + 3 for level in ZONE_1_DATA['levels'])
         ]
 
         # Define the default scores with adjusted values

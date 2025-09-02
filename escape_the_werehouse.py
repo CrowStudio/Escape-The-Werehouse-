@@ -1,8 +1,8 @@
 import pygame
 import logging
 import sys
-from game_board.blitting import BoardElements
 from game_board.basic_tile import BasicTile
+from game_board.zone_level_wrapper import ZoneLevelWrapper
 from sound import AudioManager
 from high_scores import ScoreManager
 from start_screen import StartMenu
@@ -50,7 +50,7 @@ def handle_input(keys, level, game_state, audio):
     game_state.prev_x, game_state.prev_y = level.px, level.py
 
     # Process arrow key inputs for player movement and direction changes
-    if process_arrow_keys(keys, game_state, level):
+    if process_arrow_keys(keys, game_state):
         # Attempt to move the player and boxes; if successful, increment the move count
         if move_player_and_boxes(level, audio, game_state):
             # Only increment the move count if the player's position has changed
@@ -229,7 +229,8 @@ def is_valid_move(level, new_x, new_y, game_state):
             push_y = new_y + (new_y - level.py)
 
             # Check if push position is valid
-            push_valid = level.validate_push(push_x, push_y)
+            push_valid = level.validate_push(push_x, push_y, game_state)
+            print(push_valid)
 
             if not push_valid:
                 return False
@@ -292,6 +293,8 @@ def move_player_and_boxes(level, audio, game_state):
             level.b1y = new_y + (new_y - y)
             if game_state.check_box_in_pit(1, level.b1x, level.b1y):
                 audio.play_sound('fall')
+            elif game_state.check_boxes_with_zone_elements(1, level.b1x, level.b1y):
+                print('zone element 1')
             else:
                 audio.play_sound('move')
         elif (new_x, new_y) == (level.b2x, level.b2y) and level.box2:
@@ -299,6 +302,8 @@ def move_player_and_boxes(level, audio, game_state):
             level.b2y = new_y + (new_y - y)
             if game_state.check_box_in_pit(2, level.b2x, level.b2y):
                 audio.play_sound('fall')
+            elif game_state.check_boxes_with_zone_elements(2, level.b2x, level.b2y):
+                print('zone element 2')
             else:
                 audio.play_sound('move')
         elif (new_x, new_y) == (level.b3x, level.b3y) and level.box3:
@@ -306,6 +311,8 @@ def move_player_and_boxes(level, audio, game_state):
             level.b3y = new_y + (new_y - y)
             if game_state.check_box_in_pit(3, level.b3x, level.b3y):
                 audio.play_sound('fall')
+            elif game_state.check_boxes_with_zone_elements(3, level.b3x, level.b3y):
+                print('zone element 3')
             else:
                 audio.play_sound('move')
         elif (new_x, new_y) == (level.b4x, level.b4y) and level.box4:
@@ -313,6 +320,8 @@ def move_player_and_boxes(level, audio, game_state):
             level.b4y = new_y + (new_y - y)
             if game_state.check_box_in_pit(4, level.b4x, level.b4y):
                 audio.play_sound('fall')
+            elif game_state.check_boxes_with_zone_elements(4, level.b4x, level.b4y):
+                print('zone element 4')
             else:
                 audio.play_sound('move')
 
@@ -328,18 +337,14 @@ def move_player_and_boxes(level, audio, game_state):
 
 def main():
     # Initialize game components
-    level = BoardElements()
+    level = ZoneLevelWrapper()
     audio = AudioManager()
-    game_state = GameState(level)
-    high_scores = ScoreManager(level)
-    start_menu = StartMenu(level, game_state)
+    game_state = GameState(level.current_zone)
+    high_scores = ScoreManager(level.current_zone)
+    start_menu = StartMenu(level.current_zone, game_state)
 
     clock = pygame.time.Clock()
     show_start_screen = True
-
-    # # Update the game board size based on the current level
-    # mode_index = 0 if game_state.game == False else 1
-    # level.update_game_board_size(level_map[mode_index][game_state.current_level])
 
     while True:
         if show_start_screen:
@@ -374,24 +379,24 @@ def main():
 
                 # Generate new level if needed
                 if game_state.new_level:
-                    level.index = game_state.current_level
+                    level.current_zone.level_index = game_state.current_level
                     mode_index = 0 if game_state.game == False else 1
-                    game_state.new_level = level.generate_level(game_state, True, mode_index)
+                    game_state.new_level = level.current_zone.generate_level(game_state, True, mode_index)
 
-                    level.game_board.fill((30, 30, 30))
+                    level.current_zone.game_board.fill((30, 30, 30))
                     # Fade in effect after resetting the level
-                    level.fade_in(game_state)
+                    level.current_zone.fade_in(game_state)
 
                     # Apply flickering effect if lights are out
                     if game_state.lights_out:
-                        level.flicker_effect(game_state)
+                        level.current_zone.flicker_effect(game_state)
 
                     game_state.player_in_pit = False
 
                 # Handle input only if not in movement cooldown
                 if game_state.debounce_timer == 0:
                     keys = pygame.key.get_pressed()
-                    if handle_input(keys, level, game_state, audio):
+                    if handle_input(keys, level.current_zone, game_state, audio):
                         game_state.debounce_timer = MOVEMENT_DELAY
 
                 else:
@@ -406,30 +411,30 @@ def main():
                         show_start_screen = True
 
                     # Fade out effect
-                    level.fade_out(game_state)
+                    level.current_zone.fade_out(game_state)
 
                 if not game_state.player_in_pit and not game_state.check_level_complete():
                     # Set background color
-                    level.game_board.fill((30, 30, 30))
+                    level.current_zone.game_board.fill((30, 30, 30))
 
                     # Render the rest of the game elements
-                    level.blit_level()
-                    level.blit_box_1(0, 0)
-                    level.blit_box_2(0, 0)
-                    level.blit_box_3(0, 0)
-                    level.blit_box_4(0, 0)
+                    level.current_zone.blit_level(game_state)
+                    level.current_zone.blit_box_1(0, 0)
+                    level.current_zone.blit_box_2(0, 0)
+                    level.current_zone.blit_box_3(0, 0)
+                    level.current_zone.blit_box_4(0, 0)
 
                     # Render player with direction
                     if game_state.travel in [1, 2]:
-                        level.blit_player(game_state, level.py)
+                        level.current_zone.blit_player(game_state, level.current_zone.py)
                     elif game_state.travel in [3, 4]:
-                        level.blit_player(game_state, level.px)
+                        level.current_zone.blit_player(game_state, level.current_zone.px)
                     else:
-                        level.blit_player(game_state, 0)
+                        level.current_zone.blit_player(game_state, 0)
 
                     # Apply blackout effect if lights are out
                     if game_state.lights_out:
-                        level.apply_blackout(game_state)
+                        level.current_zone.apply_blackout(game_state)
 
                     game_state.draw_status_bar()
 

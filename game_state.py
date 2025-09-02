@@ -26,6 +26,9 @@ class GameState:
         self.prev_x = 0
         self.prev_y = 0
 
+        self.SD_H1_closed = False
+        self.SD_V1_closed = True
+
         self.lights_out = False  # New attribute for lights checkbox
         self.is_searching = False
         self.search = 0
@@ -194,6 +197,9 @@ class GameState:
 
                 return False
 
+    def check_boxes_with_zone_elements(self, box_num, bx, by):
+        return self.level.check_boxes_with_zone_elements(self, box_num, bx, by)
+
     def check_player_in_pit(self, x, y, audio):
         if self.player_in_pit:
             return False
@@ -243,7 +249,7 @@ class GameState:
     # Blit the level and boxes
     def __blit_level_elements__(self):
         self.level.game_board.fill((30, 30, 30))
-        self.level.blit_level()
+        self.level.blit_level(self)
         self.level.blit_box_1(0, 0)
         self.level.blit_box_2(0, 0)
         self.level.blit_box_3(0, 0)
