@@ -293,6 +293,8 @@ def move_player_and_boxes(level, audio, game_state):
             level.b1y = new_y + (new_y - y)
             if game_state.check_box_in_pit(1, level.b1x, level.b1y):
                 audio.play_sound('fall')
+            elif game_state.check_boxes_with_zone_element(1, level.b1x, level.b1y):
+                print('zone element 1')
             else:
                 audio.play_sound('move')
         elif (new_x, new_y) == (level.b2x, level.b2y) and level.box2:
@@ -300,6 +302,8 @@ def move_player_and_boxes(level, audio, game_state):
             level.b2y = new_y + (new_y - y)
             if game_state.check_box_in_pit(2, level.b2x, level.b2y):
                 audio.play_sound('fall')
+            elif game_state.check_boxes_with_zone_element(2, level.b2x, level.b2y):
+                print('zone element 2')
             else:
                 audio.play_sound('move')
         elif (new_x, new_y) == (level.b3x, level.b3y) and level.box3:
@@ -307,6 +311,8 @@ def move_player_and_boxes(level, audio, game_state):
             level.b3y = new_y + (new_y - y)
             if game_state.check_box_in_pit(3, level.b3x, level.b3y):
                 audio.play_sound('fall')
+            elif game_state.check_boxes_with_zone_element(3, level.b3x, level.b3y):
+                print('zone element 3')
             else:
                 audio.play_sound('move')
         elif (new_x, new_y) == (level.b4x, level.b4y) and level.box4:
@@ -314,6 +320,8 @@ def move_player_and_boxes(level, audio, game_state):
             level.b4y = new_y + (new_y - y)
             if game_state.check_box_in_pit(4, level.b4x, level.b4y):
                 audio.play_sound('fall')
+            elif game_state.check_boxes_with_zone_element(4, level.b4x, level.b4y):
+                print('zone element 4')
             else:
                 audio.play_sound('move')
 

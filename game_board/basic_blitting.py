@@ -280,7 +280,7 @@ class BasicBoardElements():
 
 
     # Place Boxes, Player, reset Pits, and Exit
-    def __place_boxes_player_and_reset_pits_and_exit__(self, option):
+    def __place_boxes_player_and_reset_elements__(self, option):
         self.box1, (self.b1x, self.b1y) = self.active_boxes[option][self.index][0], self.positions[option][self.index][0]
         self.box2, (self.b2x, self.b2y) = self.active_boxes[option][self.index][1], self.positions[option][self.index][1]
         self.box3, (self.b3x, self.b3y) = self.active_boxes[option][self.index][2], self.positions[option][self.index][2]
@@ -354,7 +354,7 @@ class BasicBoardElements():
         print(f'Option={option}, Level={self.index}')
 
         # Place boxes, rest Player and Exit
-        self.__place_boxes_player_and_reset_pits_and_exit__(option)
+        self.__place_boxes_player_and_reset_elements__(option)
 
         # Facing & beam angle
         game_state.facing_direction = self.player_direction[option][self.index]
@@ -536,7 +536,7 @@ class BasicBoardElements():
         # Create a mask for the game board with per-pixel alpha.
         mask = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
         # Start with nearly full opacity
-        mask.fill((0, 0, 0, 249))  # Semi-transparent black overlay.
+        mask.fill((0, 0, 0, 254))  # Semi-transparent black overlay.
 
         # Flashlight parameters.
         beam_length = int(2 * BasicTile.SIZE)        # How far the beam extends.
@@ -684,9 +684,9 @@ class BasicBoardElements():
 
             # Apply the off time with a mask of higher opacity
             mask = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
-            mask.fill((0, 0, 0, 249))  # Higher opacity
+            mask.fill((0, 0, 0, 254))  # Higher opacity
             self.game_board.fill((30, 30, 30))
-            self.blit_basic_elements()
+            self.blit_basic_elements(game_state)
             self.blit_box_1(0, 0)
             self.blit_box_2(0, 0)
             self.blit_box_3(0, 0)

@@ -28,33 +28,40 @@ class ZoneTwo(BasicBoardElements):
     def __init__(self):
         super().__init__(ZONE_DATA)
 
-    def blit_zone_element(self, element, pos, i, game_state):
-        # Blit zone-specific sprites on top of the floor tiles
-        if element == Zone2Tiles.WALL_SWITCH_UP_1:
-            self.game_board.blit(Sprite.FLOOR[i], pos)
+        self.element_mapping = {
+            # Simple elements: (sprite, None)
+            Zone2Tiles.WALL_SWITCH_UP_1: (Sprite.WALL_SWITCH_UP_1[0], None),
+            Zone2Tiles.WALL_SWITCH_DOWN_1: (Sprite.WALL_SWITCH_DOWN_1[0], None),
+            Zone2Tiles.WALL_SWITCH_LEFT_1: (Sprite.WALL_SWITCH_LEFT_1[0], None),
+            Zone2Tiles.WALL_SWITCH_RIGHT_1: (Sprite.WALL_SWITCH_RIGHT_1[0], None),
+            # State-dependent elements: ((closed_sprite, open_sprite), state_attribute)
+            Zone2Tiles.SLIDING_DOOR_HORIZONTAL_1: (
+                (Sprite.SLIDING_DOOR_HORIZONTAL_1[0], Sprite.SLIDING_DOOR_HORIZONTAL_1[1]),
+                'SD_H1_closed'
+            ),
+            Zone2Tiles.SLIDING_DOOR_VERTICAL_1: (
+                (Sprite.SLIDING_DOOR_VERTICAL_1[0], Sprite.SLIDING_DOOR_VERTICAL_1[1]),
+                'SD_V1_closed'
+            ),
+        }
 
-            self.game_board.blit(Sprite.WALL_SWITCH_UP_1[0], pos)
-        elif element == Zone2Tiles.WALL_SWITCH_DOWN_1:
-            self.game_board.blit(Sprite.FLOOR[i], pos)
-            self.game_board.blit(Sprite.WALL_SWITCH_DOWN_1[0], pos)
-        elif element == Zone2Tiles.WALL_SWITCH_LEFT_1:
-            self.game_board.blit(Sprite.FLOOR[i], pos)
-            self.game_board.blit(Sprite.WALL_SWITCH_LEFT_1[0], pos)
-        elif element == Zone2Tiles.WALL_SWITCH_RIGHT_1:
-            self.game_board.blit(Sprite.FLOOR[i], pos)
-            self.game_board.blit(Sprite.WALL_SWITCH_RIGHT_1[0], pos)
-        elif element == Zone2Tiles.SLIDING_DOOR_HORIZONTAL_1:
-            self.game_board.blit(Sprite.FLOOR[i], pos)
-            if game_state.SD_H1_closed == True:
-                self.game_board.blit(Sprite.SLIDING_DOOR_HORIZONTAL_1[0], pos)
+    def blit_zone_element(self, element, pos, i, game_state):
+        # Blit the floor tile
+        self.game_board.blit(Sprite.FLOOR[i], pos)
+
+        # Look up the element in the mapping
+        if element in self.element_mapping:
+            sprite_data, state_attr = self.element_mapping[element]
+
+            if state_attr:
+                # Use getattr to check the game state for doors
+                closed = getattr(game_state, state_attr)
+                sprite = sprite_data[0] if closed else sprite_data[1]
             else:
-                self.game_board.blit(Sprite.SLIDING_DOOR_HORIZONTAL_1[1], pos)
-        elif element == Zone2Tiles.SLIDING_DOOR_VERTICAL_1:
-            self.game_board.blit(Sprite.FLOOR[i], pos)
-            if game_state.SD_V1_closed == True:
-                self.game_board.blit(Sprite.SLIDING_DOOR_VERTICAL_1[0], pos)
-            else:
-                self.game_board.blit(Sprite.SLIDING_DOOR_VERTICAL_1[1], pos)
+                # Use the sprite directly for switches
+                sprite = sprite_data
+
+            self.game_board.blit(sprite, pos)
 
     def blit_level(self, game_state):
         super().blit_basic_elements(game_state, blit_zone_element = self.blit_zone_element)
@@ -81,3 +88,6 @@ class ZoneTwo(BasicBoardElements):
 
     def validate_push(self, push_x, push_y, game_state):
         return super().validate_push(push_x, push_y, game_state, is_zone_element_valid=self.is_zone_element_valid)
+
+    def check_boxes_with_zone_element(self, game_State, box_num, bx, by):
+        return False
