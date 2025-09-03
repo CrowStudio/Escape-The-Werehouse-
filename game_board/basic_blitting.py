@@ -148,30 +148,12 @@ class BasicBoardElements():
         self.no_of_levels = [sum(type(i) == type([]) for i in self.level_maps[0])]
         self.no_of_levels.append(sum(type(i) == type([]) for i in self.level_maps[1]))
 
-        # Variable to tell if Player finished the Game or fell into a Pit
-        self.play = True
-
-        # Variable for active/inactive Exit
-        self.exit = False
-
-        # Variables for active/inactive Pit
-        self.pit1 = True
-        self.pit2 = True
-        self.pit3 = True
-        self.pit4 = True
-
-        # Variables for Box to fill Pit with
-        self.in_pit1 = False
-        self.in_pit2 = False
-        self.in_pit3 = False
-        self.in_pit4 = False
-
         # Lists for creation of Levels
         self.elements = []
         self.box = []
         self.pit_box = []
 
-        # Variable to keep track of Levels
+        # Variable to keep track of level to blit
         self.level_index = 0
 
         # Variable to store zone-specific element (tile) to be handled by dynamic method __zone_element__(
@@ -194,20 +176,20 @@ class BasicBoardElements():
         self.game_board.blit(Sprite.WALL, pos)
 
     # Blit pit1 tile
-    def __pit_1__(self, pos, box):
-        self.__pit_common__(pos, box, pit_index=1, eye_index=None)
+    def __pit_1__(self, pos, box, game_state):
+        self.__pit_common__(game_state, pos, box, 1, eye_index=None)
 
     # Blit pit2 tile
-    def __pit_2__(self, pos, box):
-        self.__pit_common__(pos, box, pit_index=2, eye_index=None)
+    def __pit_2__(self, pos, box, game_state):
+        self.__pit_common__(game_state, pos, box, 2, eye_index=None)
 
     # Blit pit3 tile
-    def __pit_3__(self, pos, box, i):
-        self.__pit_common__(pos, box, pit_index=3, eye_index=i)
+    def __pit_3__(self, pos, box, i, game_state):
+        self.__pit_common__(game_state, pos, box, 3,  eye_index=i)
 
     # Blit pit4 tile
-    def __pit_4__(self, pos, box, i):
-        self.__pit_common__(pos, box, pit_index=4, eye_index=i)
+    def __pit_4__(self, pos, box, i, game_state):
+        self.__pit_common__(game_state, pos, box, 4,  eye_index=i)
 
     # Blit pit_as_wall tile
     def __pit_as_wall__(self, pos):
@@ -215,10 +197,10 @@ class BasicBoardElements():
         self.game_board.blit(Sprite.PIT, pos)
 
     # Blit exit tile
-    def __exit__(self, pos):
+    def __exit__(self, pos, game_state):
         # If Exit is active
         # - Blit exit
-        if self.exit:
+        if game_state.exit:
             self.game_board.blit(Sprite.EXIT, pos)
         # Else
         # - Blit no_exit
@@ -230,8 +212,8 @@ class BasicBoardElements():
         self.blit_zone_element(self.zone_element, pos, i, game_state)
 
     # Helper for pits 1-4
-    def __pit_common__(self, pos, box, pit_index, eye_index):
-        active = getattr(self, f'pit{pit_index}')
+    def __pit_common__(self, game_state, pos, box, pit_index, eye_index):
+        active = getattr(game_state, f'pit{pit_index}')
         if active:
             # Pick correct pit graphic
             if pit_index in (1, 2):
@@ -280,15 +262,15 @@ class BasicBoardElements():
 
 
     # Place Boxes, Player, reset Pits, and Exit
-    def __place_boxes_player_and_reset_elements__(self, option):
+    def __place_boxes_player_and_reset_elements__(self, option, game_state):
         self.box1, (self.b1x, self.b1y) = self.active_boxes[option][self.level_index][0], self.positions[option][self.level_index][0]
         self.box2, (self.b2x, self.b2y) = self.active_boxes[option][self.level_index][1], self.positions[option][self.level_index][1]
         self.box3, (self.b3x, self.b3y) = self.active_boxes[option][self.level_index][2], self.positions[option][self.level_index][2]
         self.box4, (self.b4x, self.b4y) = self.active_boxes[option][self.level_index][3], self.positions[option][self.level_index][3]
 
         self.px, self.py = self.player_start[option][self.level_index]
-        self.pit1 = self.pit2 = self.pit3 = self.pit4 = True
-        self.exit = self.active_exit[option][self.level_index]
+        game_state.pit1 = game_state.pit2 = game_state.pit3 = game_state.pit4 = True
+        game_state.exit = self.active_exit[option][self.level_index]
 
 
     # Blit tiles for level n with the help of dispatch
@@ -303,7 +285,7 @@ class BasicBoardElements():
             5: (self.__pit_as_wall__, None),
             6: (self.__floor__, 'floor'),
             7: (self.__wall__, None),
-            8: (self.__exit__, None),
+            8: (self.__exit__, 'exit'),
             9: (self.__zone_element__, 'zone_element')
         }
 
@@ -329,12 +311,14 @@ class BasicBoardElements():
     def __get_method_arguments__(self, element, rand_floor, rand_pit, game_state, blit_zone_element):
         if element == 9:
             return (rand_floor, game_state, blit_zone_element)
+        elif element == 8:
+            return (game_state, )
         elif element == 6:
             return (rand_floor,)
         elif element in (3, 4):
-            return (getattr(self, f'in_pit{element}'), rand_pit)
+            return (getattr(game_state, f'in_pit{element}'), rand_pit, game_state)
         elif element in (1, 2):
-            return (getattr(self, f'in_pit{element}'),)
+            return (getattr(game_state, f'in_pit{element}'), game_state)
         else:
             return ()
 
@@ -354,7 +338,7 @@ class BasicBoardElements():
         print(f'Option={option}, Level={self.level_index}')
 
         # Place boxes, rest Player and Exit
-        self.__place_boxes_player_and_reset_elements__(option)
+        self.__place_boxes_player_and_reset_elements__(option, game_state)
 
         # Facing & beam angle
         game_state.facing_direction = self.player_direction[option][self.level_index]
@@ -374,29 +358,29 @@ class BasicBoardElements():
             return False
 
     # Validate movement
-    def validate_move(self, new_x, new_y, game_state, is_zone_element_valid=None):
+    def validate_move(self, new_x, new_y, game_state, check_zone_element_state=None):
         for element in self.elements:
             if element[1] == (new_x, new_y):
                 # Check for valid tiles including EXIT and PITS
-                if element[0] == BasicTile.EXIT and self.exit:  # Allow exit only if active
+                if element[0] == BasicTile.EXIT and game_state.exit:  # Allow exit only if active
                     return True
                 elif element[0] == BasicTile.START or element[0] == BasicTile.FLOOR:
                     return True
-                elif element[0] == BasicTile.PIT1 and (not self.pit1 or not game_state.is_pulling):
+                elif element[0] == BasicTile.PIT1 and (not game_state.pit1 or not game_state.is_pulling):
                     return True
-                elif element[0] == BasicTile.PIT2 and (not self.pit2 or not game_state.is_pulling):
+                elif element[0] == BasicTile.PIT2 and (not game_state.pit2 or not game_state.is_pulling):
                     return True
-                elif element[0] == BasicTile.PIT3 and (not self.pit3 or not game_state.is_pulling):
+                elif element[0] == BasicTile.PIT3 and (not game_state.pit3 or not game_state.is_pulling):
                     return True
-                elif element[0] == BasicTile.PIT4 and (not self.pit4 or not game_state.is_pulling):
+                elif element[0] == BasicTile.PIT4 and (not game_state.pit4 or not game_state.is_pulling):
                     return True
                 elif element[0] in [BasicTile.WALL, BasicTile.PIT_WALL]:
                     return False
                 else:
-                    return is_zone_element_valid(element, game_state)
+                    return check_zone_element_state(element, game_state)
 
     # Validate push
-    def validate_push(self, push_x, push_y, game_state, is_zone_element_valid=None):
+    def validate_push(self, push_x, push_y, game_state, check_zone_element_state=None):
         for element in self.elements:
             if element[1] == (push_x, push_y):
                 if element[0] in [BasicTile.START, BasicTile.FLOOR, BasicTile.EXIT,
@@ -405,7 +389,7 @@ class BasicBoardElements():
                 elif element[0] in [BasicTile.WALL, BasicTile.PIT_WALL]:
                     return False
                 else:
-                    return is_zone_element_valid(element, game_state)
+                    return check_zone_element_state(element, game_state)
 
     # Generic box blitter
     def __blit_box__(self, index, travel, move):

@@ -40,10 +40,10 @@ def handle_input(keys, level, game_state, audio):
     # Reset movement variables for this frame to ensure no residual state affects the current frame
     game_state.reset_movement_variables()
 
-    # Handle pulling action, which is instantaneous and triggered by the spacebar
+    # Handle pulling action, which is triggered by the spacebar + any arrow key while standing close to box
     game_state.is_pulling = keys[pygame.K_SPACE]
 
-    # Handle searching with WASD keys, which controls the searchlight direction independently of movement
+    # Handle searching with WASD keys, which controls the searchlight direction independently of movement when lights out
     handle_searching(keys, game_state)
 
     # Store the current player position to allow rollback if the move is invalid or dangerous

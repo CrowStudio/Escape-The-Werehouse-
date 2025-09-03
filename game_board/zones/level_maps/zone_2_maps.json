@@ -37,7 +37,7 @@
                 "WALL",
                 "WALL",
                 "WALL",
-                "FLOOR"
+                "SLIDING_DOOR_HORIZONTAL_1"
               ],
               [
                 "FLOOR",
@@ -48,7 +48,7 @@
                 "PIT4"
               ],
               [
-                "SLIDING_DOOR_HORIZONTAL_1",
+                "FLOOR",
                 "WALL",
                 "FLOOR",
                 "FLOOR",
@@ -102,7 +102,7 @@
             ],
             "player_direction": "up",
             "exit_active": true,
-            "score": 19
+            "score": 27
         },
         {
             "level": 2,

@@ -28,13 +28,24 @@ class ZoneTwo(BasicBoardElements):
     def __init__(self):
         super().__init__(ZONE_DATA)
 
-        self.element_mapping = {
-            # Simple elements: (sprite, None)
-            Zone2Tiles.WALL_SWITCH_UP_1: (Sprite.WALL_SWITCH_UP_1[0], None),
-            Zone2Tiles.WALL_SWITCH_DOWN_1: (Sprite.WALL_SWITCH_DOWN_1[0], None),
-            Zone2Tiles.WALL_SWITCH_LEFT_1: (Sprite.WALL_SWITCH_LEFT_1[0], None),
-            Zone2Tiles.WALL_SWITCH_RIGHT_1: (Sprite.WALL_SWITCH_RIGHT_1[0], None),
-            # State-dependent elements: ((closed_sprite, open_sprite), state_attribute)
+        # Sprite mapping for zone elements
+        self.sprite_mapping = {
+            Zone2Tiles.WALL_SWITCH_UP_1: (
+                (Sprite.WALL_SWITCH_UP_1[0], Sprite.WALL_SWITCH_UP_1[1]),
+                'WS_U1_off'
+            ),
+            Zone2Tiles.WALL_SWITCH_DOWN_1: (
+                (Sprite.WALL_SWITCH_DOWN_1[0], Sprite.WALL_SWITCH_DOWN_1[1]),
+                'WS_D1_off'
+            ),
+            Zone2Tiles.WALL_SWITCH_LEFT_1: (
+                (Sprite.WALL_SWITCH_LEFT_1[0]), (Sprite.WALL_SWITCH_LEFT_1[1]),
+                 'WS_L1_off'
+            ),
+            Zone2Tiles.WALL_SWITCH_RIGHT_1: (
+                (Sprite.WALL_SWITCH_RIGHT_1[0], Sprite.WALL_SWITCH_RIGHT_1[1]),
+                'WS_R1_off'
+            ),
             Zone2Tiles.SLIDING_DOOR_HORIZONTAL_1: (
                 (Sprite.SLIDING_DOOR_HORIZONTAL_1[0], Sprite.SLIDING_DOOR_HORIZONTAL_1[1]),
                 'SD_H1_closed'
@@ -42,16 +53,64 @@ class ZoneTwo(BasicBoardElements):
             Zone2Tiles.SLIDING_DOOR_VERTICAL_1: (
                 (Sprite.SLIDING_DOOR_VERTICAL_1[0], Sprite.SLIDING_DOOR_VERTICAL_1[1]),
                 'SD_V1_closed'
-            ),
+            )
         }
+
+        # State mapping of zone elements
+        self.state_mapping = {
+            # Wall switches: Always valid
+            Zone2Tiles.WALL_SWITCH_UP_1: ('WS_U1_off', 'SD_H1_closed',  'wall switch present'),
+            Zone2Tiles.WALL_SWITCH_DOWN_1: ('WS_D1_off', 'SD_H1_closed', 'wall switch present'),
+            Zone2Tiles.WALL_SWITCH_LEFT_1: ('WS_L1_off', 'SD_V1_closed', 'wall switch present'),
+            Zone2Tiles.WALL_SWITCH_RIGHT_1: ('WS_R1_off', 'SD_V1_closed', 'wall switch present'),
+
+            # Sliding doors: State attribute and message prefix
+            Zone2Tiles.SLIDING_DOOR_VERTICAL_1: ('SD_V1_closed', 'Vertical sliding door'),
+            Zone2Tiles.SLIDING_DOOR_HORIZONTAL_1: ('SD_H1_closed', 'Horizontal sliding door'),
+        }
+
+    def check_zone_element_state(self, element, game_state):
+        '''Check if a zone element is valid based on its type and game state.'''
+        element_type = element[0]
+
+        # Look up the element in the mapping
+        if element_type in self.state_mapping:
+            entry = self.state_mapping[element_type]
+
+            if isinstance(entry, tuple) and len(entry) == 3:
+                # Wall switches: Always valid
+                switch_state, door_state, message = entry
+                print(message)
+                # Invert the state of swithc
+                switch_value = getattr(game_state, switch_state)
+                setattr(game_state, switch_state, not switch_value)
+
+                door_value = getattr(game_state, door_state)
+                setattr(game_state, door_state, not door_value)
+                return True
+            else:
+                # Sliding doors: Check game state
+                state_attr, message_prefix = entry
+                closed = getattr(game_state, state_attr)
+
+                if not closed:
+                    print(f"{message_prefix} open")
+                    return True
+                else:
+                    print(f"{message_prefix} closed")
+                    return False
+
+        # Default case: Element not in mapping
+        print(f"Warning: Unknown element {element_type} in check_zone_element_state")
+        return False
 
     def blit_zone_element(self, element, pos, i, game_state):
         # Blit the floor tile
         self.game_board.blit(Sprite.FLOOR[i], pos)
 
-        # Look up the element in the mapping
-        if element in self.element_mapping:
-            sprite_data, state_attr = self.element_mapping[element]
+        # Look up the element in the sprite mapping
+        if element in self.sprite_mapping:
+            sprite_data, state_attr = self.sprite_mapping[element]
 
             if state_attr:
                 # Use getattr to check the game state for doors
@@ -66,28 +125,11 @@ class ZoneTwo(BasicBoardElements):
     def blit_level(self, game_state):
         super().blit_basic_elements(game_state, blit_zone_element = self.blit_zone_element)
 
-    def is_zone_element_valid(self, element, game_state):
-        if element[0] in [Zone2Tiles.WALL_SWITCH_UP_1, Zone2Tiles.WALL_SWITCH_DOWN_1, Zone2Tiles.WALL_SWITCH_LEFT_1, Zone2Tiles.WALL_SWITCH_RIGHT_1]:
-            print('wall switch present')
-            return True
-        elif element[0] in Zone2Tiles.SLIDING_DOOR_VERTICAL_1 and game_state.SD_V1_closed == False:
-            print('Vertical sliding door open')
-            return True
-        elif element[0]== Zone2Tiles.SLIDING_DOOR_HORIZONTAL_1 and game_state.SD_H1_closed == False:
-            print('Horizontal sliding door open')
-            return True
-        elif element[0] == Zone2Tiles.SLIDING_DOOR_VERTICAL_1 and game_state.SD_V1_closed == True:
-            print('Vertical sliding door  closed')
-            return False
-        elif element[0]== Zone2Tiles.SLIDING_DOOR_HORIZONTAL_1 and game_state.SD_H1_closed == True:
-            print('Horizontal sliding door  closed')
-            return False
-
     def validate_move(self, new_x, new_y, game_state):
-        return super().validate_move(new_x, new_y, game_state, is_zone_element_valid=self.is_zone_element_valid)
+        return super().validate_move(new_x, new_y, game_state, check_zone_element_state=self.check_zone_element_state)
 
     def validate_push(self, push_x, push_y, game_state):
-        return super().validate_push(push_x, push_y, game_state, is_zone_element_valid=self.is_zone_element_valid)
+        return super().validate_push(push_x, push_y, game_state, check_zone_element_state=self.check_zone_element_state)
 
-    def check_boxes_with_zone_elements(self, game_State, box_num, bx, by):
+    def check_boxes_with_zone_elements(self, game_state, box_num, bx, by):
         return False
