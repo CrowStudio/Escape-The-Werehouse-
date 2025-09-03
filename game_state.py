@@ -5,7 +5,7 @@ class GameState:
     def __init__(self, level):
         self.level = level
 
-        self.game = False  # False == no of initial tutorial levels, True == no of game levels
+        self.game = False  # False == tutorial levels, True == zone levels
         self.is_playing = True
         self.new_level = True
 
@@ -18,9 +18,9 @@ class GameState:
         self.a_key_pressed = False
 
         self.normal_movement = True
-        self.travel = 0  # Only keep track of direction
-        self.direction = None
-        self.facing_direction = 'up'  # New attribute to track facing direction
+        self.travel = 0
+        self.direction = None  # Only keep track of direction
+        self.facing_direction = 'up'  # Attribute to track facing direction
         self.is_pulling = False
         self.player_in_pit = False
         self.prev_x = 0
@@ -41,15 +41,17 @@ class GameState:
         self.in_pit3 = False
         self.in_pit4 = False
 
+        # Variables for wall switches
         self.WS_U1_off = True
         self.WS_D1_off = True
         self.WS_L1_off = True
         self.WS_R1_off = True
 
+        # Variables for sliding doors
         self.SD_H1_closed = True
         self.SD_V1_closed = True
 
-        self.lights_out = False  # New attribute for lights checkbox
+        self.lights_out = False
         self.is_searching = False
         self.search = 0
         self.search_speed = 0.4
