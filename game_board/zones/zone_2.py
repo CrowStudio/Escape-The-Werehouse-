@@ -111,24 +111,24 @@ class ZoneTwo(BasicBoardElements):
         # State mapping of zone elements
         self.state_mapping = {
             # Wall switches:
-            Zone2Tiles.WALL_SWITCH_UP_1_1: ('WS_U1_on', 'SD_H1_1_closed',  'wall switch present'),
-            Zone2Tiles.WALL_SWITCH_UP_1_0: ('WS_U1_off', 'SD_H1_0_closed',  'wall switch present'),
+            Zone2Tiles.WALL_SWITCH_UP_1_1: ('WS_U1_on', 'SD_H1_1_closed',  'Wall switch present'),
+            Zone2Tiles.WALL_SWITCH_UP_1_0: ('WS_U1_off', 'SD_H1_0_closed',  'Wall switch present'),
 
-            Zone2Tiles.WALL_SWITCH_DOWN_1_1: ('WS_D1_on', 'SD_H1_1_closed', 'wall switch present'),
-            Zone2Tiles.WALL_SWITCH_DOWN_1_0: ('WS_D1_off', 'SD_H1_0_closed', 'wall switch present'),
+            Zone2Tiles.WALL_SWITCH_DOWN_1_1: ('WS_D1_on', 'SD_H1_1_closed', 'Wall switch present'),
+            Zone2Tiles.WALL_SWITCH_DOWN_1_0: ('WS_D1_off', 'SD_H1_0_closed', 'Wall switch present'),
 
-            Zone2Tiles.WALL_SWITCH_LEFT_1_1: ('WS_L1_on', 'SD_V1_1_closed', 'wall switch present'),
-            Zone2Tiles.WALL_SWITCH_LEFT_1_0: ('WS_L1_off', 'SD_V1_0_closed', 'wall switch present'),
+            Zone2Tiles.WALL_SWITCH_LEFT_1_1: ('WS_L1_on', 'SD_V1_1_closed', 'Wall switch present'),
+            Zone2Tiles.WALL_SWITCH_LEFT_1_0: ('WS_L1_off', 'SD_V1_0_closed', 'Wall switch present'),
 
-            Zone2Tiles.WALL_SWITCH_RIGHT_1_1: ('WS_R1_on', 'SD_V1_1_closed', 'wall switch present'),
-            Zone2Tiles.WALL_SWITCH_RIGHT_1_0: ('WS_R1_off', 'SD_V1_0_closed', 'wall switch present'),
+            Zone2Tiles.WALL_SWITCH_RIGHT_1_1: ('WS_R1_on', 'SD_V1_1_closed', 'Wall switch present'),
+            Zone2Tiles.WALL_SWITCH_RIGHT_1_0: ('WS_R1_off', 'SD_V1_0_closed', 'Wall switch present'),
 
             # Sliding doors:
-            Zone2Tiles.SLIDING_DOOR_HORIZONTAL_1_1: ('SD_H1_1_closed', 'Horizontal sliding door'),
-            Zone2Tiles.SLIDING_DOOR_HORIZONTAL_1_0: ('SD_H1_0_closed', 'Horizontal sliding door'),
+            Zone2Tiles.SLIDING_DOOR_HORIZONTAL_1_1: ('SD_H1_1_closed', 'horizontal sliding door'),
+            Zone2Tiles.SLIDING_DOOR_HORIZONTAL_1_0: ('SD_H1_0_closed', 'horizontal sliding door'),
 
-            Zone2Tiles.SLIDING_DOOR_VERTICAL_1_1: ('SD_V1_1_closed', 'Vertical sliding door'),
-            Zone2Tiles.SLIDING_DOOR_VERTICAL_1_0: ('SD_V1_0_closed', 'Vertical sliding door')
+            Zone2Tiles.SLIDING_DOOR_VERTICAL_1_1: ('SD_V1_1_closed', 'vertical sliding door'),
+            Zone2Tiles.SLIDING_DOOR_VERTICAL_1_0: ('SD_V1_0_closed', 'vertical sliding door')
         }
 
     def check_zone_element_state(self, element, game_state):
@@ -146,21 +146,21 @@ class ZoneTwo(BasicBoardElements):
                 # Invert the state of switch
                 switch_value = getattr(game_state, switch_state)
                 setattr(game_state, switch_state, not switch_value)
-                print('Wall switch:', 'active' if not getattr(game_state, switch_state) else 'disengaged')
+                print('Activating' if not getattr(game_state, switch_state) else 'Disengaging')
 
                 door_value = getattr(game_state, door_state)
                 setattr(game_state, door_state, not door_value)
-                print('Sliding door:', 'open' if not getattr(game_state, door_state) else 'closed')
+                print('Opening sliding door' if not getattr(game_state, door_state) else 'Closing sliding door')
                 return True
             else:  # Sliding doors:
                 door_state, message = entry
                 closed = getattr(game_state, door_state)
 
                 if not closed:
-                    print(f"{message} open")
+                    print('Passing the', message)
                     return True
                 else:
-                    print(f"{message} closed")
+                    print('The', message, 'is closed!')
                     return False
 
         # Default case: Element not in mapping

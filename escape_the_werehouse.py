@@ -260,7 +260,7 @@ def move_player_and_boxes(level, audio, game_state):
 
     # First check if the move is valid
     if not is_valid_move(level, new_x, new_y, game_state):
-        print('Invalid move!')
+        print('Cannot move in that direction!')
         return False  # Don't move if invalid
 
     # Handle box movement
@@ -331,7 +331,7 @@ def move_player_and_boxes(level, audio, game_state):
         return False  # Movement was valid but player fell
 
     # Move player to new position
-    print('Legal move!')
+    print('Moving')
     level.px = new_x
     level.py = new_y
 
