@@ -9,69 +9,94 @@
     "FLOOR": 6,
     "WALL": 7,
     "EXIT": 8,
-    "WALL_SWITCH_UP_1": "Z1-U1",
-    "WALL_SWITCH_DOWN_1": "Z1-D1",
-    "WALL_SWITCH_LEFT_1": "Z1-L1",
-    "WALL_SWITCH_RIGHT_1": "Z1-R1",
-    "FLOOR_SWITCH_1": "Z2-1",
-    "TRAP_DOOR_1": "Z3-1",
-    "SLIDING_DOOR_HORIZONTAL_1": "Z4-H1",
-    "SLIDING_DOOR_VERTICAL_1": "Z4-V1"
+    "WALL_SWITCH_UP_1_1": "Z1U_1_1",
+    "WALL_SWITCH_UP_1_0": "Z1U_1_0",
+    "WALL_SWITCH_UP_2_1": "Z1U_2_1",
+    "WALL_SWITCH_UP_2_0": "Z1U_2_0",
+    "WALL_SWITCH_DOWN_1_1": "Z2D_1_1",
+    "WALL_SWITCH_DOWN_1_0": "Z2D_1_0",
+    "WALL_SWITCH_DOWN_2_1": "Z2D_2_1",
+    "WALL_SWITCH_DOWN_2_0": "Z2D_2_0",
+    "WALL_SWITCH_LEFT_1_1": "Z3L_1_1",
+    "WALL_SWITCH_LEFT_1_0": "Z3L_1_0",
+    "WALL_SWITCH_LEFT_2_1": "Z3L_2_1",
+    "WALL_SWITCH_LEFT_2_0": "Z3L_2_0",
+    "WALL_SWITCH_RIGHT_1_1": "Z4R_1_1",
+    "WALL_SWITCH_RIGHT_1_0": "Z4R_1_0",
+    "WALL_SWITCH_RIGHT_2_1": "Z4R_2_1",
+    "WALL_SWITCH_RIGHT_2_0": "Z4R_2_0",
+    "SLIDING_DOOR_HORIZONTAL_1_1": "Z5H_1_1",
+    "SLIDING_DOOR_HORIZONTAL_1_0": "Z5H_1_0",
+    "SLIDING_DOOR_HORIZONTAL_2_1": "Z5H_2_1",
+    "SLIDING_DOOR_HORIZONTAL_2_0": "Z5H_2_0",
+    "SLIDING_DOOR_VERTICAL_1_1": "Z6V_1_1",
+    "SLIDING_DOOR_VERTICAL_1_0": "Z6V_1_0",
+    "SLIDING_DOOR_VERTICAL_2_1": "Z6V_2_1",
+    "SLIDING_DOOR_VERTICAL_2_0": "Z6V_2_0",
+    "FLOOR_SWITCH_1": "Z7_1",
+    "FLOOR_SWITCH_2": "Z7_2",
+    "FLOOR_SWITCH_3": "Z7_3",
+    "FLOOR_SWITCH_4": "Z7_4",
+    "TRAP_DOOR_1": "Z8_1",
+    "TRAP_DOOR_2": "Z8_2",
+    "TRAP_DOOR_3": "Z8_3",
+    "TRAP_DOOR_4": "Z8_4",
+    "ACTIVATE_EXIT_1": "Z9_1"
   },
     "levels": [
         {
             "level": 1,
             "title": "Blocked 2",
-            "map": [
-              [
-                "FLOOR",
-                "FLOOR",
-                "WALL_SWITCH_RIGHT_1",
-                "WALL",
-                "EXIT",
-                "FLOOR"
-              ],
-              [
-                "PIT1",
-                "WALL",
-                "WALL",
-                "WALL",
-                "WALL",
-                "SLIDING_DOOR_HORIZONTAL_1"
-              ],
-              [
-                "FLOOR",
-                "SLIDING_DOOR_VERTICAL_1",
-                "FLOOR",
-                "FLOOR",
-                "FLOOR",
-                "PIT4"
-              ],
-              [
-                "FLOOR",
-                "WALL",
-                "FLOOR",
-                "FLOOR",
-                "FLOOR",
-                "WALL"
-              ],
-                [
-                    "FLOOR",
-                    "WALL",
-                    "FLOOR",
-                    "FLOOR",
-                    "WALL",
-                    "WALL"
-                ],
-              [
-                "START",
-                "WALL",
-                "WALL",
-                "WALL_SWITCH_DOWN_1",
-                "WALL",
-                "WALL"
-              ]
+          "map": [
+            [
+              "FLOOR",
+              "FLOOR",
+              "WALL_SWITCH_RIGHT_1_1",
+              "WALL",
+              "EXIT",
+              "FLOOR"
             ],
+            [
+              "PIT1",
+              "WALL",
+              "WALL",
+              "WALL",
+              "WALL",
+              "SLIDING_DOOR_HORIZONTAL_1_0"
+            ],
+            [
+              "FLOOR",
+              "SLIDING_DOOR_VERTICAL_1_1",
+              "FLOOR",
+              "FLOOR",
+              "FLOOR",
+              "PIT4"
+            ],
+            [
+              "FLOOR",
+              "WALL",
+              "FLOOR",
+              "FLOOR",
+              "FLOOR",
+              "WALL"
+            ],
+            [
+              "FLOOR",
+              "WALL",
+              "FLOOR",
+              "FLOOR",
+              "WALL",
+              "WALL"
+            ],
+            [
+              "START",
+              "WALL",
+              "WALL",
+              "WALL_SWITCH_DOWN_1_0",
+              "WALL",
+              "WALL"
+            ]
+          ],
             "active_boxes": [
                 true,
                 true,
@@ -102,7 +127,7 @@
             ],
             "player_direction": "up",
             "exit_active": true,
-            "score": 27
+            "score": 29
         },
         {
             "level": 2,

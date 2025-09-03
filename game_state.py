@@ -42,14 +42,42 @@ class GameState:
         self.in_pit4 = False
 
         # Variables for wall switches
+        self.WS_U1_on = True
         self.WS_U1_off = True
+
+        self.WS_U2_on = True
+        self.WS_U2_off = True
+
+        self.WS_D1_on = True
         self.WS_D1_off = True
+
+        self.WS_D2_on = True
+        self.WS_D2_off = True
+
+        self.WS_L1_on = True
         self.WS_L1_off = True
+
+        self.WS_L2_on = True
+        self.WS_L2_off = True
+
+        self.WS_R1_on = True
         self.WS_R1_off = True
 
+        self.WS_R2_on = True
+        self.WS_R2_off = True
+
         # Variables for sliding doors
-        self.SD_H1_closed = True
-        self.SD_V1_closed = True
+        self.SD_H1_1_closed = True
+        self.SD_H1_0_closed = False
+
+        self.SD_H2_1_closed = True
+        self.SD_H2_0_closed = False
+
+        self.SD_V1_1_closed = True
+        self.SD_V1_0_closed = False
+
+        self.SD_V2_1_closed = True
+        self.SD_V2_0_closed = False
 
         self.lights_out = False
         self.is_searching = False
