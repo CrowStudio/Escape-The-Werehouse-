@@ -1,10 +1,10 @@
 ### Reference a related issue
 
-This pull request solves #2
+This pull request solves #
 
 ### Description of changes
-- Created new game board element
-- A description of the elements behavior
+- Added something
+ - Does something
 
 ### Mentions
 Persons responsible for reviewing: @CrowStudio

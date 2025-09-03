@@ -358,11 +358,11 @@ class BasicBoardElements():
             return False
 
     # Validate movement
-    def validate_move(self, new_x, new_y, game_state, is_zone_element_valid=None):
+    def validate_move(self, new_x, new_y, game_state, check_zone_element_state=None):
         for element in self.elements:
             if element[1] == (new_x, new_y):
                 # Check for valid tiles including EXIT and PITS
-                if element[0] == BasicTile.EXIT and self.exit:  # Allow exit only if active
+                if element[0] == BasicTile.EXIT and game_state.exit:  # Allow exit only if active
                     return True
                 elif element[0] == BasicTile.START or element[0] == BasicTile.FLOOR:
                     return True
@@ -377,10 +377,10 @@ class BasicBoardElements():
                 elif element[0] in [BasicTile.WALL, BasicTile.PIT_WALL]:
                     return False
                 else:
-                    return is_zone_element_valid(element, game_state)
+                    return check_zone_element_state(element, game_state)
 
     # Validate push
-    def validate_push(self, push_x, push_y, game_state, is_zone_element_valid=None):
+    def validate_push(self, push_x, push_y, game_state, check_zone_element_state=None):
         for element in self.elements:
             if element[1] == (push_x, push_y):
                 if element[0] in [BasicTile.START, BasicTile.FLOOR, BasicTile.EXIT,
@@ -389,7 +389,7 @@ class BasicBoardElements():
                 elif element[0] in [BasicTile.WALL, BasicTile.PIT_WALL]:
                     return False
                 else:
-                    return is_zone_element_valid(element, game_state)
+                    return check_zone_element_state(element, game_state)
 
     # Generic box blitter
     def __blit_box__(self, index, travel, move):

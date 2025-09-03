@@ -41,7 +41,12 @@ class GameState:
         self.in_pit3 = False
         self.in_pit4 = False
 
-        self.SD_H1_closed = False
+        self.WS_U1_off = True
+        self.WS_D1_off = True
+        self.WS_L1_off = True
+        self.WS_R1_off = True
+
+        self.SD_H1_closed = True
         self.SD_V1_closed = True
 
         self.lights_out = False  # New attribute for lights checkbox
