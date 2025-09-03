@@ -385,6 +385,8 @@ class BasicBoardElements():
             if element[1] == (push_x, push_y):
                 if element[0] in [BasicTile.START, BasicTile.FLOOR, BasicTile.EXIT,
                                 BasicTile.PIT1, BasicTile.PIT2, BasicTile.PIT3, BasicTile.PIT4]:
+                    print('element 1: ', element[1])
+                    # Need to add check for other boxes at the to not trigger zone element if other box is on that zone element!
                     return True
                 elif element[0] in [BasicTile.WALL, BasicTile.PIT_WALL]:
                     return False
