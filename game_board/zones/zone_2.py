@@ -193,8 +193,35 @@ class ZoneTwo(BasicBoardElements):
     def validate_move(self, new_x, new_y, game_state):
         return super().validate_move(new_x, new_y, game_state, check_zone_element_state=self.check_zone_element_state)
 
-    def validate_push(self, push_x, push_y, game_state):
-        return super().validate_push(push_x, push_y, game_state, check_zone_element_state=self.check_zone_element_state)
+    def validate_push(self, box_data, push_x, push_y, game_state):
+        return super().validate_push(box_data, push_x, push_y, game_state, check_zone_element_state=self.check_zone_element_state, check_boxes_with_zone_elements=self.check_boxes_with_zone_elements)
 
-    def check_boxes_with_zone_elements(self, game_state, box_num, bx, by):
-        return False
+    def check_boxes_with_zone_elements(self, game_state, box_num, push_x, push_y, bx, by):
+        box_positions = []
+        # Check if the box is being pushed onto a zone element
+        for element in self.elements:
+            if element[1] == (push_x, push_y):
+                print('Checking for zone element at: ', element[1], 'bx:', bx, 'bx:', by)
+                if element[0] in [
+                    Zone2Tiles.WALL_SWITCH_UP_1_1, Zone2Tiles.WALL_SWITCH_UP_1_0,
+                    Zone2Tiles.WALL_SWITCH_DOWN_1_1, Zone2Tiles.WALL_SWITCH_DOWN_1_0,
+                    Zone2Tiles.WALL_SWITCH_LEFT_1_1, Zone2Tiles.WALL_SWITCH_LEFT_1_0,
+                    Zone2Tiles.WALL_SWITCH_RIGHT_1_1, Zone2Tiles.WALL_SWITCH_RIGHT_1_0,
+                    Zone2Tiles.SLIDING_DOOR_HORIZONTAL_1_1, Zone2Tiles.SLIDING_DOOR_HORIZONTAL_1_0,
+                    Zone2Tiles.SLIDING_DOOR_VERTICAL_1_1, Zone2Tiles.SLIDING_DOOR_VERTICAL_1_0,
+                    self.basic_tile.WALL, self.basic_tile.PIT_WALL
+                ]:
+                    # Check if there is already a box on the zone element
+                    if self.box1 and box_num != 1: box_positions.append((self.b1x, self.b1y))
+                    if self.box2 and box_num != 2: box_positions.append((self.b2x, self.b2y))
+                    if self.box3 and box_num != 3: box_positions.append((self.b3x, self.b3y))
+                    if self.box4 and box_num != 4: box_positions.append((self.b4x, self.b4y))
+
+                    # If another box is already on the zone element, do not trigger it
+                    for box_pos in box_positions:
+                        print('box positions',box_positions)
+                        if box_pos == (bx, by):
+                            print(f"Box {box_num} cannot trigger zone element, another box is already on it.")
+                            return False
+                        # Trigger the zone element
+                        return True

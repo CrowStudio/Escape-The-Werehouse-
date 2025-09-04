@@ -176,21 +176,22 @@ def move_in_facing_direction(game_state, movement):
 
 # Check if move is valid
 def is_valid_move(level, new_x, new_y, game_state):
-    # Check for game board edges
-    level.is_within_game_board(new_x, new_y)
-
     # Check if the target position contains a valid tile
     valid_move = level.validate_move(new_x, new_y, game_state)
-
     if not valid_move:
+        return False
+    return True
+
+def is_push_valid(level, new_x, new_y, game_state):
+    if (new_x < 0 or new_x > BasicTile.BOARD_WIDTH) or (new_y < 0 or new_y > BasicTile.BOARD_HEIGHT-100):
         return False
 
     # Get active box positions
     box_positions = []
-    if level.box1: box_positions.append((level.b1x, level.b1y))
-    if level.box2: box_positions.append((level.b2x, level.b2y))
-    if level.box3: box_positions.append((level.b3x, level.b3y))
-    if level.box4: box_positions.append((level.b4x, level.b4y))
+    if level.box1: box_positions.append([[1], (level.b1x, level.b1y)])
+    if level.box2: box_positions.append([[2], (level.b2x, level.b2y)])
+    if level.box3: box_positions.append([[3], (level.b3x, level.b3y)])
+    if level.box4: box_positions.append([[4], (level.b4x, level.b4y)])
 
     # Calculate position behind player
     behind_x = level.px + (level.px - new_x)
@@ -200,27 +201,28 @@ def is_valid_move(level, new_x, new_y, game_state):
         # Check for box behind player
         box_behind = False
         for box_pos in box_positions:
-            if box_pos == (behind_x, behind_y):
+            if box_pos[1] == (behind_x, behind_y):
                 box_behind = True
                 break
 
         # If no box behind when pulling, check if we're trying to walk over a box
         if not box_behind:
             for box_pos in box_positions:
-                if box_pos == (new_x, new_y):
+                if box_pos[1] == (new_x, new_y):
                     return False  # Can't walk over box while holding space
             return True
 
         # Check if target position is blocked by another box
         for box_pos in box_positions:
-            if box_pos == (new_x, new_y):
+            if box_pos[1] == (new_x, new_y):
                 return False
     else:
         # Handle pushing boxes
         box_at_target = False
         for box_pos in box_positions:
-            if box_pos == (new_x, new_y):
+            if box_pos[1] == (new_x, new_y):
                 box_at_target = True
+                box_data = [box_pos[0], box_pos[1]]
                 break
 
         if box_at_target:
@@ -229,8 +231,7 @@ def is_valid_move(level, new_x, new_y, game_state):
             push_y = new_y + (new_y - level.py)
 
             # Check if push position is valid
-            push_valid = level.validate_push(push_x, push_y, game_state)
-
+            push_valid = level.validate_push(box_data, push_x, push_y, game_state)
             if not push_valid:
                 return False
 
@@ -258,7 +259,12 @@ def move_player_and_boxes(level, audio, game_state):
     elif game_state.direction == 'right':
         new_x = x + BasicTile.SIZE  # Move exactly one tile right
 
-    # First check if the move is valid
+    # Check if the push is valid
+    if not is_push_valid(level, new_x, new_y, game_state):
+        print('Cannot push!')
+        return False  # Don't push if invalid
+
+    # Check if the move is valid
     if not is_valid_move(level, new_x, new_y, game_state):
         print('Cannot move in that direction!')
         return False  # Don't move if invalid
@@ -293,8 +299,8 @@ def move_player_and_boxes(level, audio, game_state):
             level.b1y = new_y + (new_y - y)
             if game_state.check_box_in_pit(1, level.b1x, level.b1y):
                 audio.play_sound('fall')
-            elif game_state.check_boxes_with_zone_elements(1, level.b1x, level.b1y):
-                print('zone element 1')
+            # elif game_state.check_boxes_with_zone_elements(1, level.b1x, level.b1y):
+            #     print('Zone element infront of box')
             else:
                 audio.play_sound('move')
         elif (new_x, new_y) == (level.b2x, level.b2y) and level.box2:
@@ -302,8 +308,8 @@ def move_player_and_boxes(level, audio, game_state):
             level.b2y = new_y + (new_y - y)
             if game_state.check_box_in_pit(2, level.b2x, level.b2y):
                 audio.play_sound('fall')
-            elif game_state.check_boxes_with_zone_elements(2, level.b2x, level.b2y):
-                print('zone element 2')
+            # elif game_state.check_boxes_with_zone_elements(2, level.b2x, level.b2y):
+            #     print('Zone element infront of box')
             else:
                 audio.play_sound('move')
         elif (new_x, new_y) == (level.b3x, level.b3y) and level.box3:
@@ -311,8 +317,8 @@ def move_player_and_boxes(level, audio, game_state):
             level.b3y = new_y + (new_y - y)
             if game_state.check_box_in_pit(3, level.b3x, level.b3y):
                 audio.play_sound('fall')
-            elif game_state.check_boxes_with_zone_elements(3, level.b3x, level.b3y):
-                print('zone element 3')
+            # elif game_state.check_boxes_with_zone_elements(3, level.b3x, level.b3y):
+            #     print('Zone element infront of box')
             else:
                 audio.play_sound('move')
         elif (new_x, new_y) == (level.b4x, level.b4y) and level.box4:
@@ -320,10 +326,12 @@ def move_player_and_boxes(level, audio, game_state):
             level.b4y = new_y + (new_y - y)
             if game_state.check_box_in_pit(4, level.b4x, level.b4y):
                 audio.play_sound('fall')
-            elif game_state.check_boxes_with_zone_elements(4, level.b4x, level.b4y):
-                print('zone element 4')
+            # elif game_state.check_boxes_with_zone_elements(4, level.b4x, level.b4y):
+            #     print('Zone element infront of box')
             else:
                 audio.play_sound('move')
+
+
 
     # Check if player falls into pit
     if game_state.check_player_in_pit(new_x, new_y, audio):

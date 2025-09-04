@@ -32,6 +32,7 @@ class BasicBoardElements():
     def __init__(self, ZONE_DATA):
         '''__init__'''
         print("BasicBoardElements instance created")  # Debug statement
+        self.basic_tile = BasicTile
 
         # Initiate variables to store levels from the JSON data
         self.tutorial_maps = []
@@ -353,12 +354,25 @@ class BasicBoardElements():
         return False
 
     # Move within game board
-    def is_within_game_board(self, new_x, new_y):
-        if new_x < 0 or new_x >= BasicTile.BOARD_WIDTH or new_y < 0 or new_y >= BasicTile.BOARD_HEIGHT:
+    def is_player_within_game_board(self, new_x, new_y):
+        if (new_x < 0 or new_x > BasicTile.BOARD_WIDTH-100) or (new_y < 0 or new_y > BasicTile.BOARD_HEIGHT):
             return False
+        else:
+            return True
+
+    # Move within game board
+    def is_box_within_game_board(self, new_x, new_y):
+        if (new_x < 0 or new_x > BasicTile.BOARD_WIDTH-100) or (new_y < 0 or new_y > BasicTile.BOARD_HEIGHT-100):
+            return False
+        else:
+            return True
 
     # Validate movement
     def validate_move(self, new_x, new_y, game_state, check_zone_element_state=None):
+        if not self.is_player_within_game_board(new_x, new_y):
+            print(f"Move ({new_x}, {new_y}) outside the board is not valid!")
+            return False
+
         for element in self.elements:
             if element[1] == (new_x, new_y):
                 # Check for valid tiles including EXIT and PITS
@@ -379,19 +393,62 @@ class BasicBoardElements():
                 else:
                     return check_zone_element_state(element, game_state)
 
+    def __check_for_obstructing_boxes__(self, push_x, push_y):
+        # Get active box positions
+        box_positions = []
+        if self.box1:
+            if (self.b1x, self.b1y) == (push_x, push_y):
+                print('Box 1', (self.b1x, self.b1y), 'infront of pushing box!')
+            box_positions.append((self.b1x, self.b1y))
+        if self.box2:
+            if (self.b2x, self.b2y) == (push_x, push_y):
+                print('Box 2', (self.b2x, self.b2y), 'infront of pushing box!')
+            box_positions.append((self.b2x, self.b2y))
+        if self.box3:
+            if (self.b3x, self.b3y) == (push_x, push_y):
+                print('Box 3', (self.b3x, self.b3y), 'infront of pushing box!')
+            box_positions.append((self.b3x, self.b3y))
+        if self.box4:
+            if (self.b4x, self.b4y) == (push_x, push_y):
+                print('Box 4', (self.b4x, self.b4y), 'infront of pushing box!')
+            box_positions.append((self.b4x, self.b4y))
+
+        # Check if pushing into another box
+        for box_pos in box_positions:
+            if box_pos == (push_x, push_y):
+                return False
+
+        print('Pushing box')
+        return True
+
     # Validate push
-    def validate_push(self, push_x, push_y, game_state, check_zone_element_state=None):
+    def validate_push(self, box_data, push_x, push_y, game_state, check_zone_element_state=None, check_boxes_with_zone_elements=None):
+        if not self.is_box_within_game_board(push_x, push_y):
+            print(f"Push ({push_x}, {push_y}) outside the board is not valid!")
+            return False
+
+        box_num, box_pos = box_data[0][0], box_data[1]
         for element in self.elements:
             if element[1] == (push_x, push_y):
                 if element[0] in [BasicTile.START, BasicTile.FLOOR, BasicTile.EXIT,
                                 BasicTile.PIT1, BasicTile.PIT2, BasicTile.PIT3, BasicTile.PIT4]:
-                    print('element 1: ', element[1])
-                    # Need to add check for other boxes at the to not trigger zone element if other box is on that zone element!
-                    return True
+                    return self.__check_for_obstructing_boxes__(push_x, push_y)
+
                 elif element[0] in [BasicTile.WALL, BasicTile.PIT_WALL]:
                     return False
+
                 else:
-                    return check_zone_element_state(element, game_state)
+                    # Check for obstructing boxes
+                    no_boxes = self.__check_for_obstructing_boxes__(push_x, push_y)
+                    if no_boxes:
+                        zone_element_ok = check_boxes_with_zone_elements(game_state, box_num, push_x, push_y, bx=box_pos[0], by=box_pos[1])
+                        if zone_element_ok:
+                            return check_zone_element_state(element, game_state)
+                    else:
+                        # If there is a box, do not trigger the zone element
+                        return False
+        return True
+
 
     # Generic box blitter
     def __blit_box__(self, index, travel, move):
