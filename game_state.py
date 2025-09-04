@@ -247,9 +247,6 @@ class GameState:
 
                 return False
 
-    def check_boxes_with_zone_elements(self, box_num, bx, by):
-        return self.level.check_boxes_with_zone_elements(self, box_num, bx, by)
-
     def check_player_in_pit(self, x, y, audio):
         if self.player_in_pit:
             return False

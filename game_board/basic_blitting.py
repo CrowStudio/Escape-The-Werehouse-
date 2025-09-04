@@ -422,7 +422,7 @@ class BasicBoardElements():
         return True
 
     # Validate push
-    def validate_push(self, box_data, push_x, push_y, game_state, check_zone_element_state=None, check_boxes_with_zone_elements=None):
+    def validate_push(self, box_data, push_x, push_y, game_state, check_zone_element_state=None):
         if not self.is_box_within_game_board(push_x, push_y):
             print(f"Push ({push_x}, {push_y}) outside the board is not valid!")
             return False
@@ -433,19 +433,14 @@ class BasicBoardElements():
                 if element[0] in [BasicTile.START, BasicTile.FLOOR, BasicTile.EXIT,
                                 BasicTile.PIT1, BasicTile.PIT2, BasicTile.PIT3, BasicTile.PIT4]:
                     return self.__check_for_obstructing_boxes__(push_x, push_y)
-
                 elif element[0] in [BasicTile.WALL, BasicTile.PIT_WALL]:
                     return False
-
                 else:
                     # Check for obstructing boxes
                     no_boxes = self.__check_for_obstructing_boxes__(push_x, push_y)
                     if no_boxes:
-                        zone_element_ok = check_boxes_with_zone_elements(game_state, box_num, push_x, push_y, bx=box_pos[0], by=box_pos[1])
-                        if zone_element_ok:
-                            return check_zone_element_state(element, game_state)
+                        return check_zone_element_state(element, game_state)
                     else:
-                        # If there is a box, do not trigger the zone element
                         return False
         return True
 
