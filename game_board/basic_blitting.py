@@ -398,19 +398,19 @@ class BasicBoardElements():
         box_positions = []
         if self.box1:
             if (self.b1x, self.b1y) == (push_x, push_y):
-                print('Box 1', (self.b1x, self.b1y), 'infront of pushing box!')
+                print(f'Box 1 (C:{int(self.b1x/100+1)}, R:{int(self.b1y/100+1)}) infront of pushing box!')
             box_positions.append((self.b1x, self.b1y))
-        if self.box2:
+        if self. box2:
             if (self.b2x, self.b2y) == (push_x, push_y):
-                print('Box 2', (self.b2x, self.b2y), 'infront of pushing box!')
+                print(f'Box 2 (C:{int(self.b2x/100+1)}, R:{int(self.b2y/100+1)}) infront of pushing box!')
             box_positions.append((self.b2x, self.b2y))
         if self.box3:
             if (self.b3x, self.b3y) == (push_x, push_y):
-                print('Box 3', (self.b3x, self.b3y), 'infront of pushing box!')
+                print(f'Box 3 (C:{int(self.b3x/100+1)}, R:{int(self.b3y/100+1)}) infront of pushing box!')
             box_positions.append((self.b3x, self.b3y))
         if self.box4:
             if (self.b4x, self.b4y) == (push_x, push_y):
-                print('Box 4', (self.b4x, self.b4y), 'infront of pushing box!')
+                print(f'Box 4 (C:{int(self.b4x/100+1)}, R:{int(self.b4y/100+1)}) infront of pushing box!')
             box_positions.append((self.b4x, self.b4y))
 
         # Check if pushing into another box
