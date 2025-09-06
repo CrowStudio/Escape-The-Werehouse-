@@ -28,6 +28,8 @@ class GameState:
 
         # Variable for active/inactive Exit
         self.exit = False
+        # Variable for Exit switch
+        self.activate_exit = False
 
         # Variables for active/inactive Pit
         self.pit1 = True
@@ -43,47 +45,55 @@ class GameState:
 
         # Variables for wall switches ON:
         # UP
-        self.WS_U1_on = True
-        self.WS_U2_on = True
+        self.WS_U1_on = False
+        self.WS_U2_on = False
         # DOWN
-        self.WS_D1_on = True
-        self.WS_D2_on = True
+        self.WS_D1_on = False
+        self.WS_D2_on = False
         # LEFT
-        self.WS_L1_on = True
-        self.WS_L2_on = True
+        self.WS_L1_on = False
+        self.WS_L2_on = False
         # RIGTH
-        self.WS_R1_on = True
-        self.WS_R2_on = True
+        self.WS_R1_on = False
+        self.WS_R2_on = False
 
         # Variables for wall switches OFF:
         # UP
-        self.WS_U1_off = True
-        self.WS_U2_off = True
+        self.WS_U1_off = False
+        self.WS_U2_off = False
         # DOWN
-        self.WS_D1_off = True
-        self.WS_D2_off = True
+        self.WS_D1_off = False
+        self.WS_D2_off = False
         # LEFT
-        self.WS_L1_off = True
-        self.WS_L2_off = True
+        self.WS_L1_off = False
+        self.WS_L2_off = False
         # RIGTH
-        self.WS_R1_off = True
-        self.WS_R2_off = True
+        self.WS_R1_off = False
+        self.WS_R2_off = False
 
-        # Variables for sliding doors CLOSED:
+        # Variables for sliding doors OPEN (NO):
         # HORIZONTAL
-        self.SD_H1_1_closed = True
-        self.SD_H2_1_closed = True
+        self.SD_H1_1_normally_open = False
+        self.SD_H2_1_normally_open = False
         # VERTICAL
-        self.SD_V1_1_closed = True
-        self.SD_V2_1_closed = True
+        self.SD_V1_1_normally_open = False
+        self.SD_V2_1_normally_open = False
 
-        # Variables for sliding doors OPEN:
-        # HORIZONTAL
-        self.SD_H1_0_closed = False
-        self.SD_H2_0_closed = False
+        # Variables for sliding doors CLOSED (NC):
+        # HORIZONTA
+        self.SD_H1_0_normally_closed = True
+        self.SD_H2_0_normally_closed = True
         # VERTICAL
-        self.SD_V1_0_closed = False
-        self.SD_V2_0_closed = False
+        self.SD_V1_0_normally_closed = True
+        self.SD_V2_0_normally_closed = True
+
+        # Variables for floor switch ON:
+        self.FS1_on = False
+        self.FS2_on = False
+
+        # Variables for floor switch OFF:
+        self.FS1_off = False
+        self.FS1_off = False
 
         # Game options
         self.lights_out = False

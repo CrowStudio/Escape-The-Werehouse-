@@ -62,11 +62,11 @@
               "WALL",
               "WALL",
               "WALL",
-              "SLIDING_DOOR_HORIZONTAL_1_0"
+              "SLIDING_DOOR_HORIZONTAL_1_1"
             ],
             [
               "FLOOR",
-              "SLIDING_DOOR_VERTICAL_1_1",
+              "SLIDING_DOOR_VERTICAL_1_0",
               "FLOOR",
               "FLOOR",
               "FLOOR",

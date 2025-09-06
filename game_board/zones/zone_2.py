@@ -29,26 +29,35 @@ class ZoneTwo(BasicBoardElements):
             # Wall switches:
             if isinstance(entry, tuple) and len(entry) == 3:
                 switch_state, door_state, message = entry
-                print(message)
                 # Invert the state of switch
                 switch_value = getattr(game_state, switch_state)
                 setattr(game_state, switch_state, not switch_value)
-                print('Activating' if not getattr(game_state, switch_state) else 'Disengaging')
+                print('Activating' if getattr(game_state, switch_state) else 'Disengaging')
 
                 door_value = getattr(game_state, door_state)
-                setattr(game_state, door_state, not door_value)
-                print('Opening sliding door' if not getattr(game_state, door_state) else 'Closing sliding door')
+                setattr(game_state, door_state, not door_value)  # Set door state to match switch state
+                # For normally closed doors
+                if 'closed'in door_state and not switch_value:
+                    print('Opening sliding door')
+                elif 'closed'in door_state and not door_value:
+                    print('Closing sliding door')
+                # For normally open doors
+                if 'open'in door_state and switch_value:
+                    print('Opening sliding door')
+                elif 'open'in door_state and not door_value:
+                    print('Closing sliding door')
                 return True
-            else:  # Sliding doors:
-                door_state, message = entry
-                closed = getattr(game_state, door_state)
 
-                if not closed:
-                    print('Passing the', message)
-                    return True
-                else:
-                    print('The', message, 'is closed!')
+            else:  # Sliding doors:
+                door_state, door = entry
+                door_closed = getattr(game_state, door_state)
+
+                if door_closed:
+                    print('The', door, 'is closed!')
                     return False
+                else:
+                    print('Passing the', door)
+                    return True
 
         # Default case: Element not in mapping
         print(f"Warning: Unknown element {element_type} in check_zone_element_state")
@@ -66,7 +75,7 @@ class ZoneTwo(BasicBoardElements):
             # Select the appropriate sprite based on the element state
             if isinstance(sprite_tuple, tuple) and len(sprite_tuple) == 2:
                 # Use the first sprite if element_state is True, else use the second sprite
-                sprite = sprite_tuple[1] if element_state else sprite_tuple[0]
+                sprite = sprite_tuple[0] if element_state == False else sprite_tuple[1]
             else:
                 # Fallback: Use the sprite directly if it's not a tuple
                 sprite = sprite_tuple

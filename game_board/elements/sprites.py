@@ -101,87 +101,93 @@ class Sprite:
         pygame.image.load(os.path.join(graphics_dir, 'pit.png'))
     ]
 
-    EXIT = [pygame.image.load(os.path.join(graphics_dir, 'exit_active.png')),
-            pygame.image.load(os.path.join(graphics_dir, 'exit_disengaged.png'))
+    ACTIVATE_EXIT = [
+        pygame.image.load(os.path.join(graphics_dir, 'exit_switch_DISENGAGED.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'exit_switch_ACTIVE.png'))
+    ]
+
+    EXIT = [
+        pygame.image.load(os.path.join(graphics_dir, 'exit_disengaged.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'exit_active.png'))
     ]
 
     # Wall switches ON:
     # UP
     WALL_SWITCH_UP_1_1 = [
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_up.png')),
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_DISENGAGED_up.png'))
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_DISENGAGED_up.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_up.png'))
     ]
     WALL_SWITCH_UP_2_1 = [
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_up.png')),
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_DISENGAGED_up.png'))
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_DISENGAGED_up.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_up.png'))
     ]
     # DOWN
     WALL_SWITCH_DOWN_1_1 = [
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_down.png')),
         pygame.image.load(os.path.join(graphics_dir, 'wall_switch_DISENGAGED_down.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_down.png'))
     ]
     WALL_SWITCH_DOWN_2_1 = [
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_down.png')),
         pygame.image.load(os.path.join(graphics_dir, 'wall_switch_DISENGAGED_down.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_down.png'))
     ]
     # LEFT
     WALL_SWITCH_LEFT_1_1 = [
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_left.png')),
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_DISENGAGED_left.png'))
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_DISENGAGED_left.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_left.png'))
     ]
     WALL_SWITCH_LEFT_2_1 = [
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_left.png')),
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_DISENGAGED_left.png'))
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_DISENGAGED_left.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_left.png'))
     ]
     # RIGHT
     WALL_SWITCH_RIGHT_1_1 = [
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_right.png')),
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_DISENGAGED_right.png'))
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_DISENGAGED_right.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_right.png'))
     ]
     WALL_SWITCH_RIGHT_2_1 = [
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_right.png')),
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_DISENGAGED_right.png'))
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_DISENGAGED_right.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_right.png'))
     ]
 
     # Wall switches OFF:
     # UP
     WALL_SWITCH_UP_1_0 = [
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_up.png')),
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_DISENGAGED_up.png'))
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_DISENGAGED_up.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_up.png'))
     ]
     WALL_SWITCH_UP_2_0 = [
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_up.png')),
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_DISENGAGED_up.png'))
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_DISENGAGED_up.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_up.png'))
     ]
     # DOWN
     WALL_SWITCH_DOWN_1_0 = [
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_down.png')),
         pygame.image.load(os.path.join(graphics_dir, 'wall_switch_DISENGAGED_down.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_down.png'))
     ]
     WALL_SWITCH_DOWN_2_0 = [
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_down.png')),
         pygame.image.load(os.path.join(graphics_dir, 'wall_switch_DISENGAGED_down.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_down.png'))
     ]
     # LEFT
     WALL_SWITCH_LEFT_1_0 = [
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_left.png')),
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_DISENGAGED_left.png'))
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_DISENGAGED_left.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_left.png'))
     ]
     WALL_SWITCH_LEFT_2_0 = [
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_left.png')),
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_DISENGAGED_left.png'))
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_DISENGAGED_left.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_left.png'))
     ]
     # RIGHT
     WALL_SWITCH_RIGHT_1_0 = [
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_right.png')),
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_DISENGAGED_right.png'))
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_DISENGAGED_right.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_right.png'))
     ]
     WALL_SWITCH_RIGHT_2_0 = [
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_right.png')),
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_DISENGAGED_right.png'))
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_DISENGAGED_right.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_right.png'))
     ]
 
-    # Sliding doors CLOSED:
+    # Sliding doors OPEN (NO):
     # HORIZONTAL
     SLIDING_DOOR_HORIZONTAL_1_1 = [
         pygame.image.load(os.path.join(graphics_dir, 'sliding_door_OPEN_horizontal.png')),
@@ -201,7 +207,7 @@ class Sprite:
         pygame.image.load(os.path.join(graphics_dir, 'sliding_door_CLOSED_vertical.png'))
     ]
 
-    # Sliding doors OPEN:
+    # Sliding doors CLOSED (NC):
     # HORIZONTAL
     SLIDING_DOOR_HORIZONTAL_1_0 = [
         pygame.image.load(os.path.join(graphics_dir, 'sliding_door_OPEN_horizontal.png')),
@@ -219,6 +225,26 @@ class Sprite:
     SLIDING_DOOR_VERTICAL_2_0 = [
             pygame.image.load(os.path.join(graphics_dir, 'sliding_door_OPEN_vertical.png')),
         pygame.image.load(os.path.join(graphics_dir, 'sliding_door_CLOSED_vertical.png'))
+    ]
+
+    # Floor switches ON:
+    FLOOR_SWITCH_1_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'floor_switch_ON_DISENGAGED.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'floor_switch_ON.png'))
+    ]
+    FLOOR_SWITCH_2_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'floor_switch_ON_DISENGAGED.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'floor_switch_ON.png'))
+    ]
+
+    # Floor switches OFF:
+    FLOOR_SWITCH_1_0 = [
+        pygame.image.load(os.path.join(graphics_dir, 'floor_switch_OFF_DISENGAGED.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'floor_switch_OFF.png'))
+    ]
+    FLOOR_SWITCH_2_0 = [
+        pygame.image.load(os.path.join(graphics_dir, 'floor_switch_OFF_DISENGAGED.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'floor_switch_OFF.png'))
     ]
 
     BOXES = [
