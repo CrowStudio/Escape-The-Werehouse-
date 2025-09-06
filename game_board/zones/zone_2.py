@@ -3,6 +3,7 @@ import json
 import os
 from game_board.basic_blitting import BasicBoardElements
 from game_board.elements.sprites import Sprite
+from game_board.zones.zone_2_tiles import Zone2Tiles
 
 # Set paths for level data
 DIR_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -12,132 +13,18 @@ ZONE_2_PATH = os.path.join(DIR_PATH, 'level_maps', 'zone_2_maps.json')
 with open(ZONE_2_PATH, 'r') as file:
     ZONE_DATA = json.load(file)
 
-# Tile type enumeration
-class Zone2Tiles:
-    WALL_SWITCH_UP_1_1          = "Z1U_1_1"
-    WALL_SWITCH_UP_1_0          = "Z1U_1_0"
-    WALL_SWITCH_UP_2_1          = "Z1U_2_1"
-    WALL_SWITCH_UP_2_0          = "Z1U_2_0"
-    WALL_SWITCH_DOWN_1_1        = "Z2D_1_1"
-    WALL_SWITCH_DOWN_1_0        = "Z2D_1_0"
-    WALL_SWITCH_DOWN_2_1        = "Z2D_2_1"
-    WALL_SWITCH_DOWN_2_0        = "Z2D_2_0"
-    WALL_SWITCH_LEFT_1_1        = "Z3L_1_1"
-    WALL_SWITCH_LEFT_1_0        = "Z3L_1_0"
-    WALL_SWITCH_LEFT_2_1        = "Z3L_2_1"
-    WALL_SWITCH_LEFT_2_0        = "Z3L_2_0"
-    WALL_SWITCH_RIGHT_1_1       = "Z4R_1_1"
-    WALL_SWITCH_RIGHT_1_0       = "Z4R_1_0"
-    WALL_SWITCH_RIGHT_2_1       = "Z4R_2_1"
-    WALL_SWITCH_RIGHT_2_0       = "Z4R_2_0"
-    SLIDING_DOOR_HORIZONTAL_1_1 = "Z5H_1_1"
-    SLIDING_DOOR_HORIZONTAL_1_0 = "Z5H_1_0"
-    SLIDING_DOOR_HORIZONTAL_2_1 = "Z5H_2_1"
-    SLIDING_DOOR_HORIZONTAL_2_0 = "Z5H_2_0"
-    SLIDING_DOOR_VERTICAL_1_1   = "Z6V_1_1"
-    SLIDING_DOOR_VERTICAL_1_0   = "Z6V_1_0"
-    SLIDING_DOOR_VERTICAL_2_1   = "Z6V_2_1"
-    SLIDING_DOOR_VERTICAL_2_0   = "Z6V_2_0"
-    FLOOR_SWITCH_1              = "Z7_1"
-    FLOOR_SWITCH_2              = "Z7_2"
-    FLOOR_SWITCH_3              = "Z7_3"
-    FLOOR_SWITCH_4              = "Z7_4"
-    TRAP_DOOR_1                 = "Z8_1"
-    TRAP_DOOR_2                 = "Z8_2"
-    TRAP_DOOR_3                 = "Z8_3"
-    TRAP_DOOR_4                 = "Z8_4"
-    ACTIVATE_EXIT_1             = "Z9_1"
-
 class ZoneTwo(BasicBoardElements):
     '''zone 2'''
     def __init__(self):
         super().__init__(ZONE_DATA)
-
-        # Sprite mapping for zone elements
-        self.sprite_mapping = {
-            # Wall switches:
-            Zone2Tiles.WALL_SWITCH_UP_1_1: (
-                (Sprite.WALL_SWITCH_UP_1_1[0], Sprite.WALL_SWITCH_UP_1_1[1]),
-                'WS_U1_on'
-            ),
-            Zone2Tiles.WALL_SWITCH_UP_1_0: (
-                (Sprite.WALL_SWITCH_UP_1_0[0], Sprite.WALL_SWITCH_UP_1_0[1]),
-                'WS_U1_off'
-            ),
-            Zone2Tiles.WALL_SWITCH_DOWN_1_1: (
-                (Sprite.WALL_SWITCH_DOWN_1_1[0], Sprite.WALL_SWITCH_DOWN_1_1[1]),
-                'WS_D1_on'
-            ),
-            Zone2Tiles.WALL_SWITCH_DOWN_1_0: (
-                (Sprite.WALL_SWITCH_DOWN_1_0[0], Sprite.WALL_SWITCH_DOWN_1_0[1]),
-                'WS_D1_off'
-            ),
-            Zone2Tiles.WALL_SWITCH_LEFT_1_1: (
-                (Sprite.WALL_SWITCH_LEFT_1_1[0], Sprite.WALL_SWITCH_LEFT_1_1[1]),
-                 'WS_L1_on'
-            ),
-            Zone2Tiles.WALL_SWITCH_LEFT_1_0: (
-                (Sprite.WALL_SWITCH_LEFT_1_0[0], Sprite.WALL_SWITCH_LEFT_1_0[1]),
-                 'WS_L1_off'
-            ),
-            Zone2Tiles.WALL_SWITCH_RIGHT_1_1: (
-                (Sprite.WALL_SWITCH_RIGHT_1_1[0], Sprite.WALL_SWITCH_RIGHT_1_1[1]),
-                'WS_R1_on'
-            ),
-            Zone2Tiles.WALL_SWITCH_RIGHT_1_0: (
-                (Sprite.WALL_SWITCH_RIGHT_1_0[0], Sprite.WALL_SWITCH_RIGHT_1_0[1]),
-                'WS_R1_off'
-            ),
-
-            # Sliding doors:
-            Zone2Tiles.SLIDING_DOOR_HORIZONTAL_1_1: (
-                (Sprite.SLIDING_DOOR_HORIZONTAL_1_1[0], Sprite.SLIDING_DOOR_HORIZONTAL_1_1[1]),
-                'SD_H1_1_closed'
-            ),
-            Zone2Tiles.SLIDING_DOOR_HORIZONTAL_1_0: (
-                (Sprite.SLIDING_DOOR_HORIZONTAL_1_0[0], Sprite.SLIDING_DOOR_HORIZONTAL_1_0[1]),
-                'SD_H1_0_closed'
-            ),
-            Zone2Tiles.SLIDING_DOOR_VERTICAL_1_1: (
-                (Sprite.SLIDING_DOOR_VERTICAL_1_1[0], Sprite.SLIDING_DOOR_VERTICAL_1_1[1]),
-                'SD_V1_1_closed'
-            ),
-            Zone2Tiles.SLIDING_DOOR_VERTICAL_1_0: (
-                (Sprite.SLIDING_DOOR_VERTICAL_1_0[0], Sprite.SLIDING_DOOR_VERTICAL_1_0[1]),
-                'SD_V1_0_closed'
-            )
-        }
-
-        # State mapping of zone elements
-        self.state_mapping = {
-            # Wall switches:
-            Zone2Tiles.WALL_SWITCH_UP_1_1: ('WS_U1_on', 'SD_H1_1_closed',  'Wall switch present'),
-            Zone2Tiles.WALL_SWITCH_UP_1_0: ('WS_U1_off', 'SD_H1_0_closed',  'Wall switch present'),
-
-            Zone2Tiles.WALL_SWITCH_DOWN_1_1: ('WS_D1_on', 'SD_H1_1_closed', 'Wall switch present'),
-            Zone2Tiles.WALL_SWITCH_DOWN_1_0: ('WS_D1_off', 'SD_H1_0_closed', 'Wall switch present'),
-
-            Zone2Tiles.WALL_SWITCH_LEFT_1_1: ('WS_L1_on', 'SD_V1_1_closed', 'Wall switch present'),
-            Zone2Tiles.WALL_SWITCH_LEFT_1_0: ('WS_L1_off', 'SD_V1_0_closed', 'Wall switch present'),
-
-            Zone2Tiles.WALL_SWITCH_RIGHT_1_1: ('WS_R1_on', 'SD_V1_1_closed', 'Wall switch present'),
-            Zone2Tiles.WALL_SWITCH_RIGHT_1_0: ('WS_R1_off', 'SD_V1_0_closed', 'Wall switch present'),
-
-            # Sliding doors:
-            Zone2Tiles.SLIDING_DOOR_HORIZONTAL_1_1: ('SD_H1_1_closed', 'horizontal sliding door'),
-            Zone2Tiles.SLIDING_DOOR_HORIZONTAL_1_0: ('SD_H1_0_closed', 'horizontal sliding door'),
-
-            Zone2Tiles.SLIDING_DOOR_VERTICAL_1_1: ('SD_V1_1_closed', 'vertical sliding door'),
-            Zone2Tiles.SLIDING_DOOR_VERTICAL_1_0: ('SD_V1_0_closed', 'vertical sliding door')
-        }
 
     def check_zone_element_state(self, element, game_state):
         '''Check if a zone element is valid based on its type and game state.'''
         element_type = element[0]
 
         # Look up the element in the mapping
-        if element_type in self.state_mapping:
-            entry = self.state_mapping[element_type]
+        if element_type in Zone2Tiles.state_mapping:
+            entry = Zone2Tiles.state_mapping[element_type]
 
             # Wall switches:
             if isinstance(entry, tuple) and len(entry) == 3:
@@ -171,8 +58,8 @@ class ZoneTwo(BasicBoardElements):
         # Blit the floor tile
         self.game_board.blit(Sprite.FLOOR[i], pos)
         # Look up the element in the sprite mapping
-        if element in self.sprite_mapping:
-            sprite_tuple, state_attr = self.sprite_mapping[element]
+        if element in Zone2Tiles.sprite_mapping:
+            sprite_tuple, state_attr = Zone2Tiles.sprite_mapping[element]
             # Get the state of the element from game_state
             element_state = getattr(game_state, state_attr)
 

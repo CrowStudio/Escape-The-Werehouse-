@@ -41,44 +41,51 @@ class GameState:
         self.in_pit3 = False
         self.in_pit4 = False
 
-        # Variables for wall switches
+        # Variables for wall switches ON:
+        # UP
         self.WS_U1_on = True
-        self.WS_U1_off = True
-
         self.WS_U2_on = True
-        self.WS_U2_off = True
-
+        # DOWN
         self.WS_D1_on = True
-        self.WS_D1_off = True
-
         self.WS_D2_on = True
-        self.WS_D2_off = True
-
+        # LEFT
         self.WS_L1_on = True
-        self.WS_L1_off = True
-
         self.WS_L2_on = True
-        self.WS_L2_off = True
-
+        # RIGTH
         self.WS_R1_on = True
-        self.WS_R1_off = True
-
         self.WS_R2_on = True
+
+        # Variables for wall switches OFF:
+        # UP
+        self.WS_U1_off = True
+        self.WS_U2_off = True
+        # DOWN
+        self.WS_D1_off = True
+        self.WS_D2_off = True
+        # LEFT
+        self.WS_L1_off = True
+        self.WS_L2_off = True
+        # RIGTH
+        self.WS_R1_off = True
         self.WS_R2_off = True
 
-        # Variables for sliding doors
+        # Variables for sliding doors CLOSED:
+        # HORIZONTAL
         self.SD_H1_1_closed = True
-        self.SD_H1_0_closed = False
-
         self.SD_H2_1_closed = True
-        self.SD_H2_0_closed = False
-
+        # VERTICAL
         self.SD_V1_1_closed = True
-        self.SD_V1_0_closed = False
-
         self.SD_V2_1_closed = True
+
+        # Variables for sliding doors OPEN:
+        # HORIZONTAL
+        self.SD_H1_0_closed = False
+        self.SD_H2_0_closed = False
+        # VERTICAL
+        self.SD_V1_0_closed = False
         self.SD_V2_0_closed = False
 
+        # Game options
         self.lights_out = False
         self.is_searching = False
         self.search = 0

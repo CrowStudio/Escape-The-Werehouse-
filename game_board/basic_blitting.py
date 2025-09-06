@@ -200,13 +200,13 @@ class BasicBoardElements():
     # Blit exit tile
     def __exit__(self, pos, game_state):
         # If Exit is active
-        # - Blit exit
+        # - Blit exit_active
         if game_state.exit:
-            self.game_board.blit(Sprite.EXIT, pos)
+            self.game_board.blit(Sprite.EXIT[0], pos)
         # Else
-        # - Blit no_exit
+        # - Blit exit_disengaged
         else:
-            self.game_board.blit(Sprite.NO_EXIT, pos)
+            self.game_board.blit(Sprite.EXIT[1], pos)
 
     # Blit zone-specific tile
     def __zone_element__(self, pos, i, game_state, blit_zone_element):
