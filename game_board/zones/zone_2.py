@@ -36,28 +36,53 @@ class ZoneTwo(BasicBoardElements):
 
                 door_value = getattr(game_state, door_state)
                 setattr(game_state, door_state, not door_value)  # Set door state to match switch state
-                # For normally closed doors
-                if 'closed'in door_state and not switch_value:
-                    print('Opening sliding door')
-                elif 'closed'in door_state and not door_value:
-                    print('Closing sliding door')
-                # For normally open doors
-                if 'open'in door_state and switch_value:
-                    print('Opening sliding door')
-                elif 'open'in door_state and not door_value:
-                    print('Closing sliding door')
+                # Sliding doors
+                if 'SD' in door_state:
+                    # For normally closed doors
+                    if 'closed' in door_state and not switch_value:
+                        print('Opening sliding door')
+                    elif 'closed' in door_state and not door_value:
+                        print('Closing sliding door')
+                    # For normally open doors
+                    if 'open' in door_state and switch_value:
+                        print('Opening sliding door')
+                    elif 'open' in door_state and not door_value:
+                        print('Closing sliding door')
+                # Trap doors
+                else:
+                    # For normally closed doors
+                    if 'closed' in door_state and not switch_value:
+                        print('Opening trap door')
+                    elif 'closed' in door_state and not door_value:
+                        print('Closing trap door')
+                    # For normally open doors
+                    if 'open' in door_state and switch_value:
+                        print('Opening trap door')
+                    elif 'open' in door_state and not door_value:
+                        print('Closing trap door')
+
                 return True
 
             else:  # Sliding doors:
                 door_state, door = entry
-                door_closed = getattr(game_state, door_state)
-
-                if door_closed:
-                    print('The', door, 'is closed!')
-                    return False
+                active = getattr(game_state, door_state)
+                # Sliding doors
+                if 'SD' in door_state:
+                    if active:
+                        print('The', door, 'is closed!')
+                        return False
+                    else:
+                        print('Passing', door)
+                        return True
+                # Trap doors
                 else:
-                    print('Passing the', door)
-                    return True
+                    if active:
+                        print('The', door, 'is open!')
+                        return False
+                    else:
+                        print('Passing', door)
+                        return True
+
 
         # Default case: Element not in mapping
         print(f"Warning: Unknown element {element_type} in check_zone_element_state")

@@ -4,41 +4,57 @@ from game_board.elements.sprites import Sprite
 class Zone2Tiles:
     WALL_SWITCH_UP_1_1          = "Z1U_1_1"
     WALL_SWITCH_UP_2_1          = "Z1U_2_1"
-    WALL_SWITCH_UP_1_0          = "Z1U_1_0"
-    WALL_SWITCH_UP_2_0          = "Z1U_2_0"
     WALL_SWITCH_DOWN_1_1        = "Z2D_1_1"
     WALL_SWITCH_DOWN_2_1        = "Z2D_2_1"
-    WALL_SWITCH_DOWN_1_0        = "Z2D_1_0"
-    WALL_SWITCH_DOWN_2_0        = "Z2D_2_0"
     WALL_SWITCH_LEFT_1_1        = "Z3L_1_1"
     WALL_SWITCH_LEFT_2_1        = "Z3L_2_1"
-    WALL_SWITCH_LEFT_1_0        = "Z3L_1_0"
-    WALL_SWITCH_LEFT_2_0        = "Z3L_2_0"
     WALL_SWITCH_RIGHT_1_1       = "Z4R_1_1"
     WALL_SWITCH_RIGHT_2_1       = "Z4R_2_1"
+    WALL_SWITCH_UP_1_0          = "Z1U_1_0"
+    WALL_SWITCH_UP_2_0          = "Z1U_2_0"
+    WALL_SWITCH_DOWN_1_0        = "Z2D_1_0"
+    WALL_SWITCH_DOWN_2_0        = "Z2D_2_0"
+    WALL_SWITCH_LEFT_1_0        = "Z3L_1_0"
+    WALL_SWITCH_LEFT_2_0        = "Z3L_2_0"
     WALL_SWITCH_RIGHT_1_0       = "Z4R_1_0"
     WALL_SWITCH_RIGHT_2_0       = "Z4R_2_0"
     SLIDING_DOOR_HORIZONTAL_1_1 = "Z5H_1_1"
     SLIDING_DOOR_HORIZONTAL_2_1 = "Z5H_2_1"
+    SLIDING_DOOR_HORIZONTAL_3_1 = "Z5H_3_1"
+    SLIDING_DOOR_HORIZONTAL_4_1 = "Z5H_4_1"
     SLIDING_DOOR_HORIZONTAL_1_0 = "Z5H_1_0"
     SLIDING_DOOR_HORIZONTAL_2_0 = "Z5H_2_0"
+    SLIDING_DOOR_HORIZONTAL_3_0 = "Z5H_3_0"
+    SLIDING_DOOR_HORIZONTAL_4_0 = "Z5H_4_0"
     SLIDING_DOOR_VERTICAL_1_1   = "Z6V_1_1"
     SLIDING_DOOR_VERTICAL_2_1   = "Z6V_2_1"
+    SLIDING_DOOR_VERTICAL_3_1   = "Z6V_3_1"
+    SLIDING_DOOR_VERTICAL_4_1   = "Z6V_4_1"
     SLIDING_DOOR_VERTICAL_1_0   = "Z6V_1_0"
     SLIDING_DOOR_VERTICAL_2_0   = "Z6V_2_0"
+    SLIDING_DOOR_VERTICAL_3_0   = "Z6V_3_0"
+    SLIDING_DOOR_VERTICAL_4_0   = "Z6V_4_0"
     FLOOR_SWITCH_1_1            = "Z7_1_1"
     FLOOR_SWITCH_2_1            = "Z7_2_1"
+    FLOOR_SWITCH_3_1            = "Z7_3_1"
+    FLOOR_SWITCH_4_1            = "Z7_4_1"
     FLOOR_SWITCH_1_0            = "Z7_1_0"
     FLOOR_SWITCH_2_0            = "Z7_2_0"
-    TRAP_DOOR_1_1               = "Z8_1_1"
-    TRAP_DOOR_2_1               = "Z8_2_1"
-    TRAP_DOOR_1_0               = "Z8_1_0"
-    TRAP_DOOR_2_0               = "Z8_2_0"
+    FLOOR_SWITCH_3_0            = "Z7_3_0"
+    FLOOR_SWITCH_4_0            = "Z7_4_0"
+    TRAP_DOOR_UP_1_1            = "Z8U_1_1"
+    TRAP_DOOR_DOWN_1_1          = "Z8D_1_1"
+    TRAP_DOOR_LEFT_1_1          = "Z8L_1_1"
+    TRAP_DOOR_RIGHT_1_1         = "Z8R_1_1"
+    TRAP_DOOR_UP_1_0            = "Z8U_1_0"
+    TRAP_DOOR_DOWN_1_0          = "Z8D_1_0"
+    TRAP_DOOR_LEFT_1_0          = "Z8L_1_0"
+    TRAP_DOOR_RIGHT_1_0         = "Z8R_1_0"
     ACTIVATE_EXIT               = "Z9"
 
     # Sprite mapping for zone elements
     sprite_mapping = {
-        # Wall switches ON:
+        # Wall switches ON (NC):
         # UP
         WALL_SWITCH_UP_1_1: (
             (Sprite.WALL_SWITCH_UP_1_1[0], Sprite.WALL_SWITCH_UP_1_1[1]),
@@ -76,7 +92,7 @@ class Zone2Tiles:
             'WS_R2_on'
         ),
 
-        # Wall switches OFF:
+        # Wall switches OFF (NO):
         # UP
         WALL_SWITCH_UP_1_0: (
             (Sprite.WALL_SWITCH_UP_1_0[0], Sprite.WALL_SWITCH_UP_1_0[1]),
@@ -105,17 +121,17 @@ class Zone2Tiles:
             'WS_L2_off'
         ),
         # RIGHT
-        WALL_SWITCH_RIGHT_2_0: (
-            (Sprite.WALL_SWITCH_RIGHT_2_0[0], Sprite.WALL_SWITCH_RIGHT_2_0[1]),
-            'WS_R2_off'
-        ),
         WALL_SWITCH_RIGHT_1_0: (
             (Sprite.WALL_SWITCH_RIGHT_1_0[0], Sprite.WALL_SWITCH_RIGHT_1_0[1]),
             'WS_R1_off'
         ),
+        WALL_SWITCH_RIGHT_2_0: (
+            (Sprite.WALL_SWITCH_RIGHT_2_0[0], Sprite.WALL_SWITCH_RIGHT_2_0[1]),
+            'WS_R2_off'
+        ),
 
 
-        # Sliding doors OPEN:
+        # Sliding doors OPEN (NO):
         # HORIZONTAL
         SLIDING_DOOR_HORIZONTAL_1_1: (
             (Sprite.SLIDING_DOOR_HORIZONTAL_1_1[0], Sprite.SLIDING_DOOR_HORIZONTAL_1_1[1]),
@@ -124,6 +140,14 @@ class Zone2Tiles:
         SLIDING_DOOR_HORIZONTAL_2_1: (
             (Sprite.SLIDING_DOOR_HORIZONTAL_2_1[0], Sprite.SLIDING_DOOR_HORIZONTAL_2_1[1]),
             'SD_H2_1_normally_open'
+        ),
+        SLIDING_DOOR_HORIZONTAL_3_1: (
+            (Sprite.SLIDING_DOOR_HORIZONTAL_3_1[0], Sprite.SLIDING_DOOR_HORIZONTAL_3_1[1]),
+            'SD_H3_1_normally_open'
+        ),
+        SLIDING_DOOR_HORIZONTAL_4_1: (
+            (Sprite.SLIDING_DOOR_HORIZONTAL_4_1[0], Sprite.SLIDING_DOOR_HORIZONTAL_4_1[1]),
+            'SD_H4_1_normally_open'
         ),
         # VERTICAL
         SLIDING_DOOR_VERTICAL_1_1: (
@@ -134,8 +158,16 @@ class Zone2Tiles:
             (Sprite.SLIDING_DOOR_VERTICAL_2_1[0], Sprite.SLIDING_DOOR_VERTICAL_2_1[1]),
             'SD_V2_1_normally_open'
         ),
+        SLIDING_DOOR_VERTICAL_3_1: (
+            (Sprite.SLIDING_DOOR_VERTICAL_3_1[0], Sprite.SLIDING_DOOR_VERTICAL_3_1[1]),
+            'SD_V3_1_normally_open'
+        ),
+        SLIDING_DOOR_VERTICAL_4_1: (
+            (Sprite.SLIDING_DOOR_VERTICAL_4_1[0], Sprite.SLIDING_DOOR_VERTICAL_4_1[1]),
+            'SD_V4_1_normally_open'
+        ),
 
-        # Sliding doors CLOSED:
+        # Sliding doors CLOSED (NC):
         # HORIZONTAL
         SLIDING_DOOR_HORIZONTAL_1_0: (
             (Sprite.SLIDING_DOOR_HORIZONTAL_1_0[0], Sprite.SLIDING_DOOR_HORIZONTAL_1_0[1]),
@@ -144,6 +176,14 @@ class Zone2Tiles:
         SLIDING_DOOR_HORIZONTAL_2_0: (
             (Sprite.SLIDING_DOOR_HORIZONTAL_2_0[0], Sprite.SLIDING_DOOR_HORIZONTAL_2_0[1]),
             'SD_H2_0_normally_closed'
+        ),
+        SLIDING_DOOR_HORIZONTAL_3_0: (
+            (Sprite.SLIDING_DOOR_HORIZONTAL_3_0[0], Sprite.SLIDING_DOOR_HORIZONTAL_3_0[1]),
+            'SD_H3_0_normally_closed'
+        ),
+        SLIDING_DOOR_HORIZONTAL_4_0: (
+            (Sprite.SLIDING_DOOR_HORIZONTAL_4_0[0], Sprite.SLIDING_DOOR_HORIZONTAL_4_0[1]),
+            'SD_H4_0_normally_closed'
         ),
         # VERTICAL
         SLIDING_DOOR_VERTICAL_1_0: (
@@ -154,8 +194,16 @@ class Zone2Tiles:
             (Sprite.SLIDING_DOOR_VERTICAL_2_0[0], Sprite.SLIDING_DOOR_VERTICAL_2_0[1]),
             'SD_V2_0_normally_closed'
         ),
+        SLIDING_DOOR_VERTICAL_3_0: (
+            (Sprite.SLIDING_DOOR_VERTICAL_3_0[0], Sprite.SLIDING_DOOR_VERTICAL_3_0[1]),
+            'SD_V3_0_normally_closed'
+        ),
+        SLIDING_DOOR_VERTICAL_4_0: (
+            (Sprite.SLIDING_DOOR_VERTICAL_4_0[0], Sprite.SLIDING_DOOR_VERTICAL_4_0[1]),
+            'SD_V4_0_normally_closed'
+        ),
 
-        # Floor switches ON:
+        # Floor switches ON (NC):
         FLOOR_SWITCH_1_1: (
             (Sprite.FLOOR_SWITCH_1_1[0], Sprite.FLOOR_SWITCH_1_1[1]),
             'FS1_on'
@@ -164,8 +212,16 @@ class Zone2Tiles:
             (Sprite.FLOOR_SWITCH_2_1[0], Sprite.FLOOR_SWITCH_2_1[1]),
             'FS2_on'
         ),
+        FLOOR_SWITCH_3_1: (
+            (Sprite.FLOOR_SWITCH_3_1[0], Sprite.FLOOR_SWITCH_3_1[1]),
+            'FS3_on'
+        ),
+        FLOOR_SWITCH_4_1: (
+            (Sprite.FLOOR_SWITCH_4_1[0], Sprite.FLOOR_SWITCH_4_1[1]),
+            'FS4_on'
+        ),
 
-        # Floor switches OFF:
+        # Floor switches OFF (NO):
         FLOOR_SWITCH_1_0: (
             (Sprite.FLOOR_SWITCH_1_0[0], Sprite.FLOOR_SWITCH_1_0[1]),
             'FS1_off'
@@ -173,6 +229,50 @@ class Zone2Tiles:
         FLOOR_SWITCH_2_0: (
             (Sprite.FLOOR_SWITCH_2_0[0], Sprite.FLOOR_SWITCH_2_0[1]),
             'FS2_off'
+        ),
+        FLOOR_SWITCH_3_0: (
+            (Sprite.FLOOR_SWITCH_3_0[0], Sprite.FLOOR_SWITCH_3_0[1]),
+            'FS3_off'
+        ),
+        FLOOR_SWITCH_4_0: (
+            (Sprite.FLOOR_SWITCH_4_0[0], Sprite.FLOOR_SWITCH_4_0[1]),
+            'FS4_off'
+        ),
+
+        # Trap doors OPEN (NO):
+        TRAP_DOOR_UP_1_1: (
+            (Sprite.TRAP_DOOR_UP_1_1[0], Sprite.TRAP_DOOR_UP_1_1[1]),
+            'TD_U1_1_normally_open'
+        ),
+        TRAP_DOOR_DOWN_1_1: (
+            (Sprite.TRAP_DOOR_DOWN_1_1[0], Sprite.TRAP_DOOR_DOWN_1_1[1]),
+            'TD_d1_1_normally_open'
+        ),
+        TRAP_DOOR_LEFT_1_1: (
+            (Sprite.TRAP_DOOR_LEFT_1_1[0], Sprite.TRAP_DOOR_LEFT_1_1[1]),
+            'TD_L1_1_normally_open'
+        ),
+        TRAP_DOOR_RIGHT_1_1: (
+            (Sprite.TRAP_DOOR_RIGHT_1_1[0], Sprite.TRAP_DOOR_RIGHT_1_1[1]),
+            'TD_R1_1_normally_open'
+        ),
+
+        # Trap doors CLOSED (NC):
+        TRAP_DOOR_UP_1_0: (
+            (Sprite.TRAP_DOOR_UP_1_0[0], Sprite.TRAP_DOOR_UP_1_0[1]),
+            'TD_U1_0_normally_closed'
+        ),
+        TRAP_DOOR_DOWN_1_0: (
+            (Sprite.TRAP_DOOR_DOWN_1_0[0], Sprite.TRAP_DOOR_DOWN_1_0[1]),
+            'TD_D1_0_normally_closed'
+        ),
+        TRAP_DOOR_LEFT_1_0: (
+            (Sprite.TRAP_DOOR_LEFT_1_0[0], Sprite.TRAP_DOOR_LEFT_1_0[1]),
+            'TD_L1_0_normally_closed'
+        ),
+        TRAP_DOOR_RIGHT_1_0: (
+            (Sprite.TRAP_DOOR_RIGHT_1_0[0], Sprite.TRAP_DOOR_RIGHT_1_0[1]),
+            'TD_R1_0_normally_closed'
         ),
 
         # Switch to activate EXIT
@@ -184,49 +284,82 @@ class Zone2Tiles:
 
     # State mapping of zone elements
     state_mapping = {
-        # Wall switches ON:
+        # Wall switches ON (NC):
         # UP
-        WALL_SWITCH_UP_1_1: ('WS_U1_on', 'SD_H1_0_normally_closed',  'Wall switch present'),
-        WALL_SWITCH_UP_2_1: ('WS_U2_on', 'SD_H2_0_normally_closed',  'Wall switch present'),
+        WALL_SWITCH_UP_1_1: ('WS_U1_on', 'SD_H1_0_normally_closed',  'Wall switch up 1_1 present'),
+        WALL_SWITCH_UP_2_1: ('WS_U2_on', 'SD_H2_0_normally_closed',  'Wall switch up 2_1 present'),
         # DOWN
-        WALL_SWITCH_DOWN_1_1: ('WS_D1_on', 'SD_H1_0_normally_closed', 'Wall switch present'),
-        WALL_SWITCH_DOWN_2_1: ('WS_D2_on', 'SD_H2_0_normally_closed', 'Wall switch present'),
+        WALL_SWITCH_DOWN_1_1: ('WS_D1_on', 'SD_H1_0_normally_closed', 'Wall switch down 1_1 present'),
+        WALL_SWITCH_DOWN_2_1: ('WS_D2_on', 'SD_H2_0_normally_closed', 'Wall switch down 2_1 present'),
         # LEFT
-        WALL_SWITCH_LEFT_1_1: ('WS_L1_on', 'SD_V1_0_normally_closed', 'Wall switch present'),
-        WALL_SWITCH_LEFT_2_1: ('WS_L2_on', 'SD_V2_0_normally_closed', 'Wall switch present'),
+        WALL_SWITCH_LEFT_1_1: ('WS_L1_on', 'SD_V1_0_normally_closed', 'Wall switch left 1_1 present'),
+        WALL_SWITCH_LEFT_2_1: ('WS_L2_on', 'SD_V2_0_normally_closed', 'Wall switch left 2_1 present'),
         # RIGHT
-        WALL_SWITCH_RIGHT_1_1: ('WS_R1_on', 'SD_V1_0_normally_closed', 'Wall switch present'),
-        WALL_SWITCH_RIGHT_2_1: ('WS_R2_on', 'SD_V2_0_normally_closed', 'Wall switch present'),
+        WALL_SWITCH_RIGHT_1_1: ('WS_R1_on', 'SD_V1_0_normally_closed', 'Wall switch right 1_1 present'),
+        WALL_SWITCH_RIGHT_2_1: ('WS_R2_on', 'SD_V2_0_normally_closed', 'Wall switch right 2_1 present'),
 
 
-        # Wall switches OFF:
+        # Wall switches OFF (NO):
         # UP
-        WALL_SWITCH_UP_1_0: ('WS_U1_off', 'SD_H1_1_normally_open',  'Wall switch present'),
-        WALL_SWITCH_UP_2_0: ('WS_U2_off', 'SD_H2_1_normally_open',  'Wall switch present'),
+        WALL_SWITCH_UP_1_0: ('WS_U1_off', 'SD_H1_1_normally_open',  'Wall switch up 1_0 present'),
+        WALL_SWITCH_UP_2_0: ('WS_U2_off', 'SD_H2_1_normally_open',  'Wall switch up 2_0 present'),
         # DOWN
-        WALL_SWITCH_DOWN_1_0: ('WS_D1_off', 'SD_H1_1_normally_open', 'Wall switch present'),
-        WALL_SWITCH_DOWN_2_0: ('WS_D2_off', 'SD_H2_1_normally_open', 'Wall switch present'),
+        WALL_SWITCH_DOWN_1_0: ('WS_D1_off', 'SD_H1_1_normally_open', 'Wall switch down 1_0 present'),
+        WALL_SWITCH_DOWN_2_0: ('WS_D2_off', 'SD_H2_1_normally_open', 'Wall switch down 2_0 present'),
         # LEFT
-        WALL_SWITCH_LEFT_1_0: ('WS_L1_off', 'SD_V1_1_normally_open', 'Wall switch present'),
-        WALL_SWITCH_LEFT_2_0: ('WS_L2_off', 'SD_V2_1_normally_open', 'Wall switch present'),
+        WALL_SWITCH_LEFT_1_0: ('WS_L1_off', 'SD_V1_1_normally_open', 'Wall switch left 1_0 present'),
+        WALL_SWITCH_LEFT_2_0: ('WS_L2_off', 'SD_V2_1_normally_open', 'Wall switch left 2_0 present'),
         # RIGHT
-        WALL_SWITCH_RIGHT_1_0: ('WS_R1_off', 'SD_V1_1_normally_open', 'Wall switch present'),
-        WALL_SWITCH_RIGHT_2_0: ('WS_R2_off', 'SD_V2_1_normally_open', 'Wall switch present'),
+        WALL_SWITCH_RIGHT_1_0: ('WS_R1_off', 'SD_V1_1_normally_open', 'Wall switch right 1_0 present'),
+        WALL_SWITCH_RIGHT_2_0: ('WS_R2_off', 'SD_V2_1_normally_open', 'Wall switch right 2_0 present'),
 
 
         # Sliding doors OPEN (NO):
         # HORIZONTAL
-        SLIDING_DOOR_HORIZONTAL_1_1: ('SD_H1_1_normally_open', 'horizontal sliding door'),
-        SLIDING_DOOR_HORIZONTAL_2_1: ('SD_H2_1_normally_open', 'horizontal sliding door'),
+        SLIDING_DOOR_HORIZONTAL_1_1: ('SD_H1_1_normally_open', 'horizontal sliding door 1_1'),
+        SLIDING_DOOR_HORIZONTAL_2_1: ('SD_H2_1_normally_open', 'horizontal sliding door 2_1'),
+        SLIDING_DOOR_HORIZONTAL_3_1: ('SD_H3_1_normally_open', 'horizontal sliding door 3_1'),
+        SLIDING_DOOR_HORIZONTAL_4_1: ('SD_H4_1_normally_open', 'horizontal sliding door 4_1'),
         # VERTICAL
-        SLIDING_DOOR_VERTICAL_1_1: ('SD_V1_1_normally_open', 'vertical sliding door'),
-        SLIDING_DOOR_VERTICAL_2_1: ('SD_V2_1_normally_open', 'vertical sliding door'),
+        SLIDING_DOOR_VERTICAL_1_1: ('SD_V1_1_normally_open', 'vertical sliding door 1_1'),
+        SLIDING_DOOR_VERTICAL_2_1: ('SD_V2_1_normally_open', 'vertical sliding door 2_1'),
+        SLIDING_DOOR_VERTICAL_3_1: ('SD_V3_1_normally_open', 'vertical sliding door 3_1'),
+        SLIDING_DOOR_VERTICAL_4_1: ('SD_V4_1_normally_open', 'vertical sliding door 4_1'),
 
         # Sliding doors CLOSED (NC):
         # HORIZONTAL
-        SLIDING_DOOR_HORIZONTAL_1_0: ('SD_H1_0_normally_closed', 'horizontal sliding door'),
-        SLIDING_DOOR_HORIZONTAL_2_0: ('SD_H2_0_normally_closed', 'horizontal sliding door'),
+        SLIDING_DOOR_HORIZONTAL_1_0: ('SD_H1_0_normally_closed', 'horizontal sliding door 1_0'),
+        SLIDING_DOOR_HORIZONTAL_2_0: ('SD_H2_0_normally_closed', 'horizontal sliding door 2_0'),
+        SLIDING_DOOR_HORIZONTAL_3_0: ('SD_H3_0_normally_closed', 'horizontal sliding door 3_0'),
+        SLIDING_DOOR_HORIZONTAL_4_0: ('SD_H4_0_normally_closed', 'horizontal sliding door 4_0'),
         # VERTICAL
-        SLIDING_DOOR_VERTICAL_1_0: ('SD_V1_0_normally_closed', 'vertical sliding door'),
-        SLIDING_DOOR_VERTICAL_2_0: ('SD_V2_0_normally_closed', 'vertical sliding door')
+        SLIDING_DOOR_VERTICAL_1_0: ('SD_V1_0_normally_closed', 'vertical sliding door 1_0'),
+        SLIDING_DOOR_VERTICAL_2_0: ('SD_V2_0_normally_closed', 'vertical sliding door 2_0'),
+        SLIDING_DOOR_VERTICAL_3_0: ('SD_V3_0_normally_closed', 'vertical sliding door 3_0'),
+        SLIDING_DOOR_VERTICAL_4_0: ('SD_V4_0_normally_closed', 'vertical sliding door 4_0'),
+
+        # Floor switches ON (NO):
+        FLOOR_SWITCH_1_1: ('FS1_on', 'TD_U1_1_normally_open', 'Floor switch_1_1 present'),
+        FLOOR_SWITCH_2_1: ('FS2_on', 'TD_D1_1_normally_open', 'Floor switch_2_1 present'),
+        FLOOR_SWITCH_3_1: ('FS3_on', 'TD_L1_1_normally_open', 'Floor switch_3_1 present'),
+        FLOOR_SWITCH_4_1: ('FS4_on', 'TD_R1_1_normally_open', 'Floor switch_4_1 present'),
+        # Floor switches OFF (NC):
+        FLOOR_SWITCH_1_0: ('FS1_off', 'TD_U1_0_normally_closed', 'Floor switch_1_0 present'),
+        FLOOR_SWITCH_2_0: ('FS2_off', 'TD_D1_0_normally_closed', 'Floor switch_2_0 present'),
+        FLOOR_SWITCH_3_0: ('FS3_off', 'TD_L1_0_normally_closed', 'Floor switch_3_0 present'),
+        FLOOR_SWITCH_4_0: ('FS4_off', 'TD_R1_0_normally_closed', 'Floor switch_4_0 present'),
+
+        # Trap doors OPEN (NO)
+        TRAP_DOOR_UP_1_1:('TD_U1_1_normally_open','trap door 1_1'),
+        TRAP_DOOR_DOWN_1_1:('TD_D1_1_normally_open','trap door 1_1'),
+        TRAP_DOOR_LEFT_1_1:('TD_L1_1_normally_open','trap door 1_1'),
+        TRAP_DOOR_RIGHT_1_1:('TD_R1_1_normally_open','trap door 1_1'),
+
+        # Trap doors CLOSED (NC)
+        TRAP_DOOR_UP_1_0:('TD_U1_0_normally_closed','trap door 1_0'),
+        TRAP_DOOR_DOWN_1_0:('TD_D1_0_normally_closed','trap door 1_0'),
+        TRAP_DOOR_LEFT_1_0:('TD_L1_0_normally_closed','trap door 1_0'),
+        TRAP_DOOR_RIGHT_1_0:('TD_R1_0_normally_closed','trap door 1_0')
+
+
     }

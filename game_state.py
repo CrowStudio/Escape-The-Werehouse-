@@ -75,25 +75,57 @@ class GameState:
         # HORIZONTAL
         self.SD_H1_1_normally_open = False
         self.SD_H2_1_normally_open = False
+        self.SD_H3_1_normally_open = False
+        self.SD_H4_1_normally_open = False
         # VERTICAL
         self.SD_V1_1_normally_open = False
         self.SD_V2_1_normally_open = False
+        self.SD_V3_1_normally_open = False
+        self.SD_V4_1_normally_open = False
 
         # Variables for sliding doors CLOSED (NC):
         # HORIZONTA
         self.SD_H1_0_normally_closed = True
         self.SD_H2_0_normally_closed = True
+        self.SD_H3_0_normally_closed = True
+        self.SD_H4_0_normally_closed = True
         # VERTICAL
         self.SD_V1_0_normally_closed = True
         self.SD_V2_0_normally_closed = True
+        self.SD_V3_0_normally_closed = True
+        self.SD_V4_0_normally_closed = True
 
         # Variables for floor switch ON:
         self.FS1_on = False
         self.FS2_on = False
+        self.FS3_on = False
+        self.FS4_on = False
 
         # Variables for floor switch OFF:
         self.FS1_off = False
-        self.FS1_off = False
+        self.FS2_off = False
+        self.FS3_off = False
+        self.FS4_off = False
+
+        # Variables for trap doors OPEN (NO):
+        # UP
+        self.TD_U1_1_normally_open = True
+        # DOWN
+        self.TD_D1_1_normally_open = True
+        # LEFT
+        self.TD_L1_1_normally_open = True
+        # RIGHT
+        self.TD_R1_1_normally_open = True
+
+        # Variables for trap doors CLOSED (NC):
+        # UP
+        self.TD_U1_0_normally_closed = False
+        # DOWN
+        self.TD_D1_0_normally_closed = False
+        # LEFT
+        self.TD_L1_0_normally_closed = False
+        # RIGHT
+        self.TD_R1_0_normally_closed = False
 
         # Game options
         self.lights_out = False
