@@ -196,7 +196,6 @@ def is_push_valid(level, new_x, new_y, game_state):
     # Calculate position behind player
     behind_x = level.px + (level.px - new_x)
     behind_y = level.py + (level.py - new_y)
-
     if game_state.is_pulling:
         # Check for box behind player
         box_behind = False

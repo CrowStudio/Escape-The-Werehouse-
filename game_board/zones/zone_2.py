@@ -18,75 +18,114 @@ class ZoneTwo(BasicBoardElements):
     def __init__(self):
         super().__init__(ZONE_DATA)
 
-    def check_zone_element_state(self, element, game_state):
+    def check_zone_element_state(self, element, game_state, player_pos=None, boxes_pos=None):
         '''Check if a zone element is valid based on its type and game state.'''
         element_type = element[0]
+        element_pos = element[1]
 
-        # Look up the element in the mapping
-        if element_type in Zone2Tiles.state_mapping:
+        if element_type in Zone2Tiles.state_mapping:   # Look up the element in the mapping
             entry = Zone2Tiles.state_mapping[element_type]
+            print('Element typ: ', entry)
 
-            # Wall switches:
-            if isinstance(entry, tuple) and len(entry) == 3:
-                switch_state, door_state, message = entry
-                # Invert the state of switch
-                switch_value = getattr(game_state, switch_state)
-                setattr(game_state, switch_state, not switch_value)
-                print('Activating' if getattr(game_state, switch_state) else 'Disengaging')
-
-                door_value = getattr(game_state, door_state)
-                setattr(game_state, door_state, not door_value)  # Set door state to match switch state
-                # Sliding doors
-                if 'SD' in door_state:
-                    # For normally closed doors
-                    if 'closed' in door_state and not switch_value:
-                        print('Opening sliding door')
-                    elif 'closed' in door_state and not door_value:
-                        print('Closing sliding door')
-                    # For normally open doors
-                    if 'open' in door_state and switch_value:
-                        print('Opening sliding door')
-                    elif 'open' in door_state and not door_value:
-                        print('Closing sliding door')
-                # Trap doors
+            if isinstance(entry, tuple) and len(entry) == 4:  # Latching or momentary switches
+                switch_state, door_state, element_info, switch_type = entry
+                if 'latching' in switch_type:
+                    print('Switch type is: Latching')
+                    latching = True
                 else:
-                    # For normally closed doors
+                    print('Switch type is: Momentary')
+                    latching = False
+
+                if latching:  # Wall switches (latching)
+                    # Invert switch state
+                    switch_value = getattr(game_state, switch_state)
+                    setattr(game_state, switch_state, not switch_value)
+                    print(f'Activating {element_info}' if getattr(game_state, switch_state) else f'Deactivating {element_info}')
+
+                    # Invert door state
+                    door_value = getattr(game_state, door_state)
+                    setattr(game_state, door_state, not door_value)
+                    # Sliding doors output
                     if 'closed' in door_state and not switch_value:
-                        print('Opening trap door')
+                        print('Opening sliding door')
                     elif 'closed' in door_state and not door_value:
-                        print('Closing trap door')
-                    # For normally open doors
+                        print('Closing sliding door')
                     if 'open' in door_state and switch_value:
-                        print('Opening trap door')
+                        print('Opening sliding door')
                     elif 'open' in door_state and not door_value:
-                        print('Closing trap door')
+                        print('Closing sliding door')
 
-                return True
+                    return True
 
-            else:  # Sliding doors:
-                door_state, door = entry
+                ##############################################################
+                # Need to refactor code to be able to update this each frame #
+                ##############################################################
+
+                # else:  # Floor switches (momentary)
+                #     print('Player pos: ', player_pos)
+                #     print('Boxes pos: ', boxes_pos)
+                #     print('Element pos: ', element_pos)
+
+                #     activated = (player_pos == element_pos) or (boxes_pos and element_pos in boxes_pos)
+
+                #     if activated:
+                #         print('Engaging', element_info)
+                #         # Invert switch state
+                #         setattr(game_state, switch_state, activated)
+                #         switch_value = getattr(game_state, switch_state)
+                #         print(switch_value)
+
+                #         # Invert door state
+                #         setattr(game_state, door_state, activated)
+                #         door_value = getattr(game_state, door_state)
+                #         print(door_value)
+
+                #     else:
+                #         print('Disengaging', element_info)
+                #         # Invert switch state
+                #         setattr(game_state, switch_state, activated)
+                #         switch_value = getattr(game_state, switch_state)
+                #         print(switch_value)
+
+                #         # Invert door state
+                #         setattr(game_state, door_state, activated)
+                #         door_value = getattr(game_state, door_state)
+                #         print(door_value)
+
+                #     # Trap doors output
+                #     if 'closed' in door_state and activated:
+                #         print('Opening trap door')
+                #     elif 'closed' in door_state and not activated:
+                #         print('Closing trap door')
+                #     if 'open' in door_state and activated:
+                #         print('Opening trap door')
+                #     elif 'open' in door_state and not activated:
+                #         print('Closing trap door')
+                #     return True
+
+            else:  # Check sliding door, or trap door status
+                door_state, element_info = entry
                 active = getattr(game_state, door_state)
-                # Sliding doors
-                if 'SD' in door_state:
+                if 'SD' in door_state:  # Sliding doors status
                     if active:
-                        print('The', door, 'is closed!')
+                        print(f'The {element_info} is closed!')
                         return False
                     else:
-                        print('Passing', door)
-                        return True
-                # Trap doors
-                else:
-                    if active:
-                        print('The', door, 'is open!')
-                        return False
-                    else:
-                        print('Passing', door)
+                        print(f'Passing {element_info}')
                         return True
 
+                else:  # Trap doors status
+                    if active:
+                        print(f'The {element_info} is open!')
+                        return False
+                    else:
+                        print(f'Passing {element_info}')
+                        return True
 
         # Default case: Element not in mapping
         print(f"Warning: Unknown element {element_type} in check_zone_element_state")
         return False
+
 
     def blit_zone_element(self, element, pos, i, game_state):
         # Blit the floor tile

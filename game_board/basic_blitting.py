@@ -5,7 +5,6 @@ import os
 import random
 from random import randrange
 import time
-import game_board
 from game_board.basic_tile import BasicTile
 from game_board.elements.sprites import Sprite
 
@@ -391,7 +390,7 @@ class BasicBoardElements():
                 elif element[0] in [BasicTile.WALL, BasicTile.PIT_WALL]:
                     return False
                 else:
-                    return check_zone_element_state(element, game_state)
+                    return check_zone_element_state(element, game_state, player_pos=(new_x, new_y))
 
     def __check_for_obstructing_boxes__(self, push_x, push_y):
         # Get active box positions
@@ -439,7 +438,7 @@ class BasicBoardElements():
                     # Check for obstructing boxes
                     no_boxes = self.__check_for_obstructing_boxes__(push_x, push_y)
                     if no_boxes:
-                        return check_zone_element_state(element, game_state)
+                        return check_zone_element_state(element, game_state, boxes_pos=self.positions[1][self.level_index][0])
                     else:
                         return False
         return True

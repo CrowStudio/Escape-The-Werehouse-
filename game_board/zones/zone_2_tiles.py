@@ -286,32 +286,32 @@ class Zone2Tiles:
     state_mapping = {
         # Wall switches ON (NC):
         # UP
-        WALL_SWITCH_UP_1_1: ('WS_U1_on', 'SD_H1_0_normally_closed',  'Wall switch up 1_1 present'),
-        WALL_SWITCH_UP_2_1: ('WS_U2_on', 'SD_H2_0_normally_closed',  'Wall switch up 2_1 present'),
+        WALL_SWITCH_UP_1_1: ('WS_U1_on', 'SD_H1_0_normally_closed',  'wall switch up 1_1', 'latching'),
+        WALL_SWITCH_UP_2_1: ('WS_U2_on', 'SD_H2_0_normally_closed',  'wall switch up 2_1', 'latching'),
         # DOWN
-        WALL_SWITCH_DOWN_1_1: ('WS_D1_on', 'SD_H1_0_normally_closed', 'Wall switch down 1_1 present'),
-        WALL_SWITCH_DOWN_2_1: ('WS_D2_on', 'SD_H2_0_normally_closed', 'Wall switch down 2_1 present'),
+        WALL_SWITCH_DOWN_1_1: ('WS_D1_on', 'SD_H1_0_normally_closed', 'wall switch down 1_1', 'latching'),
+        WALL_SWITCH_DOWN_2_1: ('WS_D2_on', 'SD_H2_0_normally_closed', 'wall switch down 2_1', 'latching'),
         # LEFT
-        WALL_SWITCH_LEFT_1_1: ('WS_L1_on', 'SD_V1_0_normally_closed', 'Wall switch left 1_1 present'),
-        WALL_SWITCH_LEFT_2_1: ('WS_L2_on', 'SD_V2_0_normally_closed', 'Wall switch left 2_1 present'),
+        WALL_SWITCH_LEFT_1_1: ('WS_L1_on', 'SD_V1_0_normally_closed', 'wall switch left 1_1', 'latching'),
+        WALL_SWITCH_LEFT_2_1: ('WS_L2_on', 'SD_V2_0_normally_closed', 'wall switch left 2_1', 'latching'),
         # RIGHT
-        WALL_SWITCH_RIGHT_1_1: ('WS_R1_on', 'SD_V1_0_normally_closed', 'Wall switch right 1_1 present'),
-        WALL_SWITCH_RIGHT_2_1: ('WS_R2_on', 'SD_V2_0_normally_closed', 'Wall switch right 2_1 present'),
+        WALL_SWITCH_RIGHT_1_1: ('WS_R1_on', 'SD_V1_0_normally_closed', 'wall switch right 1_1', 'latching'),
+        WALL_SWITCH_RIGHT_2_1: ('WS_R2_on', 'SD_V2_0_normally_closed', 'wall switch right 2_1', 'latching'),
 
 
         # Wall switches OFF (NO):
         # UP
-        WALL_SWITCH_UP_1_0: ('WS_U1_off', 'SD_H1_1_normally_open',  'Wall switch up 1_0 present'),
-        WALL_SWITCH_UP_2_0: ('WS_U2_off', 'SD_H2_1_normally_open',  'Wall switch up 2_0 present'),
+        WALL_SWITCH_UP_1_0: ('WS_U1_off', 'SD_H1_1_normally_open',  'wall switch up 1_0', 'latching'),
+        WALL_SWITCH_UP_2_0: ('WS_U2_off', 'SD_H2_1_normally_open',  'wall switch up 2_0', 'latching'),
         # DOWN
-        WALL_SWITCH_DOWN_1_0: ('WS_D1_off', 'SD_H1_1_normally_open', 'Wall switch down 1_0 present'),
-        WALL_SWITCH_DOWN_2_0: ('WS_D2_off', 'SD_H2_1_normally_open', 'Wall switch down 2_0 present'),
+        WALL_SWITCH_DOWN_1_0: ('WS_D1_off', 'SD_H1_1_normally_open', 'wall switch down 1_0', 'latching'),
+        WALL_SWITCH_DOWN_2_0: ('WS_D2_off', 'SD_H2_1_normally_open', 'wall switch down 2_0', 'latching'),
         # LEFT
-        WALL_SWITCH_LEFT_1_0: ('WS_L1_off', 'SD_V1_1_normally_open', 'Wall switch left 1_0 present'),
-        WALL_SWITCH_LEFT_2_0: ('WS_L2_off', 'SD_V2_1_normally_open', 'Wall switch left 2_0 present'),
+        WALL_SWITCH_LEFT_1_0: ('WS_L1_off', 'SD_V1_1_normally_open', 'wall switch left 1_0', 'latching'),
+        WALL_SWITCH_LEFT_2_0: ('WS_L2_off', 'SD_V2_1_normally_open', 'wall switch left 2_0', 'latching'),
         # RIGHT
-        WALL_SWITCH_RIGHT_1_0: ('WS_R1_off', 'SD_V1_1_normally_open', 'Wall switch right 1_0 present'),
-        WALL_SWITCH_RIGHT_2_0: ('WS_R2_off', 'SD_V2_1_normally_open', 'Wall switch right 2_0 present'),
+        WALL_SWITCH_RIGHT_1_0: ('WS_R1_off', 'SD_V1_1_normally_open', 'wall switch right 1_0', 'latching'),
+        WALL_SWITCH_RIGHT_2_0: ('WS_R2_off', 'SD_V2_1_normally_open', 'wall switch right 2_0', 'latching'),
 
 
         # Sliding doors OPEN (NO):
@@ -339,15 +339,15 @@ class Zone2Tiles:
         SLIDING_DOOR_VERTICAL_4_0: ('SD_V4_0_normally_closed', 'vertical sliding door 4_0'),
 
         # Floor switches ON (NO):
-        FLOOR_SWITCH_1_1: ('FS1_on', 'TD_U1_1_normally_open', 'Floor switch_1_1 present'),
-        FLOOR_SWITCH_2_1: ('FS2_on', 'TD_D1_1_normally_open', 'Floor switch_2_1 present'),
-        FLOOR_SWITCH_3_1: ('FS3_on', 'TD_L1_1_normally_open', 'Floor switch_3_1 present'),
-        FLOOR_SWITCH_4_1: ('FS4_on', 'TD_R1_1_normally_open', 'Floor switch_4_1 present'),
+        FLOOR_SWITCH_1_1: ('FS1_on', 'TD_U1_1_normally_open', 'floor switch_1_1', 'momentary'),
+        FLOOR_SWITCH_2_1: ('FS2_on', 'TD_D1_1_normally_open', 'floor switch_2_1', 'momentary'),
+        FLOOR_SWITCH_3_1: ('FS3_on', 'TD_L1_1_normally_open', 'floor switch_3_1', 'momentary'),
+        FLOOR_SWITCH_4_1: ('FS4_on', 'TD_R1_1_normally_open', 'floor switch_4_1', 'momentary'),
         # Floor switches OFF (NC):
-        FLOOR_SWITCH_1_0: ('FS1_off', 'TD_U1_0_normally_closed', 'Floor switch_1_0 present'),
-        FLOOR_SWITCH_2_0: ('FS2_off', 'TD_D1_0_normally_closed', 'Floor switch_2_0 present'),
-        FLOOR_SWITCH_3_0: ('FS3_off', 'TD_L1_0_normally_closed', 'Floor switch_3_0 present'),
-        FLOOR_SWITCH_4_0: ('FS4_off', 'TD_R1_0_normally_closed', 'Floor switch_4_0 present'),
+        FLOOR_SWITCH_1_0: ('FS1_off', 'TD_U1_0_normally_closed', 'floor switch_1_0', 'momentary'),
+        FLOOR_SWITCH_2_0: ('FS2_off', 'TD_D1_0_normally_closed', 'floor switch_2_0', 'momentary'),
+        FLOOR_SWITCH_3_0: ('FS3_off', 'TD_L1_0_normally_closed', 'floor switch_3_0', 'momentary'),
+        FLOOR_SWITCH_4_0: ('FS4_off', 'TD_R1_0_normally_closed', 'floor switch_4_0', 'momentary'),
 
         # Trap doors OPEN (NO)
         TRAP_DOOR_UP_1_1:('TD_U1_1_normally_open','trap door 1_1'),
