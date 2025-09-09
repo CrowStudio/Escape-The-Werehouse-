@@ -359,7 +359,7 @@ class Zone2Tiles:
         TRAP_DOOR_UP_1_0:('TD_U1_0_normally_closed','trap door 1_0'),
         TRAP_DOOR_DOWN_1_0:('TD_D1_0_normally_closed','trap door 1_0'),
         TRAP_DOOR_LEFT_1_0:('TD_L1_0_normally_closed','trap door 1_0'),
-        TRAP_DOOR_RIGHT_1_0:('TD_R1_0_normally_closed','trap door 1_0')
+        TRAP_DOOR_RIGHT_1_0:('TD_R1_0_normally_closed','trap door 1_0'),
 
-
+        ACTIVATE_EXIT:('activate_exit', 'exit', 'activate exit', 'momentary')
     }

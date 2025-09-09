@@ -142,7 +142,7 @@
                 3
             ],
             "player_direction": "left",
-            "exit_active": true,
+            "exit_active": false,
             "score": 35
         },
         {

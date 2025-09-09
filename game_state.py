@@ -29,7 +29,7 @@ class GameState:
         # Variable for active/inactive Exit
         self.exit = False
         # Variable for Exit switch
-        self.activate_exit = True
+        self.activate_exit = False
 
         # Variables for active/inactive Pit
         self.pit1 = True

@@ -57,51 +57,52 @@ class ZoneTwo(BasicBoardElements):
 
                     return True
 
+
+                else:  # Floor switches (momentary)
+                    print('Player pos: ', player_pos)
+                    print('Boxes pos: ', boxes_pos)
+                    print('Element pos: ', element_pos)
+
                 ##############################################################
                 # Need to refactor code to be able to update this each frame #
                 ##############################################################
 
-                # else:  # Floor switches (momentary)
-                #     print('Player pos: ', player_pos)
-                #     print('Boxes pos: ', boxes_pos)
-                #     print('Element pos: ', element_pos)
+                    activated = (player_pos == element_pos) or (boxes_pos and element_pos in boxes_pos)
 
-                #     activated = (player_pos == element_pos) or (boxes_pos and element_pos in boxes_pos)
+                    if activated:
+                        print('Engaging', element_info)
+                        # Invert switch state
+                        setattr(game_state, switch_state, activated)
+                        switch_value = getattr(game_state, switch_state)
+                        print(switch_value)
 
-                #     if activated:
-                #         print('Engaging', element_info)
-                #         # Invert switch state
-                #         setattr(game_state, switch_state, activated)
-                #         switch_value = getattr(game_state, switch_state)
-                #         print(switch_value)
+                        # Invert door state
+                        setattr(game_state, door_state, activated)
+                        door_value = getattr(game_state, door_state)
+                        print(door_value)
 
-                #         # Invert door state
-                #         setattr(game_state, door_state, activated)
-                #         door_value = getattr(game_state, door_state)
-                #         print(door_value)
+                    else:
+                        print('Disengaging', element_info)
+                        # Invert switch state
+                        setattr(game_state, switch_state, activated)
+                        switch_value = getattr(game_state, switch_state)
+                        print(switch_value)
 
-                #     else:
-                #         print('Disengaging', element_info)
-                #         # Invert switch state
-                #         setattr(game_state, switch_state, activated)
-                #         switch_value = getattr(game_state, switch_state)
-                #         print(switch_value)
+                        # Invert door state
+                        setattr(game_state, door_state, activated)
+                        door_value = getattr(game_state, door_state)
+                        print(door_value)
 
-                #         # Invert door state
-                #         setattr(game_state, door_state, activated)
-                #         door_value = getattr(game_state, door_state)
-                #         print(door_value)
-
-                #     # Trap doors output
-                #     if 'closed' in door_state and activated:
-                #         print('Opening trap door')
-                #     elif 'closed' in door_state and not activated:
-                #         print('Closing trap door')
-                #     if 'open' in door_state and activated:
-                #         print('Opening trap door')
-                #     elif 'open' in door_state and not activated:
-                #         print('Closing trap door')
-                #     return True
+                    # Trap doors output
+                    if 'closed' in door_state and activated:
+                        print('Opening trap door')
+                    elif 'closed' in door_state and not activated:
+                        print('Closing trap door')
+                    if 'open' in door_state and activated:
+                        print('Opening trap door')
+                    elif 'open' in door_state and not activated:
+                        print('Closing trap door')
+                    return True
 
             else:  # Check sliding door, or trap door status
                 door_state, element_info = entry
