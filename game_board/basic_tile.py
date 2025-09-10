@@ -27,4 +27,4 @@ class BasicTile:
             FLOOR,
             WALL,
             EXIT
-        }
+    }

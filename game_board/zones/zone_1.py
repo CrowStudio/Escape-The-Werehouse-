@@ -25,8 +25,11 @@ class ZoneOne(BasicBoardElements):
     def blit_zone_element(self, element, pos, i, game_state):
         pass
 
-    def blit_level(self, game_state):
-        super().blit_basic_elements(game_state, blit_zone_element = self.blit_zone_element)
+    def blit_level_elements(self, game_state):
+        super().blit_level_elements(game_state, blit_zone_element = self.blit_zone_element)
+
+    def draw_status_bar(self, game_state):
+        super().draw_status_bar(game_state)
 
     def validate_move(self, new_x, new_y, game_state):
         return super().validate_move(new_x, new_y, game_state, check_zone_element_state=self.check_zone_element_state)

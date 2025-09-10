@@ -274,7 +274,7 @@ class BasicBoardElements():
 
 
     # Blit tiles for level n with the help of dispatch
-    def blit_basic_elements(self, game_state, blit_zone_element=None):
+    def blit_level_elements(self, game_state, blit_zone_element=None):
         # dispatch: tile_code → (method, args_info)
         dispatch = {
             0: (self.__start__, None),
@@ -442,7 +442,6 @@ class BasicBoardElements():
                         return False
         return True
 
-
     # Generic box blitter
     def __blit_box__(self, index, travel, move):
         """
@@ -491,6 +490,19 @@ class BasicBoardElements():
         '''blit_box4'''
         self.__blit_box__(3, b4_travel, b4_move)
 
+    def blit_level(self, game_state):
+        self.game_board.fill((30, 30, 30))
+        self.blit_level_elements(game_state)
+        self.blit_box_1(0, 0)
+        self.blit_box_2(0, 0)
+        self.blit_box_3(0, 0)
+        self.blit_box_4(0, 0)
+        self.blit_player(game_state, 0)
+
+        # Draw the status bar at the top
+        bar_rect = pygame.Rect(0, 0, BasicTile.BOARD_WIDTH, BasicTile.HEIGHT_OFFSET)
+        pygame.draw.rect(self.game_board, (50, 50, 50), bar_rect)  # Dark gray color for the bar
+
 
     # Blit player
     def blit_player(self, game_state, p_move):
@@ -533,6 +545,63 @@ class BasicBoardElements():
                 self.game_board.blit(Sprite.PLAYER, (self.px, self.py + BasicTile.HEIGHT_OFFSET))
 
 
+    def draw_status_bar(self, game_state):
+        font = pygame.font.SysFont('Lucida Console', 24)  # Font for UI text
+        tutorial_font = pygame.font.SysFont('Lucida Console', 12)  # Font for tutorial text
+        # Draw the status bar at the top
+        bar_rect = pygame.Rect(0, 0, BasicTile.BOARD_WIDTH, BasicTile.HEIGHT_OFFSET)
+        pygame.draw.rect(self.game_board, (50, 50, 50), bar_rect)  # Dark gray color for the bar
+
+        # Set caption and render the text inside the status bar
+        if game_state.game and game_state.is_playing:
+            # Set window caption
+            pygame.display.set_caption(f'Escape the Werehouse! - {self.map_title[1][game_state.current_level]}')
+            # Set status bar
+            moves_text = font.render(f'Moves: {game_state.moves}', True, (255, 255, 255))
+            total_moves_text = font.render(f'Total Moves: {game_state.total_moves}', True, (255, 255, 255))
+            lives_text = font.render(f'Lives: {game_state.lives}', True, (255, 255, 255))
+            # Render status bar
+            self.game_board.blit(moves_text, (10, 10))
+            self.game_board.blit(total_moves_text, (200, 10))
+            self.game_board.blit(lives_text, (480, 10))
+        elif self.is_playing:
+            # Set window caption
+            pygame.display.set_caption(f'Escape the Werehouse! - Tutorial {game_state.current_level + 1}')
+            # Set status bar
+            tutorial_text = tutorial_font.render(f'{self.map_title[0][game_state.current_level]}', True, (255, 255, 255))
+            # Render status bar
+            self.game_board.blit(tutorial_text, (15, 15))
+
+
+    def blit_status_bar(self, game_state):
+            font = pygame.font.SysFont('Lucida Console', 24)  # Font for UI text
+            pygame.display.set_caption('Escape the Werehouse!')
+
+            # Draw the status bar at the top
+            bar_rect = pygame.Rect(0, 0, BasicTile.BOARD_WIDTH, BasicTile.HEIGHT_OFFSET)
+            pygame.draw.rect(self.game_board, (50, 50, 50), bar_rect)  # Dark gray color for the bar
+
+            # Render the text inside the bar
+            moves_text = font.render(f'Moves: {game_state.moves}', True, (255, 255, 255))
+            total_moves_text = font.render(f'Total Moves: {game_state.total_moves}', True, (255, 255, 255))
+            lives_text = font.render(f'Lives: {game_state.lives}', True, (255, 255, 255))
+            self.game_board.blit(moves_text, (10, 10))
+            self.game_board.blit(total_moves_text, (200, 10))
+            self.game_board.blit(lives_text, (480, 10))
+
+
+    def __render_tutorial_bar__(self, game_state):
+        # Tutorial bar
+        tutorial_font = pygame.font.SysFont('Lucida Console', 12)  # Font for tutorial text
+        tutorial_text = tutorial_font.render(f'{self.map_title[0][game_state.current_level]}', True, (255, 255, 255)) # Set window bar
+
+        bar_rect = pygame.Rect(0, 0, self.game_board.get_width(), BasicTile.HEIGHT_OFFSET)
+
+        pygame.display.set_caption(f'Escape the Werehouse! - Tutorial {game_state.current_level + 1}')
+        pygame.draw.rect(self.game_board, (50, 50, 50), bar_rect)  # Dark gray color for the bar
+        self.game_board.blit(tutorial_text, (15, 15))
+
+
     # Blit level score (stars), identical logic but shorter
     def blit_stars(self, game_state):
         '''blit_stars'''
@@ -551,9 +620,30 @@ class BasicBoardElements():
 
         # Blit numbers of highlighted Stars
         self.game_board.blit(Sprite.STARS[count], (186, 155 - BasicTile.HEIGHT_OFFSET))
-        pygame.display.update()
+        # Update the display
+        pygame.display.flip()
         # Pause for 2 seconds to show Stars
         time.sleep(2)
+
+
+    # Show GAME OVER screen when out of lives
+    def display_game_over(self):
+        self.dead_font = pygame.font.SysFont('Arial Black', 72)  # Biggest font for GAME OVER
+
+        # Clear the screen
+        self.game_board.fill((10, 10, 10))
+        pygame.display.set_caption('GAME OVER')
+
+        # Render "GAME OVER" text
+        game_over_text = self.dead_font.render('GAME OVER', True, (220, 0, 10))
+        game_over_center = game_over_text.get_rect(center=(self.game_board.get_width() // 2, 200))
+        self.game_board.blit(game_over_text, game_over_center)
+
+        # Update the display
+        pygame.display.flip()
+
+        # Wait for a few seconds before returning to the start screen
+        pygame.time.wait(3000)
 
 
     def __lerp_angle__(self, current, target, factor):
@@ -691,38 +781,38 @@ class BasicBoardElements():
 
             if first_iteration:
                 # First iteration: no mask
-                self.__blit_level_elements__(game_state)
+                self.blit_level(game_state)
 
                 if game_state.game == True:
                     # Render Status bar
-                    self.__render_status_bar__(game_state)
+                    self.blit_status_bar(game_state)
                 else:
                     # Render Tutorial bar
                     self. __render_tutorial_bar__(game_state)
-                pygame.display.update()
+                pygame.display.flip()
                 time.sleep(on_time)
                 first_iteration = False
             else:
                 # Apply the on time with a mask of lower opacity
                 mask = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
                 mask.fill((0, 0, 0, 76))  # Lower opacity
-                self.__blit_level_elements__(game_state)
+                self.blit_level(game_state)
                 self.game_board.blit(mask, (0, 0))
 
                 if game_state.game == True:
                     # Render Status bar
-                    self.__render_status_bar__(game_state)
+                    self.blit_status_bar(game_state)
                 else:
                     # Render Tutorial bar
                     self. __render_tutorial_bar__(game_state)
-                pygame.display.update()
+                pygame.display.flip()
                 time.sleep(on_time)
 
             # Apply the off time with a mask of higher opacity
             mask = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
             mask.fill((0, 0, 0, 254))  # Higher opacity
             self.game_board.fill((30, 30, 30))
-            self.blit_basic_elements(game_state)
+            self.blit_level_elements(game_state)
             self.blit_box_1(0, 0)
             self.blit_box_2(0, 0)
             self.blit_box_3(0, 0)
@@ -731,11 +821,11 @@ class BasicBoardElements():
 
             if game_state.game == True:
                 # render Status bar
-                self.__render_status_bar__(game_state)
+                self.blit_status_bar(game_state)
             else:
                 # render Tutorial bar
                 self. __render_tutorial_bar__(game_state)
-            pygame.display.update()
+            pygame.display.flip()
             time.sleep(off_time)
 
         # Add a delay before turning on the flashlight beam
@@ -744,7 +834,7 @@ class BasicBoardElements():
 
         # Turn on the flashlight beam
         self.apply_blackout(game_state)
-        pygame.display.update()
+        pygame.display.flip()
 
     def fade_out(self, game_state):
         """Create a fade-out effect."""
@@ -767,7 +857,7 @@ class BasicBoardElements():
         for alpha in range(start_alpha, end_alpha, inc_alpha):  # Increase alpha gradually
             fade.set_alpha(alpha)
             self.game_board.blit(fade, (0, 0))
-            pygame.display.update()
+            pygame.display.flip()
             if alpha == 0:
                 pygame.time.wait(init)
             pygame.time.wait(delay)  # Small delay to control the speed of the fade
@@ -780,7 +870,7 @@ class BasicBoardElements():
 
             # Blit the warning text
             self.game_board.blit(warning_text, warning_text_rect)
-            pygame.display.update()
+            pygame.display.flip()
 
             # Wait for a moment to let the player read the warning
             pygame.time.wait(1500)  # Wait for 1.5 seconds
@@ -793,51 +883,16 @@ class BasicBoardElements():
         # Decrease alpha gradually from 255 (opaque) to 0 (transparent)
         for alpha in range(255, 0, -10):
             # Re-blit the game state each frame
-            self.__blit_level_elements__(game_state)
+            self.blit_level(game_state)
 
             if game_state.game == True:
                 # Render Status bar
-                self.__render_status_bar__(game_state)
+                self.blit_status_bar(game_state)
             else:
                 # Render Tutorial bar
                 self.__render_tutorial_bar__(game_state)
             fade.set_alpha(alpha)
             self.game_board.blit(fade, (0, 0))
-            pygame.display.update()
+            pygame.display.flip()
             pygame.time.wait(30)
         return
-
-    def __render_status_bar__(self, game_state):
-        # Status bar
-        font = pygame.font.SysFont('Lucida Console', 24)  # Font for UI text
-        moves_text = font.render(f'Moves: {game_state.moves}', True, (255, 255, 255))
-        total_moves_text = font.render(f'Total Moves: {game_state.total_moves}', True, (255, 255, 255))
-        lives_text = font.render(f'Lives: {game_state.lives}', True, (255, 255, 255))
-
-        bar_rect = pygame.Rect(0, 0, self.game_board.get_width(), BasicTile.HEIGHT_OFFSET)
-
-        pygame.display.set_caption(f'Escape the Werehouse! - {self.map_title[1][game_state.current_level]}')
-        pygame.draw.rect(self.game_board, (50, 50, 50), bar_rect)  # Dark gray color for the bar
-        self.game_board.blit(moves_text, (10, 10))
-        self.game_board.blit(total_moves_text, (200, 10))
-        self.game_board.blit(lives_text, (480, 10))
-
-    def __render_tutorial_bar__(self, game_state):
-        # Tutorial bar
-        tutorial_font = pygame.font.SysFont('Lucida Console', 12)  # Font for tutorial text
-        tutorial_text = tutorial_font.render(f'{self.map_title[0][game_state.current_level]}', True, (255, 255, 255)) # Set window bar
-
-        bar_rect = pygame.Rect(0, 0, self.game_board.get_width(), BasicTile.HEIGHT_OFFSET)
-
-        pygame.display.set_caption(f'Escape the Werehouse! - Tutorial {game_state.current_level + 1}')
-        pygame.draw.rect(self.game_board, (50, 50, 50), bar_rect)  # Dark gray color for the bar
-        self.game_board.blit(tutorial_text, (15, 15))
-
-    def __blit_level_elements__(self, game_state):
-        self.game_board.fill((30, 30, 30))
-        self.blit_basic_elements(game_state)
-        self.blit_box_1(0, 0)
-        self.blit_box_2(0, 0)
-        self.blit_box_3(0, 0)
-        self.blit_box_4(0, 0)
-        self.blit_player(game_state, 0)

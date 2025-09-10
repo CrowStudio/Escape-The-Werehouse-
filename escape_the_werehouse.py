@@ -417,7 +417,7 @@ def main():
                     level.current_zone.game_board.fill((30, 30, 30))
 
                     # Render the rest of the game elements
-                    level.current_zone.blit_level(game_state)
+                    level.current_zone.blit_level_elements(game_state)
                     level.current_zone.blit_box_1(0, 0)
                     level.current_zone.blit_box_2(0, 0)
                     level.current_zone.blit_box_3(0, 0)
@@ -435,8 +435,9 @@ def main():
                     if game_state.lights_out:
                         level.current_zone.apply_blackout(game_state)
 
-                    game_state.draw_status_bar()
+                    level.current_zone.draw_status_bar(game_state)
 
+                    # Update the display
                     pygame.display.flip()
                     # Cap frame rate
                     clock.tick(FPS)
