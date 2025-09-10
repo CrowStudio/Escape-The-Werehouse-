@@ -231,7 +231,7 @@ def is_push_valid(level, new_x, new_y, game_state):
             push_y = new_y + (new_y - level.py)
 
             # Check if push position is valid
-            push_valid = level.validate_push(box_data, push_x, push_y, game_state)
+            push_valid = level.validate_push(push_x, push_y, game_state)
             if not push_valid:
                 return False
 

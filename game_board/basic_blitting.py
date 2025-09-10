@@ -421,12 +421,11 @@ class BasicBoardElements():
         return True
 
     # Validate push
-    def validate_push(self, box_data, push_x, push_y, game_state, check_zone_element_state=None):
+    def validate_push(self, push_x, push_y, game_state, check_zone_element_state=None):
         if not self.is_box_within_game_board(push_x, push_y):
             print(f"Push ({push_x}, {push_y}) outside the board is not valid!")
             return False
 
-        box_num, box_pos = box_data[0][0], box_data[1]
         for element in self.elements:
             if element[1] == (push_x, push_y):
                 if element[0] in [BasicTile.START, BasicTile.FLOOR, BasicTile.EXIT,

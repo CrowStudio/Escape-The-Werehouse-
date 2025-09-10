@@ -154,5 +154,5 @@ class ZoneTwo(BasicBoardElements):
     def validate_move(self, new_x, new_y, game_state):
         return super().validate_move(new_x, new_y, game_state, check_zone_element_state=self.check_zone_element_state)
 
-    def validate_push(self, box_data, push_x, push_y, game_state):
-        return super().validate_push(box_data, push_x, push_y, game_state, check_zone_element_state=self.check_zone_element_state)
+    def validate_push(self, push_x, push_y, game_state):
+        return super().validate_push(push_x, push_y, game_state, check_zone_element_state=self.check_zone_element_state)
