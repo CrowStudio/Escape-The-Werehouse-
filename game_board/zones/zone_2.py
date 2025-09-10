@@ -104,6 +104,10 @@ class ZoneTwo(BasicBoardElements):
                         print('Closing trap door')
                     return True
 
+            # Basic tiles are OK
+            elif element_type in self.basic_tile:
+                return True
+
             else:  # Check sliding door, or trap door status
                 door_state, element_info = entry
                 active = getattr(game_state, door_state)
