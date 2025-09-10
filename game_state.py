@@ -269,7 +269,7 @@ class GameState:
             BasicTile.PIT4: ('pit4', 'in_pit4'),
         }
 
-        # Iterate over the elements of the level
+        # Look for pit
         for element in self.level.elements:
             position, pit_type = element[1], element[0]
 
@@ -321,26 +321,25 @@ class GameState:
                         self.__blit_level_elements__()
 
                         # Debug statement to check player position
-                        print(f"Blitting player at pit position: ({self.level.px}, {self.level.py})")
+                        print(f"Oh no! Player fell into pit: {element[0]} (C:{int(self.level.px/100+1)}, R:{int(self.level.py/100+1)})")
 
                         pygame.display.flip()
 
                         # Fade out effect
                         self.level.fade_out(self)
 
-                        if self.lives <= 0:
-                            self.__display_game_over__()
-                            self.is_playing = False
-                        else:
-                            # Reset level
+                        # Reset level
+                        if self.lives > 0:
                             self.new_level = True
                             self.total_moves += 1
                             self.moves = 0
                             self.prev_x, self.prev_y = self.level.px, self.level.py
-
                             return False
-
-                        return True
+                        # Game Over
+                        else:
+                            self.__display_game_over__()
+                            self.is_playing = False
+                            return True
 
     # Blit the level and boxes
     def __blit_level_elements__(self):

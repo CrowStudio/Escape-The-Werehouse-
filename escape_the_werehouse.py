@@ -269,6 +269,10 @@ def move_player_and_boxes(level, audio, game_state):
         print('Cannot move in that direction!')
         return False  # Don't move if invalid
 
+    # Check if player falls into pit
+    if game_state.check_player_in_pit(new_x, new_y, audio):
+        return False  # Movement was valid but player fell
+
     # Handle box movement
     if game_state.is_pulling:
         # Calculate position behind player
@@ -322,13 +326,6 @@ def move_player_and_boxes(level, audio, game_state):
                 audio.play_sound('fall')
             else:
                 audio.play_sound('move')
-
-
-
-    # Check if player falls into pit
-    if game_state.check_player_in_pit(new_x, new_y, audio):
-        print('Oh no!')
-        return False  # Movement was valid but player fell
 
     # Move player to new position
     print('Moving')
