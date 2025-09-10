@@ -23,7 +23,6 @@ TUTORIAL_PATH = os.path.join(DIR_PATH, 'zones','level_maps', 'tutorial_maps.json
 with open(TUTORIAL_PATH, 'r') as file:
     TUTORIAL_DATA = json.load(file)
 
-
 # CLASS for setup of basic level variables and blitting of basic elements
 class BasicBoardElements():
     '''BasicBoardElements'''
@@ -31,7 +30,7 @@ class BasicBoardElements():
     def __init__(self, ZONE_DATA):
         '''__init__'''
         print("BasicBoardElements instance created")  # Debug statement
-        self.basic_tile = BasicTile
+        self.basic_tile = BasicTile()
 
         # Initiate variables to store levels from the JSON data
         self.tutorial_maps = []

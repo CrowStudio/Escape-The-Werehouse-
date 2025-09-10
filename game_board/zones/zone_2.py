@@ -1,6 +1,7 @@
 ﻿import pygame
 import json
 import os
+from game_board.basic_tile import BasicTile
 from game_board.basic_blitting import BasicBoardElements
 from game_board.elements.sprites import Sprite
 from game_board.zones.zone_2_tiles import Zone2Tiles
@@ -122,6 +123,10 @@ class ZoneTwo(BasicBoardElements):
                     else:
                         print(f'Passing {element_info}')
                         return True
+
+        # Basic tiles are OK
+        elif element_type in self.basic_tile.mapping:
+            return True
 
         # Default case: Element not in mapping
         print(f"Warning: Unknown element {element_type} in check_zone_element_state")
