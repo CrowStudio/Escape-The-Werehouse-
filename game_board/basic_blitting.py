@@ -203,7 +203,7 @@ class BasicBoardElements():
         if game_state.exit:
             self.game_board.blit(Sprite.EXIT[1], pos)
         # Else
-        # - Blit exit_disengaged
+        # - Blit exit_inactive
         else:
             self.game_board.blit(Sprite.EXIT[0], pos)
 

@@ -107,7 +107,7 @@ class Sprite:
     ]
 
     EXIT = [
-        pygame.image.load(os.path.join(graphics_dir, 'exit_disengaged.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'exit_inactive.png')),
         pygame.image.load(os.path.join(graphics_dir, 'exit_active.png'))
     ]
 
