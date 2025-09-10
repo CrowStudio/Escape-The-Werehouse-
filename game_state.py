@@ -84,7 +84,7 @@ class GameState:
         self.SD_V4_1_normally_open = False
 
         # Variables for sliding doors CLOSED (NC):
-        # HORIZONTA
+        # HORIZONTAL
         self.SD_H1_0_normally_closed = True
         self.SD_H2_0_normally_closed = True
         self.SD_H3_0_normally_closed = True
@@ -266,23 +266,24 @@ class GameState:
             BasicTile.PIT1: ('pit1', 'in_pit1'),
             BasicTile.PIT2: ('pit2', 'in_pit2'),
             BasicTile.PIT3: ('pit3', 'in_pit3'),
-            BasicTile.PIT4: ('pit4', 'in_pit4'),
+            BasicTile.PIT4: ('pit4', 'in_pit4')
         }
 
-        # Look for pit
+        # Look for pit element
         for element in self.level.elements:
             position, pit_type = element[1], element[0]
 
             # Check if the current element is a pit and matches the given coordinates
             if position == (bx, by) and pit_type in pit_mapping:
-                pit_attr, in_pit_attr = pit_mapping[pit_type]
+                pit_state, in_pit = pit_mapping[pit_type]
+                pit_active = getattr(self, pit_state)
 
                 # Only proceed if the pit is active
-                if getattr(self, pit_attr):
+                if pit_active:
                     # Deactivate the pit and set the box number in the pit
-                    setattr(self, pit_attr, False)
-                    setattr(self, in_pit_attr, box_num)
-                    print(f"Box {box_num} fell into pit {pit_type}")  # Debug statement
+                    setattr(self, pit_state, False)
+                    setattr(self, in_pit, box_num)
+                    print(f"Box {box_num} fell into pit {pit_type} (C:{int(bx/100+1)}, R:{int(by/100+1)})")  # Debug statement
 
                     if box_num == 1:
                         self.level.box1 = False
@@ -296,50 +297,61 @@ class GameState:
 
                 return False
 
-    def check_player_in_pit(self, x, y, audio):
+    def check_player_in_pit(self, px, py, audio):
         if self.player_in_pit:
             return False
 
+        # Mapping of pit types to their corresponding attributes
+        pit_mapping = {
+            BasicTile.PIT1: ('pit1'),
+            BasicTile.PIT2: ('pit2'),
+            BasicTile.PIT3: ('pit3'),
+            BasicTile.PIT4: ('pit4')
+        }
+
+        # Look for pit element
         for element in self.level.elements:
-            if element[1] == (x, y):
-                if element[0] in [BasicTile.PIT1, BasicTile.PIT2, BasicTile.PIT3, BasicTile.PIT4]:
-                    # Check if pit is not filled (active)
-                    if ((element[0] == BasicTile.PIT1 and self.pit1) or
-                        (element[0] == BasicTile.PIT2 and self.pit2) or
-                        (element[0] == BasicTile.PIT3 and self.pit3) or
-                        (element[0] == BasicTile.PIT4 and self.pit4)):
-                        # Player fell in pit
-                        audio.play_sound('fall')
-                        self.lives -= 1
-                        self.player_in_pit = True
-                        # Reset player movement
-                        self.travel = 0
+            position, pit_type = element[1], element[0]
 
-                        # Update player position to the pit
-                        self.level.px, self.level.py = x, y
+            # Check if the current element is a pit and matches the given coordinates
+            if position == (px, py) and pit_type in pit_mapping:
+                pit_state = pit_mapping[pit_type]
+                pit_active = getattr(self, pit_state)
 
-                        self.__blit_level_elements__()
+                # Only proceed if the pit is active
+                if pit_active:
+                    # Player fell in pit
+                    audio.play_sound('fall')
+                    self.lives -= 1
+                    self.player_in_pit = True
+                    # Reset player movement
+                    self.travel = 0
 
-                        # Debug statement to check player position
-                        print(f"Oh no! Player fell into pit: {element[0]} (C:{int(self.level.px/100+1)}, R:{int(self.level.py/100+1)})")
+                    # Update player position to the pit
+                    self.level.px, self.level.py = px, py
 
-                        pygame.display.flip()
+                    self.__blit_level_elements__()
 
-                        # Fade out effect
-                        self.level.fade_out(self)
+                    # Debug statement to check player position
+                    print(f"Oh no! Player fell into pit {pit_type} (C:{int(px/100+1)}, R:{int(py/100+1)})")
 
-                        # Reset level
-                        if self.lives > 0:
-                            self.new_level = True
-                            self.total_moves += 1
-                            self.moves = 0
-                            self.prev_x, self.prev_y = self.level.px, self.level.py
-                            return False
-                        # Game Over
-                        else:
-                            self.__display_game_over__()
-                            self.is_playing = False
-                            return True
+                    pygame.display.flip()
+
+                    # Fade out effect
+                    self.level.fade_out(self)
+
+                    # Reset level
+                    if self.lives > 0:
+                        self.new_level = True
+                        self.total_moves += 1
+                        self.moves = 0
+                        self.prev_x, self.prev_y = self.level.px, self.level.py
+                        return False
+                    # Game Over
+                    else:
+                        self.__display_game_over__()
+                        self.is_playing = False
+                        return True
 
     # Blit the level and boxes
     def __blit_level_elements__(self):
