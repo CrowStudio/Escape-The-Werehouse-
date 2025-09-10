@@ -57,15 +57,15 @@ class ZoneTwo(BasicBoardElements):
 
                     return True
 
+                ##############################################################
+                # Need to refactor code to be able to update this each frame #
+                ##############################################################
 
                 else:  # Floor switches (momentary)
                     print('Player pos: ', player_pos)
                     print('Boxes pos: ', boxes_pos)
                     print('Element pos: ', element_pos)
 
-                ##############################################################
-                # Need to refactor code to be able to update this each frame #
-                ##############################################################
 
                     activated = (player_pos == element_pos) or (boxes_pos and element_pos in boxes_pos)
 

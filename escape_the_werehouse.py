@@ -183,7 +183,8 @@ def is_valid_move(level, new_x, new_y, game_state):
     return True
 
 def is_push_valid(level, new_x, new_y, game_state):
-    if (new_x < 0 or new_x > BasicTile.BOARD_WIDTH) or (new_y < 0 or new_y > BasicTile.BOARD_HEIGHT-100):
+    if not level.is_box_within_game_board(new_x, new_y):
+        print(f"Push ({new_x}, {new_y}) outside the board is not valid!")
         return False
 
     # Get active box positions
