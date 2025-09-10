@@ -16,3 +16,15 @@ class BasicTile:
     FLOOR       = 6
     WALL        = 7
     EXIT        = 8
+
+    mapping = {
+            START,
+            PIT1,
+            PIT2,
+            PIT3,
+            PIT4,
+            PIT_WALL,
+            FLOOR,
+            WALL,
+            EXIT
+        }
