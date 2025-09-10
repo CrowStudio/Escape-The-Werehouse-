@@ -9,69 +9,195 @@
     "FLOOR": 6,
     "WALL": 7,
     "EXIT": 8,
-    "WALL_SWITCH_UP_1": "Z1-U1",
-    "WALL_SWITCH_DOWN_1": "Z1-D1",
-    "WALL_SWITCH_LEFT_1": "Z1-L1",
-    "WALL_SWITCH_RIGHT_1": "Z1-R1",
-    "FLOOR_SWITCH_1": "Z2-1",
-    "TRAP_DOOR_1": "Z3-1",
-    "SLIDING_DOOR_HORIZONTAL_1": "Z4-H1",
-    "SLIDING_DOOR_VERTICAL_1": "Z4-V1"
+    "WALL_SWITCH_UP_1_1": "Z1U_1_1",
+    "WALL_SWITCH_UP_2_1": "Z1U_2_1",
+    "WALL_SWITCH_UP_1_0": "Z1U_1_0",
+    "WALL_SWITCH_UP_2_0": "Z1U_2_0",
+    "WALL_SWITCH_DOWN_1_1": "Z2D_1_1",
+    "WALL_SWITCH_DOWN_2_1": "Z2D_2_1",
+    "WALL_SWITCH_DOWN_1_0": "Z2D_1_0",
+    "WALL_SWITCH_DOWN_2_0": "Z2D_2_0",
+    "WALL_SWITCH_LEFT_1_1": "Z3L_1_1",
+    "WALL_SWITCH_LEFT_2_1": "Z3L_2_1",
+    "WALL_SWITCH_LEFT_1_0": "Z3L_1_0",
+    "WALL_SWITCH_LEFT_2_0": "Z3L_2_0",
+    "WALL_SWITCH_RIGHT_1_1": "Z4R_1_1",
+    "WALL_SWITCH_RIGHT_2_1": "Z4R_2_1",
+    "WALL_SWITCH_RIGHT_1_0": "Z4R_1_0",
+    "WALL_SWITCH_RIGHT_2_0": "Z4R_2_0",
+    "SLIDING_DOOR_HORIZONTAL_1_1": "Z5H_1_1",
+    "SLIDING_DOOR_HORIZONTAL_2_1": "Z5H_2_1",
+    "SLIDING_DOOR_HORIZONTAL_3_1": "Z5H_3_1",
+    "SLIDING_DOOR_HORIZONTAL_4_1": "Z5H_4_1",
+    "SLIDING_DOOR_HORIZONTAL_1_0": "Z5H_1_0",
+    "SLIDING_DOOR_HORIZONTAL_2_0": "Z5H_2_0",
+    "SLIDING_DOOR_HORIZONTAL_3_0": "Z5H_3_0",
+    "SLIDING_DOOR_HORIZONTAL_4_0": "Z5H_4_0",
+    "SLIDING_DOOR_VERTICAL_1_1": "Z6V_1_1",
+    "SLIDING_DOOR_VERTICAL_2_1": "Z6V_2_1",
+    "SLIDING_DOOR_VERTICAL_3_1": "Z6V_3_1",
+    "SLIDING_DOOR_VERTICAL_4_1": "Z6V_4_1",
+    "SLIDING_DOOR_VERTICAL_1_0": "Z6V_1_0",
+    "SLIDING_DOOR_VERTICAL_2_0": "Z6V_2_0",
+    "SLIDING_DOOR_VERTICAL_3_0": "Z6V_3_0",
+    "SLIDING_DOOR_VERTICAL_4_0": "Z6V_4_0",
+    "FLOOR_SWITCH_1_1": "Z7_1_1",
+    "FLOOR_SWITCH_2_1": "Z7_2_1",
+    "FLOOR_SWITCH_3_1": "Z7_3_1",
+    "FLOOR_SWITCH_4_1": "Z7_4_1",
+    "FLOOR_SWITCH_1_0": "Z7_1_0",
+    "FLOOR_SWITCH_2_0": "Z7_2_0",
+    "FLOOR_SWITCH_3_0": "Z7_3_0",
+    "FLOOR_SWITCH_4_0": "Z7_4_0",
+    "TRAP_DOOR_UP_1_1": "Z8U_1_1",
+    "TRAP_DOOR_DOWN_1_1": "Z8D_1_1",
+    "TRAP_DOOR_LEFT_1_1": "Z8L_1_1",
+    "TRAP_DOOR_RIGHT_1_1": "Z8R_1_1",
+    "TRAP_DOOR_UP_1_0": "Z8U_1_0",
+    "TRAP_DOOR_DOWN_1_0": "Z8D_1_0",
+    "TRAP_DOOR_LEFT_1_0": "Z8L_1_0",
+    "TRAP_DOOR_RIGHT_1_0": "Z8R_1_0",
+    "ACTIVATE_EXIT": "Z9"
   },
     "levels": [
         {
             "level": 1,
-            "title": "Blocked 2",
+            "title": "Debug Level",
             "map": [
               [
+                "TRAP_DOOR_UP_1_0",
+                "TRAP_DOOR_UP_1_1",
+                "SLIDING_DOOR_HORIZONTAL_1_1",
+                "SLIDING_DOOR_HORIZONTAL_1_0",
+                "ACTIVATE_EXIT",
+                "EXIT"
+              ],
+              [
+                "FLOOR_SWITCH_1_0",
+                "FLOOR_SWITCH_1_1",
+                "WALL_SWITCH_UP_1_0",
+                "WALL_SWITCH_UP_1_1",
                 "FLOOR",
-                "FLOOR",
-                "WALL_SWITCH_RIGHT_1",
-                "WALL",
-                "EXIT",
                 "FLOOR"
               ],
               [
-                "PIT1",
-                "WALL",
-                "WALL",
-                "WALL",
-                "WALL",
-                "SLIDING_DOOR_HORIZONTAL_1"
+                "FLOOR",
+                "FLOOR",
+                "FLOOR",
+                "FLOOR",
+                "FLOOR",
+                "FLOOR"
               ],
               [
                 "FLOOR",
-                "SLIDING_DOOR_VERTICAL_1",
                 "FLOOR",
                 "FLOOR",
                 "FLOOR",
-                "PIT4"
+                "FLOOR",
+                "FLOOR"
               ],
               [
                 "FLOOR",
-                "WALL",
                 "FLOOR",
                 "FLOOR",
                 "FLOOR",
-                "WALL"
+                "FLOOR",
+                "FLOOR"
               ],
-                [
-                    "FLOOR",
-                    "WALL",
-                    "FLOOR",
-                    "FLOOR",
-                    "WALL",
-                    "WALL"
-                ],
               [
-                "START",
-                "WALL",
-                "WALL",
-                "WALL_SWITCH_DOWN_1",
-                "WALL",
-                "WALL"
+                "SLIDING_DOOR_VERTICAL_1_0",
+                "SLIDING_DOOR_VERTICAL_2_0",
+                "FLOOR",
+                "FLOOR",
+                "FLOOR",
+                "START"
               ]
             ],
+            "active_boxes": [
+                true,
+                true,
+                true,
+                true
+            ],
+            "box_positions": [
+                [
+                    0,
+                    3
+                ],
+                [
+                    1,
+                    3
+                ],
+                [
+                    2,
+                    3
+                ],
+                [
+                    3,
+                    3
+                ]
+            ],
+            "player_start": [
+                5,
+                3
+            ],
+            "player_direction": "left",
+            "exit_active": false,
+            "score": 35
+        },
+        {
+            "level": 2,
+            "title": "Blocked 2",
+          "map": [
+            [
+              "FLOOR",
+              "FLOOR",
+              "WALL_SWITCH_RIGHT_1_1",
+              "WALL",
+              "EXIT",
+              "TRAP_DOOR_UP_1_1"
+            ],
+            [
+              "PIT1",
+              "WALL",
+              "WALL",
+              "WALL",
+              "WALL",
+              "SLIDING_DOOR_HORIZONTAL_1_1"
+            ],
+            [
+              "FLOOR",
+              "SLIDING_DOOR_VERTICAL_1_0",
+              "FLOOR",
+              "FLOOR",
+              "FLOOR",
+              "PIT4"
+            ],
+            [
+              "FLOOR",
+              "WALL",
+              "FLOOR",
+              "FLOOR",
+              "FLOOR_SWITCH_1_1",
+              "WALL"
+            ],
+            [
+              "FLOOR",
+              "WALL",
+              "FLOOR",
+              "FLOOR",
+              "WALL",
+              "WALL"
+            ],
+            [
+              "START",
+              "WALL",
+              "WALL",
+              "WALL_SWITCH_DOWN_1_0",
+              "WALL",
+              "WALL"
+            ]
+          ],
             "active_boxes": [
                 true,
                 true,
@@ -102,10 +228,10 @@
             ],
             "player_direction": "up",
             "exit_active": true,
-            "score": 27
+            "score": 29
         },
         {
-            "level": 2,
+            "level": 3,
             "title": "Deceiving Pits 2",
             "map": [
                 [
@@ -188,91 +314,6 @@
             "player_direction": "up",
             "exit_active": true,
             "score": 24
-        },
-        {
-            "level": 3,
-            "title": "One too Many 2",
-            "map": [
-                [
-                    "FLOOR",
-                    "FLOOR",
-                    "WALL",
-                    "WALL",
-                    "WALL",
-                    "EXIT"
-                ],
-                [
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "PIT2",
-                    "FLOOR"
-                ],
-                [
-                    "FLOOR",
-                    "FLOOR",
-                    "WALL",
-                    "PIT3",
-                    "WALL",
-                    "WALL"
-                ],
-                [
-                    "PIT1",
-                    "WALL",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "START"
-                ],
-                [
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "WALL",
-                    "PIT_WALL"
-                ],
-                [
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "FLOOR",
-                    "WALL",
-                    "WALL"
-                ]
-            ],
-            "active_boxes": [
-                true,
-                true,
-                true,
-                true
-            ],
-            "box_positions": [
-                [
-                    2,
-                    5
-                ],
-                [
-                    1,
-                    0
-                ],
-                [
-                    5,
-                    1
-                ],
-                [
-                    0,
-                    0
-                ]
-            ],
-            "player_start": [
-                5,
-                3
-            ],
-            "player_direction": "left",
-            "exit_active": true,
-            "score": 35
         },
         {
             "level": 4,

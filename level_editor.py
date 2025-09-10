@@ -33,7 +33,7 @@ TILE_IMAGES = {
     'PIT3': Sprite.PIT,
     'PIT4': Sprite.PIT,
     'PIT_WALL': Sprite.PIT,
-    'EXIT': Sprite.EXIT,
+    'EXIT': Sprite.EXIT[0],
     'BOX1': Sprite.BOXES[8],
     'BOX2': Sprite.BOXES[9],
     'BOX3': Sprite.BOXES[10],

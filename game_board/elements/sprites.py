@@ -50,9 +50,12 @@ class Sprite:
         pygame.image.load(os.path.join(graphics_dir, 'floor39.png')),
         pygame.image.load(os.path.join(graphics_dir, 'floor40.png'))
     ]
+
     WALL = pygame.image.load(os.path.join(graphics_dir, 'wall.png'))
 
+
     PIT = pygame.image.load(os.path.join(graphics_dir, 'pit.png'))
+    # Used for random PIT
     PIT_EVIL = [
         pygame.image.load(os.path.join(graphics_dir, 'pit_evil1.png')),
         pygame.image.load(os.path.join(graphics_dir, 'pit.png')),
@@ -98,34 +101,246 @@ class Sprite:
         pygame.image.load(os.path.join(graphics_dir, 'pit.png'))
     ]
 
-    EXIT = pygame.image.load(os.path.join(graphics_dir, 'exit.png'))
-    NO_EXIT = pygame.image.load(os.path.join(graphics_dir, 'exit_inactive.png'))
-
-    WALL_SWITCH_UP_1 = [
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_up.png')),
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_up.png'))
-    ]
-    WALL_SWITCH_DOWN_1 = [
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_down.png')),
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_down.png'))
-    ]
-    WALL_SWITCH_LEFT_1 = [
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_left.png')),
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_left.png'))
-    ]
-    WALL_SWITCH_RIGHT_1 = [
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_right.png')),
-        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_right.png'))
+    ACTIVATE_EXIT = [
+        pygame.image.load(os.path.join(graphics_dir, 'exit_switch_DISENGAGED.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'exit_switch_ACTIVE.png'))
     ]
 
-    SLIDING_DOOR_HORIZONTAL_1 = [
-        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_CLOSED_horizontal.png')),
-        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_OPEN_horizontal.png'))
+    EXIT = [
+        pygame.image.load(os.path.join(graphics_dir, 'exit_inactive.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'exit_active.png'))
     ]
-    SLIDING_DOOR_VERTICAL_1 = [
-        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_CLOSED_vertical.png')),
-        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_OPEN_vertical.png'))
+
+    # Wall switches ON (NC):
+    # UP
+    WALL_SWITCH_UP_1_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_INACTIVE_up.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_ACTIVE_up.png'))
     ]
+    WALL_SWITCH_UP_2_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_INACTIVE_up.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_ACTIVE_up.png'))
+    ]
+    # DOWN
+    WALL_SWITCH_DOWN_1_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_INACTIVE_down.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_ACTIVE_down.png'))
+    ]
+    WALL_SWITCH_DOWN_2_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_INACTIVE_down.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_ACTIVE_down.png'))
+    ]
+    # LEFT
+    WALL_SWITCH_LEFT_1_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_INACTIVE_left.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_ACTIVE_left.png'))
+    ]
+    WALL_SWITCH_LEFT_2_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_INACTIVE_left.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_ACTIVE_left.png'))
+    ]
+    # RIGHT
+    WALL_SWITCH_RIGHT_1_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_INACTIVE_right.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_ACTIVE_right.png'))
+    ]
+    WALL_SWITCH_RIGHT_2_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_INACTIVE_right.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_ON_ACTIVE_right.png'))
+    ]
+
+    # Wall switches OFF (NO):
+    # UP
+    WALL_SWITCH_UP_1_0 = [
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_INACTIVE_up.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_ACTIVE_up.png'))
+    ]
+    WALL_SWITCH_UP_2_0 = [
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_INACTIVE_up.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_ACTIVE_up.png'))
+    ]
+    # DOWN
+    WALL_SWITCH_DOWN_1_0 = [
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_INACTIVE_down.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_ACTIVE_down.png'))
+    ]
+    WALL_SWITCH_DOWN_2_0 = [
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_INACTIVE_down.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_ACTIVE_down.png'))
+    ]
+    # LEFT
+    WALL_SWITCH_LEFT_1_0 = [
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_INACTIVE_left.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_ACTIVE_left.png'))
+    ]
+    WALL_SWITCH_LEFT_2_0 = [
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_INACTIVE_left.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_ACTIVE_left.png'))
+    ]
+    # RIGHT
+    WALL_SWITCH_RIGHT_1_0 = [
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_INACTIVE_right.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_ACTIVE_right.png'))
+    ]
+    WALL_SWITCH_RIGHT_2_0 = [
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_INACTIVE_right.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'wall_switch_OFF_ACTIVE_right.png'))
+    ]
+
+    # Sliding doors OPEN (NO):
+    # HORIZONTAL
+    SLIDING_DOOR_HORIZONTAL_1_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_OPEN_horizontal.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_CLOSED_horizontal.png'))
+    ]
+    SLIDING_DOOR_HORIZONTAL_2_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_OPEN_horizontal.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_CLOSED_horizontal.png'))
+    ]
+    SLIDING_DOOR_HORIZONTAL_3_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_OPEN_horizontal.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_CLOSED_horizontal.png'))
+    ]
+    SLIDING_DOOR_HORIZONTAL_4_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_OPEN_horizontal.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_CLOSED_horizontal.png'))
+    ]
+    # VERTICAL
+    SLIDING_DOOR_VERTICAL_1_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_OPEN_vertical.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_CLOSED_vertical.png'))
+    ]
+    SLIDING_DOOR_VERTICAL_2_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_OPEN_vertical.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_CLOSED_vertical.png'))
+    ]
+    SLIDING_DOOR_VERTICAL_3_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_OPEN_vertical.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_CLOSED_vertical.png'))
+    ]
+    SLIDING_DOOR_VERTICAL_4_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_OPEN_vertical.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_CLOSED_vertical.png'))
+    ]
+
+    # Sliding doors CLOSED (NC):
+    # HORIZONTAL
+    SLIDING_DOOR_HORIZONTAL_1_0 = [
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_OPEN_horizontal.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_CLOSED_horizontal.png'))
+    ]
+    SLIDING_DOOR_HORIZONTAL_2_0 = [
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_OPEN_horizontal.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_CLOSED_horizontal.png'))
+    ]
+    SLIDING_DOOR_HORIZONTAL_3_0 = [
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_OPEN_horizontal.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_CLOSED_horizontal.png'))
+    ]
+    SLIDING_DOOR_HORIZONTAL_4_0 = [
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_OPEN_horizontal.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_CLOSED_horizontal.png'))
+    ]
+    # VERTICAL
+    SLIDING_DOOR_VERTICAL_1_0 = [
+            pygame.image.load(os.path.join(graphics_dir, 'sliding_door_OPEN_vertical.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_CLOSED_vertical.png'))
+    ]
+    SLIDING_DOOR_VERTICAL_2_0 = [
+            pygame.image.load(os.path.join(graphics_dir, 'sliding_door_OPEN_vertical.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_CLOSED_vertical.png'))
+    ]
+    SLIDING_DOOR_VERTICAL_3_0 = [
+            pygame.image.load(os.path.join(graphics_dir, 'sliding_door_OPEN_vertical.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_CLOSED_vertical.png'))
+    ]
+    SLIDING_DOOR_VERTICAL_4_0 = [
+            pygame.image.load(os.path.join(graphics_dir, 'sliding_door_OPEN_vertical.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'sliding_door_CLOSED_vertical.png'))
+    ]
+
+    # Floor switches ON (NC):
+    FLOOR_SWITCH_1_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'floor_switch_ON_DISENGAGED_1.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'floor_switch_ON_ENGAGED_1.png'))
+    ]
+    FLOOR_SWITCH_2_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'floor_switch_ON_DISENGAGED_2.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'floor_switch_ON_ENGAGED_2.png'))
+    ]
+    FLOOR_SWITCH_3_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'floor_switch_ON_DISENGAGED_3.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'floor_switch_ON_ENGAGED_3.png'))
+    ]
+    FLOOR_SWITCH_4_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'floor_switch_ON_DISENGAGED_4.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'floor_switch_ON_ENGAGED_4.png'))
+    ]
+
+    # Floor switches OFF (NO):
+    FLOOR_SWITCH_1_0 = [
+        pygame.image.load(os.path.join(graphics_dir, 'floor_switch_OFF_DISENGAGED_1.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'floor_switch_OFF_ENGAGED_1.png'))
+    ]
+    FLOOR_SWITCH_2_0 = [
+        pygame.image.load(os.path.join(graphics_dir, 'floor_switch_OFF_DISENGAGED_2.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'floor_switch_OFF_ENGAGED_2.png'))
+    ]
+    FLOOR_SWITCH_3_0 = [
+        pygame.image.load(os.path.join(graphics_dir, 'floor_switch_OFF_DISENGAGED_3.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'floor_switch_OFF_ENGAGED_3.png'))
+    ]
+    FLOOR_SWITCH_4_0 = [
+        pygame.image.load(os.path.join(graphics_dir, 'floor_switch_OFF_DISENGAGED_4.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'floor_switch_OFF_ENGAGED_4.png'))
+    ]
+
+    # Trap doors OPEN (NO):
+    # UP
+    TRAP_DOOR_UP_1_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'trap_door_CLOSED_up_1.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'trap_door_OPEN_up_1.png'))
+    ]
+    # DOWN
+    TRAP_DOOR_DOWN_1_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'trap_door_CLOSED_down_1.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'trap_door_OPEN_down_1.png'))
+    ]
+    # LEFT
+    TRAP_DOOR_LEFT_1_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'trap_door_CLOSED_left_1.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'trap_door_OPEN_left_1.png'))
+    ]
+    # RIGHT
+    TRAP_DOOR_RIGHT_1_1 = [
+        pygame.image.load(os.path.join(graphics_dir, 'trap_door_CLOSED_right_1.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'trap_door_OPEN_right_1.png'))
+    ]
+
+
+
+    # Trap doors CLOSED (NC):
+    # UP
+    TRAP_DOOR_UP_1_0 = [
+        pygame.image.load(os.path.join(graphics_dir, 'trap_door_CLOSED_up_1.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'trap_door_evil_OPEN_up_1.png'))
+    ]
+    # DOWN
+    TRAP_DOOR_DOWN_1_0 = [
+        pygame.image.load(os.path.join(graphics_dir, 'trap_door_CLOSED_down_1.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'trap_door_OPEN_down_1.png'))
+    ]
+    # LEFT
+    TRAP_DOOR_LEFT_1_0 = [
+        pygame.image.load(os.path.join(graphics_dir, 'trap_door_CLOSED_left_1.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'trap_door_OPEN_left_1.png'))
+    ]
+    # RIGHT
+    TRAP_DOOR_RIGHT_1_0 = [
+        pygame.image.load(os.path.join(graphics_dir, 'trap_door_CLOSED_right_1.png')),
+        pygame.image.load(os.path.join(graphics_dir, 'trap_door_OPEN_right_1.png'))
+    ]
+
 
     BOXES = [
         pygame.image.load(os.path.join(graphics_dir, 'box_in_pit.png')),
