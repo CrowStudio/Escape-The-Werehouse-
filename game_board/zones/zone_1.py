@@ -31,7 +31,7 @@ class ZoneOne(BasicBoardElements):
     def draw_status_bar(self, game_state):
         super().draw_status_bar(game_state)
 
-    def validate_move(self, new_x, new_y, game_state):
+    def validate_move(self, new_x, new_y):
         return super().validate_move(new_x, new_y, game_state, check_zone_element_state=self.check_zone_element_state)
 
     def validate_push(self, push_x, push_y, game_state):
