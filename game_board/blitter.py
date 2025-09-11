@@ -5,7 +5,7 @@ import os
 import random
 from random import randrange
 import time
-from game_board.construct_level_data import LevelData
+from game_board.level_data import LevelData
 from game_board.elements.sprites import Sprite
 
 class Blitter():
