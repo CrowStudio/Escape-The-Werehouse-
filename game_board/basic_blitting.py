@@ -470,7 +470,7 @@ class BasicBoardElements():
                 self.game_board.blit(Sprite.PLAYER, (game_state.px, game_state.py + BasicTile.HEIGHT_OFFSET))
 
 
-    def draw_status_bar(self, game_state):
+    def blit_status_bar(self, game_state):
         # Draw the status bar at the top
         bar_rect = pygame.Rect(0, 0, BasicTile.BOARD_WIDTH, BasicTile.HEIGHT_OFFSET)
         pygame.draw.rect(self.game_board, (50, 50, 50), bar_rect)  # Dark gray color for the bar
@@ -494,22 +494,6 @@ class BasicBoardElements():
             tutorial_text = self.tutorial_font.render(f'{self.map_title[0][game_state.current_level]}', True, (255, 255, 255))
             # Render status bar
             self.game_board.blit(tutorial_text, (15, 15))
-
-
-    def blit_status_bar(self, game_state):
-            pygame.display.set_caption('Escape the Werehouse!')
-
-            # Draw the status bar at the top
-            bar_rect = pygame.Rect(0, 0, BasicTile.BOARD_WIDTH, BasicTile.HEIGHT_OFFSET)
-            pygame.draw.rect(self.game_board, (50, 50, 50), bar_rect)  # Dark gray color for the bar
-
-            # Render the text inside the bar
-            moves_text = self.satus_font.render(f'Moves: {game_state.moves}', True, (255, 255, 255))
-            total_moves_text = self.satus_font.render(f'Total Moves: {game_state.total_moves}', True, (255, 255, 255))
-            lives_text = self.satus_font.render(f'Lives: {game_state.lives}', True, (255, 255, 255))
-            self.game_board.blit(moves_text, (10, 10))
-            self.game_board.blit(total_moves_text, (200, 10))
-            self.game_board.blit(lives_text, (480, 10))
 
 
     def __render_tutorial_bar__(self, game_state):

@@ -432,7 +432,7 @@ def main():
                     if game_state.lights_out:
                         level.current_zone.apply_blackout(game_state)
 
-                    level.current_zone.draw_status_bar(game_state)
+                    level.current_zone.blit_status_bar(game_state)
 
                     # Update the display
                     pygame.display.flip()
