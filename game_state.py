@@ -184,7 +184,7 @@ class GameState:
         self.new_level = True
 
         # Handle mode transitions
-        if self.game == False and self.current_level >= 4:
+        if self.game == False and self.current_level >= self.level.no_of_levels[0]:
             # Debug statement
             print('Well done, you finished the Tutorials! Now try to Escape the Werehouse!')
             # Set game states
@@ -193,7 +193,7 @@ class GameState:
             self.moves = 0
             self.total_moves = 0
             self.lives = 3
-        elif self.game == True and self.current_level >= self.level.no_of_levels[1]:
+        elif self.game == True and self.current_level >= self.level.no_of_levels[1]: # set [1] to current_zone_index instead
             # Debug statements
             print('Congratulations! You finished the last level!')
             print(f'Your have made a total of {self.total_moves} successful moves!')
@@ -308,7 +308,6 @@ class GameState:
 
     # Validate push
     def validate_push(self, level, push_x, push_y, check_zone_element_state=None):
-        print('No boxes: ', level.positions[1][level.level_index][0])
         if not self.is_box_within_game_board(push_x, push_y):
             print(f"Push ({push_x}, {push_y}) outside the board is not valid!")
             return False
