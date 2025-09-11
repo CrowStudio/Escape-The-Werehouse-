@@ -5,148 +5,34 @@ import os
 import random
 from random import randrange
 import time
-from game_board.basic_tile import BasicTile
+from game_board.level_data import LevelData
 from game_board.elements.sprites import Sprite
 
-# Generate a flat list in row-major order:
-tiles = [
-    (col * BasicTile.SIZE, row * BasicTile.SIZE)
-    for row in range(BasicTile.NUM_ROWS)
-    for col in range( BasicTile.NUM_COLS)
-]
-
-# Set paths for level data
-DIR_PATH = os.path.dirname(os.path.abspath(__file__))
-TUTORIAL_PATH = os.path.join(DIR_PATH, 'zones','level_maps', 'tutorial_maps.json')
-
-# Load the tutorial maps
-with open(TUTORIAL_PATH, 'r') as file:
-    TUTORIAL_DATA = json.load(file)
-
-
-# CLASS for setup of basic level variables and blitting of basic elements
-class BasicBoardElements():
-    '''BasicBoardElements'''
-
-    def __init__(self, ZONE_DATA):
+class Blitter():
+    '''Blitter'''
+    def __init__(self, ZONE_DATA, ZONE_TILES):
         '''__init__'''
-        print("BasicBoardElements instance created")  # Debug statement
-        self.basic_tile = BasicTile
+        print("Blitter instance created")  # Debug statement
+        self.zone_data = LevelData(ZONE_DATA)
 
-        # Initiate variables to store levels from the JSON data
-        self.tutorial_maps = []
-        self.zone_maps = []
-        self.level_maps = []
+        # Generate a flat list in row-major order:
+        self.tiles = [
+            (col * ZONE_TILES.SIZE, row * ZONE_TILES.SIZE)
+            for row in range(ZONE_TILES.NUM_ROWS)
+            for col in range( ZONE_TILES.NUM_COLS)
+        ]
 
-        self.tutorial_title = []
-        self.game_title = []
-        self.map_title = []
+        self.seize = ZONE_TILES.SIZE
+        self.width = ZONE_TILES.BOARD_WIDTH
+        self.height = ZONE_TILES.BOARD_HEIGHT
+        self.height_offset = ZONE_TILES.HEIGHT_OFFSET
 
-        self.tutorial_active_boxes = []
-        self.game_active_boxes = []
-        self.active_boxes = []
-
-        self.tutorial_positions = []
-        self.game_positions = []
-        self.positions = []
-
-        self.tutorial_player_start = []
-        self.game_player_start = []
-        self.player_start = []
-
-        self.tutorial_player_direction = []
-        self.game_player_direction = []
-        self.player_direction = []
-
-        self.tutorial_active_exit = []
-        self.game_active_exit = []
-        self.active_exit = []
-
-        self.game_score = []
-        self.level_score = []
-
-        # Always add the tutorial maps
-        for level in TUTORIAL_DATA['levels']:
-            # Create the level map
-            self.tutorial_maps.append([TUTORIAL_DATA['game_board_elements'][item] for row in level['map'] for item in row])
-            # Extract other level data
-            self.tutorial_title.append(level['title'])
-            self.tutorial_active_boxes.append(level['active_boxes'])
-
-            # Convert box positions
-            box_positions = []
-            for pos in level['box_positions']:
-                    box_positions.append(tuple(int(x * BasicTile.SIZE) for x in pos))
-            self.tutorial_positions.append(box_positions)
-
-            # Convert player start position
-            self.tutorial_player_start.append(tuple(int(x * BasicTile.SIZE) for x in level['player_start']))
-
-            self.tutorial_player_direction.append(level['player_direction'])
-            self.tutorial_active_exit.append(level['exit_active'])
-
-        # Add the zone maps
-        for level in ZONE_DATA['levels']:
-            # Create the level map
-            self.zone_maps.append([ZONE_DATA['game_board_elements'][item] for row in level['map'] for item in row])
-
-            # Extract other level data
-            self.game_title.append(level['title'])
-            self.game_active_boxes.append(level['active_boxes'])
-
-            # Convert box positions
-            box_positions = []
-            for pos in level['box_positions']:
-                    box_positions.append(tuple(int(x * BasicTile.SIZE) for x in pos))
-            self.game_positions.append(box_positions)
-
-            # Convert player start position
-            self.game_player_start.append(tuple(int(x * BasicTile.SIZE) for x in level['player_start']))
-
-            self.game_player_direction.append(level['player_direction'])
-            self.game_active_exit.append(level['exit_active'])
-            self.game_score.append(level['score'])
-
-        # Update the level variables
-        self.level_maps.append(self.tutorial_maps)
-        self.level_maps.append(self.zone_maps)
-        print(f'level_maps: {self.level_maps}')
-
-        self.map_title.append(self.tutorial_title)
-        self.map_title.append(self.game_title)
-        print(f'\nmap_title: {self.map_title}')
-
-        self.active_boxes.append(self.tutorial_active_boxes)
-        self.active_boxes.append(self.game_active_boxes)
-        print(f'\nactive_boxes: {self.active_boxes}')
-
-        self.positions.append(self.tutorial_positions)
-        self.positions.append(self.game_positions)
-        print(f'\npositions: {self.positions}')
-
-        self.player_start.append(self.tutorial_player_start)
-        self.player_start.append(self.game_player_start)
-        print(f'\nplayer_start: {self.player_start}')
-
-        self.player_direction.append(self.tutorial_player_direction)
-        self.player_direction.append(self.game_player_direction)
-        print(f'\nplayer_direction: {self.player_direction}')
-
-        self.active_exit.append(self.tutorial_active_exit)
-        self.active_exit.append(self.game_active_exit)
-        print(f'\nactive_exit: {self.active_exit}')
-
-        self.level_score.append(self.game_score)
-        print(f'\nlevel_score: {self.level_score}')
-
-        # Initialize game board size to default values
-        self.width = BasicTile.BOARD_WIDTH
-        self.height = BasicTile.BOARD_HEIGHT
-        self.game_board = pygame.display.set_mode((self.width, (self.height)))  # Set the screen size to 600x640
+        # Initialize game board size to zone values
+        self.game_board = pygame.display.set_mode((self.width, (self.height)))  # Set the screen size to zone width x zone height
 
         # Variable to keep track of numbers of Levels
-        self.no_of_levels = [sum(type(i) == type([]) for i in self.level_maps[0])]
-        self.no_of_levels.append(sum(type(i) == type([]) for i in self.level_maps[1]))
+        self.no_of_levels = [sum(type(i) == type([]) for i in self.zone_data.level_maps[0])]
+        self.no_of_levels.append(sum(type(i) == type([]) for i in self.zone_data.level_maps[1]))
 
         # Lists for creation of Levels
         self.elements = []
@@ -161,6 +47,12 @@ class BasicBoardElements():
 
         # Default initial beam angle
         self.current_beam_angle = -1.55
+
+        # Create font objects
+        self.tutorial_font = pygame.font.SysFont('Lucida Console', 12)  # Font for tutorial text
+        self.satus_font = pygame.font.SysFont('Lucida Console', 24)  # Font for UI text
+        self.warning_font = pygame.font.SysFont('Arial Black', 42) # Font for player in pit
+        self.game_over_font = pygame.font.SysFont('Arial Black', 72)  # Font for GAME OVER
 
 
     # Blit start tile
@@ -234,8 +126,8 @@ class BasicBoardElements():
         self.elements.clear()
         # For each coordinate in level_maps
         # - Set tiles depending on value of the level element
-        for i, element in enumerate(self.level_maps[option][self.level_index]):
-            pos        = tiles[i]
+        for i, element in enumerate(self.zone_data.level_maps[option][self.level_index]):
+            pos        = self.tiles[i]
             rand_floor = randrange(0, 40)
             rand_pit   = randrange(0, 20)
             # store exactly the tuple [element, pos, rand_floor, rand_pit]
@@ -263,18 +155,26 @@ class BasicBoardElements():
 
     # Place Boxes, Player, reset Pits, and Exit
     def __place_boxes_player_and_reset_elements__(self, option, game_state):
-        self.box1, (self.b1x, self.b1y) = self.active_boxes[option][self.level_index][0], self.positions[option][self.level_index][0]
-        self.box2, (self.b2x, self.b2y) = self.active_boxes[option][self.level_index][1], self.positions[option][self.level_index][1]
-        self.box3, (self.b3x, self.b3y) = self.active_boxes[option][self.level_index][2], self.positions[option][self.level_index][2]
-        self.box4, (self.b4x, self.b4y) = self.active_boxes[option][self.level_index][3], self.positions[option][self.level_index][3]
+        self.box1, (game_state.b1x, game_state.b1y) = \
+                    self.zone_data.active_boxes[option][self.level_index][0], \
+                    self.zone_data.positions[option][self.level_index][0]
+        self.box2, (game_state.b2x, game_state.b2y) = \
+                    self.zone_data.active_boxes[option][self.level_index][1], \
+                    self.zone_data.positions[option][self.level_index][1]
+        self.box3, (game_state.b3x, game_state.b3y) = \
+                    self.zone_data.active_boxes[option][self.level_index][2], \
+                    self.zone_data.positions[option][self.level_index][2]
+        self.box4, (game_state.b4x, game_state.b4y) = \
+                    self.zone_data.active_boxes[option][self.level_index][3], \
+                    self.zone_data.positions[option][self.level_index][3]
 
-        self.px, self.py = self.player_start[option][self.level_index]
+        game_state.px, game_state.py = self.zone_data.player_start[option][self.level_index]
         game_state.pit1 = game_state.pit2 = game_state.pit3 = game_state.pit4 = True
-        game_state.exit = self.active_exit[option][self.level_index]
+        game_state.exit = self.zone_data.active_exit[option][self.level_index]
 
 
     # Blit tiles for level n with the help of dispatch
-    def blit_basic_elements(self, game_state, blit_zone_element=None):
+    def blit_level_elements(self, game_state, blit_zone_element=None):
         # dispatch: tile_code → (method, args_info)
         dispatch = {
             0: (self.__start__, None),
@@ -296,7 +196,7 @@ class BasicBoardElements():
                 element = 9
 
             method, arg_info = dispatch[element]
-            x, y = pos[0], pos[1] + BasicTile.HEIGHT_OFFSET
+            x, y = pos[0], pos[1] + self.height_offset
 
             # Get additional arguments based on element type
             args = self.__get_method_arguments__(element, rand_floor, rand_pit, game_state, blit_zone_element)
@@ -341,7 +241,7 @@ class BasicBoardElements():
         self.__place_boxes_player_and_reset_elements__(option, game_state)
 
         # Facing & beam angle
-        game_state.facing_direction = self.player_direction[option][self.level_index]
+        game_state.facing_direction = self.zone_data.player_direction[option][self.level_index]
         fd = game_state.facing_direction
         if   fd == 'up':    ang = math.atan2(-1, 0)
         elif fd == 'down':  ang = math.atan2( 1, 0)
@@ -352,99 +252,9 @@ class BasicBoardElements():
         self.level_index += 1
         return False
 
-    # Move within game board
-    def is_player_within_game_board(self, new_x, new_y):
-        if (new_x < 0 or new_x > BasicTile.BOARD_WIDTH-100) or (new_y < 0 or new_y > BasicTile.BOARD_HEIGHT):
-            return False
-        else:
-            return True
-
-    # Move within game board
-    def is_box_within_game_board(self, new_x, new_y):
-        if (new_x < 0 or new_x > BasicTile.BOARD_WIDTH-100) or (new_y < 0 or new_y > BasicTile.BOARD_HEIGHT-100):
-            return False
-        else:
-            return True
-
-    # Validate movement
-    def validate_move(self, new_x, new_y, game_state, check_zone_element_state=None):
-        if not self.is_player_within_game_board(new_x, new_y):
-            print(f"Move ({new_x}, {new_y}) outside the board is not valid!")
-            return False
-
-        for element in self.elements:
-            if element[1] == (new_x, new_y):
-                # Check for valid tiles including EXIT and PITS
-                if element[0] == BasicTile.EXIT and game_state.exit:  # Allow exit only if active
-                    return True
-                elif element[0] == BasicTile.START or element[0] == BasicTile.FLOOR:
-                    return True
-                elif element[0] == BasicTile.PIT1 and (not game_state.pit1 or not game_state.is_pulling):
-                    return True
-                elif element[0] == BasicTile.PIT2 and (not game_state.pit2 or not game_state.is_pulling):
-                    return True
-                elif element[0] == BasicTile.PIT3 and (not game_state.pit3 or not game_state.is_pulling):
-                    return True
-                elif element[0] == BasicTile.PIT4 and (not game_state.pit4 or not game_state.is_pulling):
-                    return True
-                elif element[0] in [BasicTile.WALL, BasicTile.PIT_WALL]:
-                    return False
-                else:
-                    return check_zone_element_state(element, game_state, player_pos=(new_x, new_y))
-
-    def __check_for_obstructing_boxes__(self, push_x, push_y):
-        # Get active box positions
-        box_positions = []
-        if self.box1:
-            if (self.b1x, self.b1y) == (push_x, push_y):
-                print(f'Box 1 (C:{int(self.b1x/100+1)}, R:{int(self.b1y/100+1)}) infront of pushing box!')
-            box_positions.append((self.b1x, self.b1y))
-        if self. box2:
-            if (self.b2x, self.b2y) == (push_x, push_y):
-                print(f'Box 2 (C:{int(self.b2x/100+1)}, R:{int(self.b2y/100+1)}) infront of pushing box!')
-            box_positions.append((self.b2x, self.b2y))
-        if self.box3:
-            if (self.b3x, self.b3y) == (push_x, push_y):
-                print(f'Box 3 (C:{int(self.b3x/100+1)}, R:{int(self.b3y/100+1)}) infront of pushing box!')
-            box_positions.append((self.b3x, self.b3y))
-        if self.box4:
-            if (self.b4x, self.b4y) == (push_x, push_y):
-                print(f'Box 4 (C:{int(self.b4x/100+1)}, R:{int(self.b4y/100+1)}) infront of pushing box!')
-            box_positions.append((self.b4x, self.b4y))
-
-        # Check if pushing into another box
-        for box_pos in box_positions:
-            if box_pos == (push_x, push_y):
-                return False
-
-        print('Pushing box')
-        return True
-
-    # Validate push
-    def validate_push(self, push_x, push_y, game_state, check_zone_element_state=None):
-        if not self.is_box_within_game_board(push_x, push_y):
-            print(f"Push ({push_x}, {push_y}) outside the board is not valid!")
-            return False
-
-        for element in self.elements:
-            if element[1] == (push_x, push_y):
-                if element[0] in [BasicTile.START, BasicTile.FLOOR, BasicTile.EXIT,
-                                BasicTile.PIT1, BasicTile.PIT2, BasicTile.PIT3, BasicTile.PIT4]:
-                    return self.__check_for_obstructing_boxes__(push_x, push_y)
-                elif element[0] in [BasicTile.WALL, BasicTile.PIT_WALL]:
-                    return False
-                else:
-                    # Check for obstructing boxes
-                    no_boxes = self.__check_for_obstructing_boxes__(push_x, push_y)
-                    if no_boxes:
-                        return check_zone_element_state(element, game_state, boxes_pos=self.positions[1][self.level_index][0])
-                    else:
-                        return False
-        return True
-
 
     # Generic box blitter
-    def __blit_box__(self, index, travel, move):
+    def __blit_box__(self, index, game_state, travel, move):
         """
         Generic blitter for box at self.box[index],
         ground‐truth positions self.b{n}x/y, active flag self.box{n}.
@@ -458,85 +268,135 @@ class BasicBoardElements():
 
         # Movement in y axis
         if travel in (1, 2):
-            x = getattr(self, f'b{index + 1}x')
-            y = move + BasicTile.HEIGHT_OFFSET
+            x = getattr(game_state, f'b{index + 1}x')
+            y = move + self.height_offset
 
         # Movement in x axis
         elif travel in (3, 4):
             x = move
-            y = getattr(self, f'b{index + 1}y') + BasicTile.HEIGHT_OFFSET
+            y = getattr(game_state, f'b{index + 1}y') + self.height_offset
 
         # No movement
         else:
-            x = getattr(self, f'b{index + 1}x')
-            y = getattr(self, f'b{index + 1}y') + BasicTile.HEIGHT_OFFSET
+            x = getattr(game_state, f'b{index + 1}x')
+            y = getattr(game_state, f'b{index + 1}y') + self.height_offset
 
         self.game_board.blit(sprite, (x, y))
 
 
     # Wrappers to blit Boxes 1-4 with the help of the generic blit_box()
-    def blit_box_1(self, b1_travel, b1_move):
+    def blit_box_1(self, game_state, b1_travel, b1_move):
         '''blit_box_1'''
-        self.__blit_box__(0, b1_travel, b1_move)
+        self.__blit_box__(0, game_state, b1_travel, b1_move)
 
-    def blit_box_2(self, b2_travel, b2_move):
+    def blit_box_2(self, game_state, b2_travel, b2_move):
         '''blit_box2'''
-        self.__blit_box__(1, b2_travel, b2_move)
+        self.__blit_box__(1, game_state, b2_travel, b2_move)
 
-    def blit_box_3(self, b3_travel, b3_move):
+    def blit_box_3(self, game_state, b3_travel, b3_move):
         '''blit_box3'''
-        self.__blit_box__(2, b3_travel, b3_move)
+        self.__blit_box__(2, game_state, b3_travel, b3_move)
 
-    def blit_box_4(self, b4_travel, b4_move):
+    def blit_box_4(self, game_state, b4_travel, b4_move):
         '''blit_box4'''
-        self.__blit_box__(3, b4_travel, b4_move)
+        self.__blit_box__(3, game_state, b4_travel, b4_move)
+
+    def blit_level(self, game_state):
+        self.game_board.fill((30, 30, 30))
+        self.blit_level_elements(game_state)
+        self.blit_box_1(game_state, 0, 0)
+        self.blit_box_2(game_state, 0, 0)
+        self.blit_box_3(game_state, 0, 0)
+        self.blit_box_4(game_state, 0, 0)
+        self.blit_player(game_state, 0)
+
+        # Draw the status bar at the top
+        bar_rect = pygame.Rect(0, 0, self.width, self.height_offset)
+        pygame.draw.rect(self.game_board, (50, 50, 50), bar_rect)  # Dark gray color for the bar
 
 
     # Blit player
-    def blit_player(self, game_state, p_move):
+    def blit_player(self, game_state, p_move=None):
         '''blit_player'''
         # If lights out or Up is moving direction
         # - Blit facing direction of player
         if game_state.lights_out or not game_state.normal_movement:
             if game_state.facing_direction == 'up':
-                self.game_board.blit(Sprite.PLAYER_UP, (self.px, self.py + BasicTile.HEIGHT_OFFSET))
+                self.game_board.blit(Sprite.PLAYER_UP, (game_state.px, game_state.py + self.height_offset))
             elif game_state.facing_direction == 'down':
-                self.game_board.blit(Sprite.PLAYER_DOWN, (self.px, self.py + BasicTile.HEIGHT_OFFSET))
+                self.game_board.blit(Sprite.PLAYER_DOWN, (game_state.px, game_state.py + self.height_offset))
             elif game_state.facing_direction == 'left':
-                self.game_board.blit(Sprite.PLAYER_LEFT, (self.px, self.py + BasicTile.HEIGHT_OFFSET))
+                self.game_board.blit(Sprite.PLAYER_LEFT, (game_state.px, game_state.py + self.height_offset))
             elif game_state.facing_direction == 'right':
-                self.game_board.blit(Sprite.PLAYER_RIGHT, (self.px, self.py + BasicTile.HEIGHT_OFFSET))
+                self.game_board.blit(Sprite.PLAYER_RIGHT, (game_state.px, game_state.py + self.height_offset))
 
         else:
             # If movement is Up
             # - Blit player in direction of y corresponding of p_move' value
             if game_state.travel == 1 and not game_state.is_pulling:
-                self.game_board.blit(Sprite.PLAYER_UP, (self.px, p_move + BasicTile.HEIGHT_OFFSET))
+                self.game_board.blit(Sprite.PLAYER_UP, (game_state.px, p_move + self.height_offset))
 
             # Else iff movement is Down
             # - Blit player in direction of y corresponding of p_move' value
             elif game_state.travel == 2 and not game_state.is_pulling:
-                self.game_board.blit(Sprite.PLAYER_DOWN, (self.px, p_move + BasicTile.HEIGHT_OFFSET))
+                self.game_board.blit(Sprite.PLAYER_DOWN, (game_state.px, p_move + self.height_offset))
 
             # Else iff movement is Left
             # - Blit player in direction of x corresponding of p_move' value
             elif game_state.travel == 3 and not game_state.is_pulling:
-                self.game_board.blit(Sprite.PLAYER_LEFT, (p_move, self.py + BasicTile.HEIGHT_OFFSET))
+                self.game_board.blit(Sprite.PLAYER_LEFT, (p_move, game_state.py + self.height_offset))
 
             # Else iff movement is Right
             # - Blit player in direction of x corresponding of p_move' value
             elif game_state.travel == 4 and not game_state.is_pulling:
-                self.game_board.blit(Sprite.PLAYER_RIGHT, (p_move, self.py + BasicTile.HEIGHT_OFFSET))
+                self.game_board.blit(Sprite.PLAYER_RIGHT, (p_move, game_state.py + self.height_offset))
 
             # - Blit no player with no travel
             else:
-                self.game_board.blit(Sprite.PLAYER, (self.px, self.py + BasicTile.HEIGHT_OFFSET))
+                self.game_board.blit(Sprite.PLAYER, (game_state.px, game_state.py + self.height_offset))
+
+
+    def blit_status_bar(self, game_state):
+        # Draw the status bar at the top
+        bar_rect = pygame.Rect(0, 0, self.width, self.height_offset)
+        pygame.draw.rect(self.game_board, (50, 50, 50), bar_rect)  # Dark gray color for the bar
+
+        # Set caption and render the text inside the status bar
+        if game_state.game:
+            # Set window caption
+            pygame.display.set_caption(f'Escape the Werehouse! - {self.zone_data.map_title[1][game_state.current_level]}')
+            # Set status bar
+            moves_text = self.satus_font.render(f'Moves: {game_state.moves}', True, (255, 255, 255))
+            total_moves_text = self.satus_font.render(f'Total Moves: {game_state.total_moves}', True, (255, 255, 255))
+            lives_text = self.satus_font.render(f'Lives: {game_state.lives}', True, (255, 255, 255))
+            # Render status bar
+            self.game_board.blit(moves_text, (10, 10))
+            self.game_board.blit(total_moves_text, (200, 10))
+            self.game_board.blit(lives_text, (480, 10))
+        else:
+            # Set window caption
+            pygame.display.set_caption(f'Escape the Werehouse! - Tutorial {game_state.current_level + 1}')
+            # Set status bar
+            tutorial_text = self.tutorial_font.render(f'{self.zone_data.map_title[0][game_state.current_level]}', True, (255, 255, 255))
+            # Render status bar
+            self.game_board.blit(tutorial_text, (15, 15))
+
+
+    def __render_tutorial_bar__(self, game_state):
+        # Tutorial bar
+        tutorial_text = self.tutorial_font.render(f'{self.zone_data.map_title[0][game_state.current_level]}', True, (255, 255, 255)) # Set window bar
+
+        bar_rect = pygame.Rect(0, 0, self.game_board.get_width(), self.height_offset)
+
+        pygame.display.set_caption(f'Escape the Werehouse! - Tutorial {game_state.current_level + 1}')
+        pygame.draw.rect(self.game_board, (50, 50, 50), bar_rect)  # Dark gray color for the bar
+        self.game_board.blit(tutorial_text, (15, 15))
 
 
     # Blit level score (stars), identical logic but shorter
     def blit_stars(self, game_state):
         '''blit_stars'''
-        least_moves = self.level_score[0][game_state.current_level]
+        least_moves = self.zone_data.level_score[0][game_state.current_level]
 
         # Blit stars depending on number of moves
         if game_state.moves <= least_moves:
@@ -550,10 +410,29 @@ class BasicBoardElements():
             count = 1
 
         # Blit numbers of highlighted Stars
-        self.game_board.blit(Sprite.STARS[count], (186, 155 - BasicTile.HEIGHT_OFFSET))
-        pygame.display.update()
+        self.game_board.blit(Sprite.STARS[count], (186, 155 - self.height_offset))
+        # Update the display
+        pygame.display.flip()
         # Pause for 2 seconds to show Stars
         time.sleep(2)
+
+
+    # Show GAME OVER screen when out of lives
+    def display_game_over(self):
+        # Clear the screen
+        self.game_board.fill((10, 10, 10))
+        pygame.display.set_caption('GAME OVER')
+
+        # Render "GAME OVER" text
+        game_over_text = self.game_over_font.render('GAME OVER', True, (220, 0, 10))
+        game_over_center = game_over_text.get_rect(center=(self.game_board.get_width() // 2, 200))
+        self.game_board.blit(game_over_text, game_over_center)
+
+        # Update the display
+        pygame.display.flip()
+
+        # Wait for a few seconds before returning to the start screen
+        pygame.time.wait(3000)
 
 
     def __lerp_angle__(self, current, target, factor):
@@ -575,12 +454,12 @@ class BasicBoardElements():
         mask.fill((0, 0, 0, 254))  # Semi-transparent black overlay.
 
         # Flashlight parameters.
-        beam_length = int(2 * BasicTile.SIZE)        # How far the beam extends.
+        beam_length = int(2 * self.seize)        # How far the beam extends.
         beam_angle = math.radians(60)           # Total angular width of the beam (60°)
 
         # Determine the player's center.
-        player_center_x = self.px + (BasicTile.SIZE // 2)
-        player_center_y = self.py + (BasicTile.SIZE // 2) + BasicTile.HEIGHT_OFFSET  # Add the offset here
+        player_center_x = game_state.px + (self.seize // 2)
+        player_center_y = game_state.py + (self.seize // 2) + self.height_offset  # Add the offset here
         player_center = (player_center_x, player_center_y)
 
         target_angle = None
@@ -691,51 +570,51 @@ class BasicBoardElements():
 
             if first_iteration:
                 # First iteration: no mask
-                self.__blit_level_elements__(game_state)
+                self.blit_level(game_state)
 
                 if game_state.game == True:
                     # Render Status bar
-                    self.__render_status_bar__(game_state)
+                    self.blit_status_bar(game_state)
                 else:
                     # Render Tutorial bar
                     self. __render_tutorial_bar__(game_state)
-                pygame.display.update()
+                pygame.display.flip()
                 time.sleep(on_time)
                 first_iteration = False
             else:
                 # Apply the on time with a mask of lower opacity
                 mask = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
                 mask.fill((0, 0, 0, 76))  # Lower opacity
-                self.__blit_level_elements__(game_state)
+                self.blit_level(game_state)
                 self.game_board.blit(mask, (0, 0))
 
                 if game_state.game == True:
                     # Render Status bar
-                    self.__render_status_bar__(game_state)
+                    self.blit_status_bar(game_state)
                 else:
                     # Render Tutorial bar
                     self. __render_tutorial_bar__(game_state)
-                pygame.display.update()
+                pygame.display.flip()
                 time.sleep(on_time)
 
             # Apply the off time with a mask of higher opacity
             mask = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
             mask.fill((0, 0, 0, 254))  # Higher opacity
             self.game_board.fill((30, 30, 30))
-            self.blit_basic_elements(game_state)
-            self.blit_box_1(0, 0)
-            self.blit_box_2(0, 0)
-            self.blit_box_3(0, 0)
-            self.blit_box_4(0, 0)
+            self.blit_level_elements(game_state)
+            self.blit_box_1(game_state, 0, 0)
+            self.blit_box_2(game_state, 0, 0)
+            self.blit_box_3(game_state, 0, 0)
+            self.blit_box_4(game_state, 0, 0)
             self.game_board.blit(mask, (0, 0))
 
             if game_state.game == True:
                 # render Status bar
-                self.__render_status_bar__(game_state)
+                self.blit_status_bar(game_state)
             else:
                 # render Tutorial bar
                 self. __render_tutorial_bar__(game_state)
-            pygame.display.update()
+            pygame.display.flip()
             time.sleep(off_time)
 
         # Add a delay before turning on the flashlight beam
@@ -744,7 +623,7 @@ class BasicBoardElements():
 
         # Turn on the flashlight beam
         self.apply_blackout(game_state)
-        pygame.display.update()
+        pygame.display.flip()
 
     def fade_out(self, game_state):
         """Create a fade-out effect."""
@@ -767,20 +646,19 @@ class BasicBoardElements():
         for alpha in range(start_alpha, end_alpha, inc_alpha):  # Increase alpha gradually
             fade.set_alpha(alpha)
             self.game_board.blit(fade, (0, 0))
-            pygame.display.update()
+            pygame.display.flip()
             if alpha == 0:
                 pygame.time.wait(init)
             pygame.time.wait(delay)  # Small delay to control the speed of the fade
 
         if game_state.player_in_pit:
             # Render the warning text
-            font = pygame.font.SysFont('Arial Black', 42)
-            warning_text = font.render("Watch out for those pits!", True, (220, 0, 10))  # Red text
+            warning_text = self.warning_font.render("Watch out for those pits!", True, (220, 0, 10))  # Red text
             warning_text_rect = warning_text.get_rect(center=(self.width // 2, 200))
 
             # Blit the warning text
             self.game_board.blit(warning_text, warning_text_rect)
-            pygame.display.update()
+            pygame.display.flip()
 
             # Wait for a moment to let the player read the warning
             pygame.time.wait(1500)  # Wait for 1.5 seconds
@@ -793,51 +671,16 @@ class BasicBoardElements():
         # Decrease alpha gradually from 255 (opaque) to 0 (transparent)
         for alpha in range(255, 0, -10):
             # Re-blit the game state each frame
-            self.__blit_level_elements__(game_state)
+            self.blit_level(game_state)
 
             if game_state.game == True:
                 # Render Status bar
-                self.__render_status_bar__(game_state)
+                self.blit_status_bar(game_state)
             else:
                 # Render Tutorial bar
                 self.__render_tutorial_bar__(game_state)
             fade.set_alpha(alpha)
             self.game_board.blit(fade, (0, 0))
-            pygame.display.update()
+            pygame.display.flip()
             pygame.time.wait(30)
         return
-
-    def __render_status_bar__(self, game_state):
-        # Status bar
-        font = pygame.font.SysFont('Lucida Console', 24)  # Font for UI text
-        moves_text = font.render(f'Moves: {game_state.moves}', True, (255, 255, 255))
-        total_moves_text = font.render(f'Total Moves: {game_state.total_moves}', True, (255, 255, 255))
-        lives_text = font.render(f'Lives: {game_state.lives}', True, (255, 255, 255))
-
-        bar_rect = pygame.Rect(0, 0, self.game_board.get_width(), BasicTile.HEIGHT_OFFSET)
-
-        pygame.display.set_caption(f'Escape the Werehouse! - {self.map_title[1][game_state.current_level]}')
-        pygame.draw.rect(self.game_board, (50, 50, 50), bar_rect)  # Dark gray color for the bar
-        self.game_board.blit(moves_text, (10, 10))
-        self.game_board.blit(total_moves_text, (200, 10))
-        self.game_board.blit(lives_text, (480, 10))
-
-    def __render_tutorial_bar__(self, game_state):
-        # Tutorial bar
-        tutorial_font = pygame.font.SysFont('Lucida Console', 12)  # Font for tutorial text
-        tutorial_text = tutorial_font.render(f'{self.map_title[0][game_state.current_level]}', True, (255, 255, 255)) # Set window bar
-
-        bar_rect = pygame.Rect(0, 0, self.game_board.get_width(), BasicTile.HEIGHT_OFFSET)
-
-        pygame.display.set_caption(f'Escape the Werehouse! - Tutorial {game_state.current_level + 1}')
-        pygame.draw.rect(self.game_board, (50, 50, 50), bar_rect)  # Dark gray color for the bar
-        self.game_board.blit(tutorial_text, (15, 15))
-
-    def __blit_level_elements__(self, game_state):
-        self.game_board.fill((30, 30, 30))
-        self.blit_basic_elements(game_state)
-        self.blit_box_1(0, 0)
-        self.blit_box_2(0, 0)
-        self.blit_box_3(0, 0)
-        self.blit_box_4(0, 0)
-        self.blit_player(game_state, 0)

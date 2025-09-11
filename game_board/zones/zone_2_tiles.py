@@ -2,6 +2,13 @@ from game_board.elements.sprites import Sprite
 
 # Tile type enumeration
 class Zone2Tiles:
+    SIZE            = 100 # Pixel width/height of the squared basic tile
+    NUM_COLS        = 6   # Number of tiles for the X axis, default 6
+    NUM_ROWS        = 6   # Number of tiles for the Y axis, default 6
+    BOARD_WIDTH     = SIZE * NUM_COLS                   # Default 600
+    HEIGHT_OFFSET   = 40                                # +40 pixels to compensate for info bar at top
+    BOARD_HEIGHT    = (SIZE * NUM_ROWS) + HEIGHT_OFFSET # Default 600 + 40
+
     WALL_SWITCH_UP_1_1          = "Z1U_1_1"
     WALL_SWITCH_UP_2_1          = "Z1U_2_1"
     WALL_SWITCH_DOWN_1_1        = "Z2D_1_1"

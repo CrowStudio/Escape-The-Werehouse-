@@ -1,9 +1,10 @@
 ﻿import pygame
 import json
 import os
-from game_board.basic_blitting import BasicBoardElements
+from game_board.blitter import Blitter
 from game_board.elements.sprites import Sprite
 from game_board.zones.zone_2_tiles import Zone2Tiles
+from game_board.basic_tile import BasicTile
 
 # Set paths for level data
 DIR_PATH = os.path.dirname(os.path.abspath(__file__))
@@ -13,10 +14,10 @@ ZONE_2_PATH = os.path.join(DIR_PATH, 'level_maps', 'zone_2_maps.json')
 with open(ZONE_2_PATH, 'r') as file:
     ZONE_DATA = json.load(file)
 
-class ZoneTwo(BasicBoardElements):
+class ZoneTwo(Blitter):
     '''zone 2'''
     def __init__(self):
-        super().__init__(ZONE_DATA)
+        super().__init__(ZONE_DATA, Zone2Tiles)
 
     def check_zone_element_state(self, element, game_state, player_pos=None, boxes_pos=None):
         '''Check if a zone element is valid based on its type and game state.'''
@@ -123,9 +124,13 @@ class ZoneTwo(BasicBoardElements):
                         print(f'Passing {element_info}')
                         return True
 
-        # Basic tiles are OK
+        # Check for basic tiles
         if element_type in self.basic_tile.mapping:
-            return True
+            # Check if Exit is inactive
+            if element_type == BasicTile.mapping[8] and not game_state.exit:
+                return False
+            else:
+                return True
 
         # Default case: Element not in mapping
         print(f"Warning: Unknown element {element_type} in check_zone_element_state")
@@ -152,11 +157,14 @@ class ZoneTwo(BasicBoardElements):
             # Blit the selected sprite
             self.game_board.blit(sprite, pos)
 
-    def blit_level(self, game_state):
-        super().blit_basic_elements(game_state, blit_zone_element = self.blit_zone_element)
+    def blit_level_elements(self, game_state):
+        super().blit_level_elements(game_state, blit_zone_element = self.blit_zone_element)
 
-    def validate_move(self, new_x, new_y, game_state):
-        return super().validate_move(new_x, new_y, game_state, check_zone_element_state=self.check_zone_element_state)
+    def blit_status_bar(self, game_state):
+        super().blit_status_bar(game_state)
 
-    def validate_push(self, push_x, push_y, game_state):
-        return super().validate_push(push_x, push_y, game_state, check_zone_element_state=self.check_zone_element_state)
+    def validate_move(self, new_x, new_y):
+        return super().validate_move(new_x, new_y, check_zone_element_state=self.check_zone_element_state)
+
+    def validate_push(self, push_x, push_y):
+        return super().validate_push(push_x, push_y, check_zone_element_state=self.check_zone_element_state)

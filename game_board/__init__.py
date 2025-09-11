@@ -1,2 +1,3 @@
-from game_board.basic_blitting import BasicBoardElements
+from game_board.blitter import Blitter
+from game_board.level_data import LevelData
 from game_board.zone_level_wrapper import ZoneLevelWrapper

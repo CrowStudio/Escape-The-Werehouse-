@@ -3,33 +3,53 @@ from game_board.basic_tile import BasicTile
 
 class GameState:
     def __init__(self, level):
+        # Variable for ZoneLevelWrapper instance
         self.level = level
 
+        # Variables for game lavels
         self.game = False  # False == tutorial levels, True == zone levels
+        self.current_level = 0
         self.is_playing = True
         self.new_level = True
 
-        self.current_level = 0
+        # Varibales for game stats
         self.moves = 0
         self.total_moves = 0
         self.lives = 3
 
+        # Variables for movements
         self.debounce_timer = 0  # To avoid unwanted movements
         self.a_key_pressed = False
-
         self.normal_movement = True
         self.travel = 0
         self.direction = None  # Only keep track of direction
-        self.facing_direction = 'up'  # Attribute to track facing direction
-        self.is_pulling = False
-        self.player_in_pit = False
         self.prev_x = 0
         self.prev_y = 0
 
-        # Variable for active/inactive Exit
+        # Variables for the player
+        self.facing_direction = 'up'  # Variable to track facing direction of the player
+        self.px = 0
+        self.py = 0
+        self.is_pulling = False
+        self.player_in_pit = False
+
+        # Box positions
+        # Box 1
+        self.b1x = 0
+        self.b1y = 0
+        # Box 2
+        self.b2x = 0
+        self.b2y = 0
+        # Box 3
+        self.b3x = 0
+        self.b3y = 0
+        # Box 4
+        self.b4x = 0
+        self.b4y = 0
+
+        # Variables for active/inactive Exit
         self.exit = False
-        # Variable for Exit switch
-        self.activate_exit = False
+        self.activate_exit = False  # Variable for Exit switch
 
         # Variables for active/inactive Pit
         self.pit1 = True
@@ -127,79 +147,36 @@ class GameState:
         # RIGHT
         self.TD_R1_0_normally_closed = False
 
-        # Game options
+        # Variables for game options
         self.lights_out = False
         self.is_searching = False
         self.search = 0
         self.search_speed = 0.4
 
-        # Create font objects
-        self.font = pygame.font.SysFont('Lucida Console', 24)  # Font for UI text
-        self.tutorial_font = pygame.font.SysFont('Lucida Console', 12)  # Font for tutorial text
-        self.font = pygame.font.SysFont('Lucida Console', 24)  # Font for UI text
-        self.dead_font = pygame.font.SysFont('Arial Black', 72)  # Biggest font for GAME OVER
-
-    def draw_status_bar(self):
-        # Draw the status bar at the top
-        bar_rect = pygame.Rect(0, 0, BasicTile.BOARD_WIDTH, BasicTile.HEIGHT_OFFSET)
-        pygame.draw.rect(self.level.game_board, (50, 50, 50), bar_rect)  # Dark gray color for the bar
-
-        # Set caption and render the text inside the status bar
-        if self.game and self.is_playing:
-            # Set window caption
-            pygame.display.set_caption(f'Escape the Werehouse! - {self.level.map_title[1][self.current_level]}')
-            # Set status bar
-            moves_text = self.font.render(f'Moves: {self.moves}', True, (255, 255, 255))
-            total_moves_text = self.font.render(f'Total Moves: {self.total_moves}', True, (255, 255, 255))
-            lives_text = self.font.render(f'Lives: {self.lives}', True, (255, 255, 255))
-            # Render status bar
-            self.level.game_board.blit(moves_text, (10, 10))
-            self.level.game_board.blit(total_moves_text, (200, 10))
-            self.level.game_board.blit(lives_text, (480, 10))
-        elif self.is_playing:
-            # Set window caption
-            pygame.display.set_caption(f'Escape the Werehouse! - Tutorial {self.current_level + 1}')
-            # Set status bar
-            tutorial_text = self.tutorial_font.render(f'{self.level.map_title[0][self.current_level]}', True, (255, 255, 255))
-            # Render status bar
-            self.level.game_board.blit(tutorial_text, (15, 15))
-
+    # Check if player has reach Exit
     def check_level_complete(self):
         # Check if player is on exit tile
         for element in self.level.elements:
             if element[0] == BasicTile.EXIT:
-                if (self.level.px, self.level.py) == element[1]:  # Player position matches exit position
+                if (self.px, self.py) == element[1]:  # Player position matches exit position
                     self.travel = 0
                     return True
 
         return False
 
+
     # Handle actions when a level is completed
     def handle_level_complete(self, high_scores):
         # Render one last frame with player on exit
-        self.__blit_level_elements__()
+        self.level.blit_level(self)
 
         # Show score for completed level
         if self.game:
-            pygame.display.set_caption(f'Escape the Werehouse!')
-
-            # Draw the status bar at the top
-            bar_rect = pygame.Rect(0, 0, BasicTile.BOARD_WIDTH, BasicTile.HEIGHT_OFFSET)
-            pygame.draw.rect(self.level.game_board, (50, 50, 50), bar_rect)  # Dark gray color for the bar
-
-            # Render the text inside the bar
-            moves_text = self.font.render(f'Moves: {self.moves}', True, (255, 255, 255))
-            total_moves_text = self.font.render(f'Total Moves: {self.total_moves}', True, (255, 255, 255))
-            lives_text = self.font.render(f'Lives: {self.lives}', True, (255, 255, 255))
-            self.level.game_board.blit(moves_text, (10, 10))
-            self.level.game_board.blit(total_moves_text, (200, 10))
-            self.level.game_board.blit(lives_text, (480, 10))
-
+            # Blit status bar
+            self.level.blit_status_bar(self)
             # Blit stars
             self.level.blit_stars(self)
-
-        pygame.display.flip()
-        pygame.time.wait(300)
+            pygame.time.wait(300)
 
         # Increment level counter
         self.current_level += 1
@@ -207,7 +184,7 @@ class GameState:
         self.new_level = True
 
         # Handle mode transitions
-        if self.game == False and self.current_level >= 4:
+        if self.game == False and self.current_level >= self.level.no_of_levels[0]:
             # Debug statement
             print('Well done, you finished the Tutorials! Now try to Escape the Werehouse!')
             # Set game states
@@ -216,7 +193,7 @@ class GameState:
             self.moves = 0
             self.total_moves = 0
             self.lives = 3
-        elif self.game == True and self.current_level >= self.level.no_of_levels[1]:
+        elif self.game == True and self.current_level >= self.level.no_of_levels[1]: # set [1] to current_zone_index instead
             # Debug statements
             print('Congratulations! You finished the last level!')
             print(f'Your have made a total of {self.total_moves} successful moves!')
@@ -229,35 +206,128 @@ class GameState:
             print("Displaying high scores...")  # Debug statement
             high_scores.display_scores()
 
+
+    # Reset the game state variables related to movement at the start of each frame.
     def reset_movement_variables(self):
-        """
-        Reset the game state variables related to movement at the start of each frame.
-        """
         self.direction = None  # Reset the movement direction
         self.travel = 0  # Reset the travel distance
 
+
+    # Set the search direction and activate searching mode.
     def set_search_direction(self, direction):
-        """
-        Set the search direction and activate searching mode.
-        """
         self.search_speed = 0.1
         self.search = direction  # Set the search direction
         self.is_searching = True  # Activate searching mode
 
+
+    # Set the movement direction and travel distance based on the movement input.
     def set_movement_direction(self, movement):
-        """
-        Set the movement direction and travel distance based on the movement input.
-        """
         self.direction = movement['direction']  # Set the movement direction
         self.travel = movement['travel']  # Set the travel distance
 
+
+    # Update the player's facing direction and set searching properties.
     def update_facing_direction(self, movement):
-        """
-        Update the player's facing direction and set searching properties.
-        """
         self.facing_direction = movement['direction']  # Update the facing direction
         self.search = movement['search']  # Set the search direction
         self.is_searching = True  # Activate searching mode
+
+
+    # Move within game board
+    def is_player_within_game_board(self, new_x, new_y):
+        if (new_x < 0 or new_x > self.level.width) or (new_y < 0 or new_y > self.level.height):
+            return False
+        else:
+            return True
+
+
+    # Move within game board
+    def is_box_within_game_board(self, new_x, new_y):
+        if (new_x < 0 or new_x > self.level.width-100) or (new_y < 0 or new_y > self.level.height-100):
+            return False
+        else:
+            return True
+
+
+    # Validate movement
+    def validate_move(self, level, new_x, new_y, check_zone_element_state=None):
+        if not self.is_player_within_game_board(new_x, new_y):
+            print(f"Move ({new_x}, {new_y}) outside the board is not valid!")
+            return False
+
+        for element in level.elements:
+            if element[1] == (new_x, new_y):
+                # Check for valid tiles including EXIT and PITS
+                if element[0] == BasicTile.EXIT and self.exit:  # Allow exit only if active
+                    return True
+                elif element[0] == BasicTile.START or element[0] == BasicTile.FLOOR:
+                    return True
+                elif element[0] == BasicTile.PIT1 and (not self.pit1 or not self.is_pulling):
+                    return True
+                elif element[0] == BasicTile.PIT2 and (not self.pit2 or not self.is_pulling):
+                    return True
+                elif element[0] == BasicTile.PIT3 and (not self.pit3 or not self.is_pulling):
+                    return True
+                elif element[0] == BasicTile.PIT4 and (not self.pit4 or not self.is_pulling):
+                    return True
+                elif element[0] in [BasicTile.WALL, BasicTile.PIT_WALL]:
+                    return False
+                else:
+                    return level.check_zone_element_state(element, game_state=self, player_pos=(new_x, new_y))
+
+
+    # Check if another box is in the way of psuhing box
+    def __check_for_obstructing_boxes__(self, level, push_x, push_y):
+        # Get active box positions
+        box_positions = []
+        if level.box1:
+            if (self.b1x, self.b1y) == (push_x, push_y):
+                print(f'Box 1 (C:{int(self.b1x/100+1)}, R:{int(self.b1y/100+1)}) infront of pushing box!')
+            box_positions.append((self.b1x, self.b1y))
+        if level. box2:
+            if (self.b2x, self.b2y) == (push_x, push_y):
+                print(f'Box 2 (C:{int(self.b2x/100+1)}, R:{int(self.b2y/100+1)}) infront of pushing box!')
+            box_positions.append((self.b2x, self.b2y))
+        if level.box3:
+            if (self.b3x, self.b3y) == (push_x, push_y):
+                print(f'Box 3 (C:{int(self.b3x/100+1)}, R:{int(self.b3y/100+1)}) infront of pushing box!')
+            box_positions.append((self.b3x, self.b3y))
+        if level.box4:
+            if (self.b4x, self.b4y) == (push_x, push_y):
+                print(f'Box 4 (C:{int(self.b4x/100+1)}, R:{int(self.b4y/100+1)}) infront of pushing box!')
+            box_positions.append((self.b4x, self.b4y))
+
+        # Check if pushing into another box
+        for box_pos in box_positions:
+            if box_pos == (push_x, push_y):
+                return False
+
+        print('Pushing box')
+        return True
+
+
+    # Validate push
+    def validate_push(self, level, push_x, push_y, check_zone_element_state=None):
+        if not self.is_box_within_game_board(push_x, push_y):
+            print(f"Push ({push_x}, {push_y}) outside the board is not valid!")
+            return False
+
+        for element in level.elements:
+            if element[1] == (push_x, push_y):
+                if element[0] in [BasicTile.START, BasicTile.FLOOR, BasicTile.EXIT,
+                                BasicTile.PIT1, BasicTile.PIT2, BasicTile.PIT3, BasicTile.PIT4]:
+                    return self.__check_for_obstructing_boxes__(level, push_x, push_y)
+                elif element[0] in [BasicTile.WALL, BasicTile.PIT_WALL]:
+                    return False
+                else:
+                    # Check for obstructing boxes
+                    no_boxes = self.__check_for_obstructing_boxes__(level, push_x, push_y)
+                    if no_boxes:
+                        return level.check_zone_element_state(element, game_state=self, boxes_pos=level.zone_data.positions[1][level.level_index][0])
+                    else:
+                        return False
+        return True
+
 
     # Check if a box has fallen into a pit and update states accordingly
     def check_box_in_pit(self, box_num, bx, by):
@@ -297,6 +367,8 @@ class GameState:
 
                 return False
 
+
+    # Check if player fell into a pit
     def check_player_in_pit(self, px, py, audio):
         if self.player_in_pit:
             return False
@@ -328,14 +400,14 @@ class GameState:
                     self.travel = 0
 
                     # Update player position to the pit
-                    self.level.px, self.level.py = px, py
+                    self.px, self.py = px, py
 
-                    self.__blit_level_elements__()
+                    self.level.blit_level(self)
+                    # Update the display
+                    pygame.display.flip()
 
                     # Debug statement to check player position
                     print(f"Oh no! Player fell into pit {pit_type} (C:{int(px/100+1)}, R:{int(py/100+1)})")
-
-                    pygame.display.flip()
 
                     # Fade out effect
                     self.level.fade_out(self)
@@ -345,39 +417,10 @@ class GameState:
                         self.new_level = True
                         self.total_moves += 1
                         self.moves = 0
-                        self.prev_x, self.prev_y = self.level.px, self.level.py
+                        self.prev_x, self.prev_y = self.px, self.py
                         return False
                     # Game Over
                     else:
-                        self.__display_game_over__()
+                        self.level.display_game_over()
                         self.is_playing = False
                         return True
-
-    # Blit the level and boxes
-    def __blit_level_elements__(self):
-        self.level.game_board.fill((30, 30, 30))
-        self.level.blit_level(self)
-        self.level.blit_box_1(0, 0)
-        self.level.blit_box_2(0, 0)
-        self.level.blit_box_3(0, 0)
-        self.level.blit_box_4(0, 0)
-        self.level.blit_player(self, 0)
-        # Draw the status bar at the top
-        bar_rect = pygame.Rect(0, 0, BasicTile.BOARD_WIDTH, BasicTile.HEIGHT_OFFSET)
-        pygame.draw.rect(self.level.game_board, (50, 50, 50), bar_rect)  # Dark gray color for the bar
-
-    # Show GAME OVER screen when out of lives
-    def __display_game_over__(self):
-        # Clear the screen
-        self.level.game_board.fill((10, 10, 10))
-        pygame.display.set_caption('GAME OVER')
-        # Render "GAME OVER" text
-        game_over_text = self.dead_font.render('GAME OVER', True, (220, 0, 10))
-        game_over_center = game_over_text.get_rect(center=(self.level.game_board.get_width() // 2, 200))
-        self.level.game_board.blit(game_over_text, game_over_center)
-
-        # Update the display
-        pygame.display.flip()
-
-        # Wait for a few seconds before returning to the start screen
-        pygame.time.wait(3000)

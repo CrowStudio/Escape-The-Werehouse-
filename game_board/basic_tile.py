@@ -17,7 +17,7 @@ class BasicTile:
     WALL        = 7
     EXIT        = 8
 
-    mapping = {
+    mapping = [
             START,
             PIT1,
             PIT2,
@@ -27,4 +27,4 @@ class BasicTile:
             FLOOR,
             WALL,
             EXIT
-        }
+    ]
