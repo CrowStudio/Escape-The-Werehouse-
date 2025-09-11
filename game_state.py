@@ -235,7 +235,7 @@ class GameState:
 
     # Move within game board
     def is_player_within_game_board(self, new_x, new_y):
-        if (new_x < 0 or new_x > BasicTile.BOARD_WIDTH-100) or (new_y < 0 or new_y > BasicTile.BOARD_HEIGHT):
+        if (new_x < 0 or new_x > self.level.width) or (new_y < 0 or new_y > self.level.height):
             return False
         else:
             return True
@@ -243,7 +243,7 @@ class GameState:
 
     # Move within game board
     def is_box_within_game_board(self, new_x, new_y):
-        if (new_x < 0 or new_x > BasicTile.BOARD_WIDTH-100) or (new_y < 0 or new_y > BasicTile.BOARD_HEIGHT-100):
+        if (new_x < 0 or new_x > self.level.width-100) or (new_y < 0 or new_y > self.level.height-100):
             return False
         else:
             return True
@@ -323,7 +323,7 @@ class GameState:
                     # Check for obstructing boxes
                     no_boxes = self.__check_for_obstructing_boxes__(level, push_x, push_y)
                     if no_boxes:
-                        return level.check_zone_element_state(element, game_state=self, boxes_pos=level.positions[1][level.level_index][0])
+                        return level.check_zone_element_state(element, game_state=self, boxes_pos=level.zone_data.positions[1][level.level_index][0])
                     else:
                         return False
         return True

@@ -94,9 +94,9 @@ class StartMenu:
         if self.dropdown_open:
             # Determine which set of titles to use based on tutorial mode
             if self.tutorial_checked:
-                titles = self.level.map_title[0]
+                titles = self.level.zone_data.map_title[0]
             else:
-                titles = self.level.map_title[1]
+                titles = self.level.zone_data.map_title[1]
 
             dropdown_levels = []  # Initialize a list to hold the level text lines for the dropdown
             max_line_width = self.screen.get_width() - 50  # Maximum width for a line of text

@@ -22,8 +22,7 @@ except pygame.error as e:
 
 # Game constants
 FPS = 120
-DISTANCE = BasicTile.SIZE
-MOVEMENT_DELAY = 10  # Controls movement speed (higher = slower)
+MOVEMENT_DELAY = 6  # Controls movement speed (higher = slower)
 ARROW_KEYS = {pygame.K_UP:    {'direction': 'up',    'travel': 1, 'search': 1},
               pygame.K_DOWN:  {'direction': 'down',  'travel': 2, 'search': 2},
               pygame.K_LEFT:  {'direction': 'left',  'travel': 3, 'search': 3},
