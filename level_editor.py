@@ -33,11 +33,11 @@ TILE_IMAGES = {
     'PIT3': Sprite.PIT,
     'PIT4': Sprite.PIT,
     'PIT_WALL': Sprite.PIT,
-    'EXIT': Sprite.EXIT[0],
-    'BOX1': Sprite.BOXES[8],
-    'BOX2': Sprite.BOXES[9],
-    'BOX3': Sprite.BOXES[10],
-    'BOX4': Sprite.BOXES[11]
+    'EXIT': Sprite.EXIT[1],
+    'BOX1': Sprite.BOXES[8],  # Box with number 1
+    'BOX2': Sprite.BOXES[9],  # Box with number 2
+    'BOX3': Sprite.BOXES[10],  # Box with number 3
+    'BOX4': Sprite.BOXES[11]  # Box with number 4
 }
 
 TILE_BUTTON_COLORS = {

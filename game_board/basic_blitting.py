@@ -269,10 +269,18 @@ class BasicBoardElements():
 
     # Place Boxes, Player, reset Pits, and Exit
     def __place_boxes_player_and_reset_elements__(self, option, game_state):
-        self.box1, (game_state.b1x, game_state.b1y) = self.active_boxes[option][self.level_index][0], self.positions[option][self.level_index][0]
-        self.box2, (game_state.b2x, game_state.b2y) = self.active_boxes[option][self.level_index][1], self.positions[option][self.level_index][1]
-        self.box3, (game_state.b3x, game_state.b3y) = self.active_boxes[option][self.level_index][2], self.positions[option][self.level_index][2]
-        self.box4, (game_state.b4x, game_state.b4y) = self.active_boxes[option][self.level_index][3], self.positions[option][self.level_index][3]
+        self.box1, (game_state.b1x, game_state.b1y) = \
+                    self.active_boxes[option][self.level_index][0], \
+                    self.positions[option][self.level_index][0]
+        self.box2, (game_state.b2x, game_state.b2y) = \
+                    self.active_boxes[option][self.level_index][1], \
+                    self.positions[option][self.level_index][1]
+        self.box3, (game_state.b3x, game_state.b3y) = \
+                    self.active_boxes[option][self.level_index][2], \
+                    self.positions[option][self.level_index][2]
+        self.box4, (game_state.b4x, game_state.b4y) = \
+                    self.active_boxes[option][self.level_index][3], \
+                    self.positions[option][self.level_index][3]
 
         game_state.px, game_state.py = self.player_start[option][self.level_index]
         game_state.pit1 = game_state.pit2 = game_state.pit3 = game_state.pit4 = True
@@ -580,8 +588,8 @@ class BasicBoardElements():
         beam_angle = math.radians(60)           # Total angular width of the beam (60°)
 
         # Determine the player's center.
-        player_center_x = self.px + (BasicTile.SIZE // 2)
-        player_center_y = self.py + (BasicTile.SIZE // 2) + BasicTile.HEIGHT_OFFSET  # Add the offset here
+        player_center_x = game_state.px + (BasicTile.SIZE // 2)
+        player_center_y = game_state.py + (BasicTile.SIZE // 2) + BasicTile.HEIGHT_OFFSET  # Add the offset here
         player_center = (player_center_x, player_center_y)
 
         target_angle = None
@@ -724,10 +732,10 @@ class BasicBoardElements():
             mask.fill((0, 0, 0, 254))  # Higher opacity
             self.game_board.fill((30, 30, 30))
             self.blit_level_elements(game_state)
-            self.blit_box_1(0, 0)
-            self.blit_box_2(0, 0)
-            self.blit_box_3(0, 0)
-            self.blit_box_4(0, 0)
+            self.blit_box_1(game_state, 0, 0)
+            self.blit_box_2(game_state, 0, 0)
+            self.blit_box_3(game_state, 0, 0)
+            self.blit_box_4(game_state, 0, 0)
             self.game_board.blit(mask, (0, 0))
 
             if game_state.game == True:

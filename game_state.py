@@ -275,6 +275,7 @@ class GameState:
                 else:
                     return level.check_zone_element_state(element, game_state=self, player_pos=(new_x, new_y))
 
+
     # Check if another box is in the way of psuhing box
     def __check_for_obstructing_boxes__(self, level, push_x, push_y):
         # Get active box positions
@@ -303,6 +304,7 @@ class GameState:
 
         print('Pushing box')
         return True
+
 
     # Validate push
     def validate_push(self, level, push_x, push_y, check_zone_element_state=None):
@@ -365,6 +367,7 @@ class GameState:
                     return True
 
                 return False
+
 
     # Check if player fell into a pit
     def check_player_in_pit(self, px, py, audio):

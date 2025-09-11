@@ -19,6 +19,8 @@ class StartMenu:
         self.dropdown_font = pygame.font.SysFont('Lucida Console', 20)  # Smaller font for dropdown
         self.menu_font = pygame.font.SysFont('Arial Black', 42)  # Even bigger font for START MENU
         self.font = pygame.font.SysFont('Lucida Console', 24)  # Font for UI text
+        self.dropdown_options = ["Lights OFF", "Arrow Up = Move Up", "Arrow Up = Move Facing Direction"]
+
 
     def draw(self):
         # Draw the start screen UI
@@ -96,7 +98,7 @@ class StartMenu:
             else:
                 titles = self.level.map_title[1]
 
-            lines = []  # Initialize a list to hold the lines of text for the dropdown
+            dropdown_levels = []  # Initialize a list to hold the level text lines for the dropdown
             max_line_width = self.screen.get_width() - 50  # Maximum width for a line of text
 
             # Process each title to format it for the dropdown
@@ -108,24 +110,24 @@ class StartMenu:
                     trimmed_title = title
                 trimmed_title = trimmed_title.split(',')[0]  # Remove any additional info after a comma
                 title_text = f"{i}: {trimmed_title}"  # Format the title text with its index
-                words = title_text.split()  # Split the title text into words
+                level_words = title_text.split()  # Split the title text into level_words
                 current_line = ""  # Initialize the current line of text
 
                 # Build the lines of text for the dropdown
-                for word in words:
+                for word in level_words:
                     test_line = current_line + word + " "  # Test adding the next word to the current line
                     if self.dropdown_font.size(test_line)[0] > max_line_width:  # If the line is too wide, finalize the current line
-                        lines.append(current_line)
+                        dropdown_levels.append(current_line)
                         current_line = word + " "  # Start a new line with the current word
                     else:
                         current_line = test_line  # Continue building the current line
 
                 if current_line:  # If there's any remaining text, add it as a new line
-                    lines.append(current_line.strip())
+                    dropdown_levels.append(current_line.strip())
 
             # Calculate the size and position of the dropdown box
-            dropdown_width = max(self.dropdown_font.size(line)[0] for line in lines) + 40
-            text_height = len(lines) * 32
+            dropdown_width = max(self.dropdown_font.size(line)[0] for line in dropdown_levels) + 40
+            text_height = len(dropdown_levels) * 32
             dropdown_y = 235
             bottom_padding = 16
             dropdown_height = text_height + bottom_padding
@@ -134,7 +136,7 @@ class StartMenu:
             pygame.draw.rect(self.screen, (50, 50, 50), dropdown_box)  # Draw the dropdown background
 
             # Render and display each line of text in the dropdown
-            for i, line in enumerate(lines):
+            for i, line in enumerate(dropdown_levels):
                 level_text = self.dropdown_font.render(line, True, (255, 255, 255))
                 level_text_rect = level_text.get_rect()
                 level_text_rect.topleft = (dropdown_x + 20, dropdown_y + 16 + i * 32)
@@ -142,12 +144,11 @@ class StartMenu:
 
         # Draw the options dropdown menu if it is open
         if self.options_dropdown_open:
-            lines = ["Lights OFF", "Arrow Up = Move Up", "Arrow Up = Move Facing Direction"]
             max_line_width = self.screen.get_width() - 50
 
             # Calculate the size and position of the options dropdown box
-            dropdown_width = max(self.dropdown_font.size(line)[0] for line in lines) + 80
-            text_height = len(lines) * 32
+            dropdown_width = max(self.dropdown_font.size(line)[0] for line in self.dropdown_options) + 80
+            text_height = len(self.dropdown_options) * 32
             dropdown_y = 495
             bottom_padding = 16
             dropdown_height = text_height + bottom_padding
@@ -156,7 +157,7 @@ class StartMenu:
             pygame.draw.rect(self.screen, (50, 50, 50), dropdown_box)  # Draw the options dropdown background
 
             # Render and display each option in the dropdown
-            for i, line in enumerate(lines):
+            for i, line in enumerate(self.dropdown_options):
                 option_text = self.dropdown_font.render(line, True, (255, 255, 255))
                 option_text_rect = option_text.get_rect()
                 option_text_rect.topleft = (dropdown_x + 20, dropdown_y + 16 + i * 32)
@@ -169,17 +170,30 @@ class StartMenu:
 
                 # Draw the checkmark if the option is checked
                 if i == 0 and self.lights_off_checked:
-                    pygame.draw.line(self.screen, (255, 255, 255), (checkbox_x + 5, dropdown_y + 20 + i * 32), (checkbox_x + 19, dropdown_y + 35 + i * 32), 2)
-                    pygame.draw.line(self.screen, (255, 255, 255), (checkbox_x + 19, dropdown_y + 20 + i * 32), (checkbox_x + 5, dropdown_y + 35 + i * 32), 2)
+                    pygame.draw.line(self.screen, (255, 255, 255), \
+                                    (checkbox_x + 5, dropdown_y + 20 + i * 32), \
+                                    (checkbox_x + 19, dropdown_y + 35 + i * 32), 2)
+                    pygame.draw.line(self.screen, (255, 255, 255), \
+                                    (checkbox_x + 19, dropdown_y + 20 + i * 32), \
+                                    (checkbox_x + 5, dropdown_y + 35 + i * 32), 2)
                 elif i == 1 and self.arrow_up_up_checked:
-                    pygame.draw.line(self.screen, (255, 255, 255), (checkbox_x + 5, dropdown_y + 18 + i * 32), (checkbox_x + 19, dropdown_y + 33 + i * 32), 2)
-                    pygame.draw.line(self.screen, (255, 255, 255), (checkbox_x + 19, dropdown_y + 18 + i * 32), (checkbox_x + 5, dropdown_y + 32 + i * 32), 2)
+                    pygame.draw.line(self.screen, (255, 255, 255), \
+                                    (checkbox_x + 5, dropdown_y + 18 + i * 32), \
+                                    (checkbox_x + 19, dropdown_y + 33 + i * 32), 2)
+                    pygame.draw.line(self.screen, (255, 255, 255), \
+                                    (checkbox_x + 19, dropdown_y + 18 + i * 32), \
+                                    (checkbox_x + 5, dropdown_y + 32 + i * 32), 2)
                 elif i == 2 and self.arrow_up_facing_checked:
-                    pygame.draw.line(self.screen, (255, 255, 255), (checkbox_x + 5, dropdown_y + 15 + i * 32), (checkbox_x + 19, dropdown_y + 30 + i * 32), 2)
-                    pygame.draw.line(self.screen, (255, 255, 255), (checkbox_x + 19, dropdown_y + 15 + i * 32), (checkbox_x + 5, dropdown_y + 30 + i * 32), 2)
+                    pygame.draw.line(self.screen, (255, 255, 255), \
+                                    (checkbox_x + 5, dropdown_y + 15 + i * 32), \
+                                    (checkbox_x + 19, dropdown_y + 30 + i * 32), 2)
+                    pygame.draw.line(self.screen, (255, 255, 255), \
+                                    (checkbox_x + 19, dropdown_y + 15 + i * 32), \
+                                    (checkbox_x + 5, dropdown_y + 30 + i * 32), 2)
 
         # Update the display
         pygame.display.flip()
+
 
     def handle_events(self):
         # Handle user events such as mouse clicks and key presses
@@ -223,11 +237,14 @@ class StartMenu:
 
                 # Check if an option in the options dropdown is clicked
                 elif self.options_dropdown_open:
-                    dropdown_x = self.screen.get_width() // 2 - (max(self.dropdown_font.size(line)[0] for line in ["Lights OFF", "Arrow Up = Move Up", "Arrow Up = Move Facing Direction"]) + 80) // 2
+                    dropdown_x = self.screen.get_width() // 2 - (max(self.dropdown_font.size(line)[0] \
+                                    for line in self.dropdown_options) + 80) // 2
                     dropdown_y = 495
 
                     # Check if the "Lights OFF" option is clicked
-                    if dropdown_x <= mouse_pos[0] <= dropdown_x + max(self.dropdown_font.size(line)[0] for line in ["Lights OFF", "Arrow Up = Move Up", "Arrow Up = Move Facing Direction"]) + 80 and dropdown_y + 13 <= mouse_pos[1] <= dropdown_y + 38:
+                    if dropdown_x <= mouse_pos[0] <= dropdown_x + max(self.dropdown_font.size(line)[0] \
+                                    for line in self.dropdown_options) + 80 \
+                                    and dropdown_y + 13 <= mouse_pos[1] <= dropdown_y + 38:
                         self.lights_off_checked = not self.lights_off_checked
                         self.game_state.lights_out = self.lights_off_checked
                         self.level.blackout = self.game_state.lights_out
@@ -235,14 +252,18 @@ class StartMenu:
                         self.draw()
 
                     # Check if the "Arrow Up = Move Up" option is clicked
-                    elif dropdown_x <= mouse_pos[0] <= dropdown_x + max(self.dropdown_font.size(line)[0] for line in ["Lights OFF", "Arrow Up = Move Up", "Arrow Up = Move Facing Direction"]) + 80 and dropdown_y + 43 <= mouse_pos[1] <= dropdown_y + 68:
+                    elif dropdown_x <= mouse_pos[0] <= dropdown_x + max(self.dropdown_font.size(line)[0] \
+                                    for line in self.dropdown_options) + 80 \
+                                    and dropdown_y + 43 <= mouse_pos[1] <= dropdown_y + 68:
                         self.arrow_up_up_checked = True
                         self.arrow_up_facing_checked = False
                         self.game_state.normal_movement = True
                         self.draw()
 
                     # Check if the "Arrow Up = Move Facing Direction" option is clicked
-                    elif dropdown_x <= mouse_pos[0] <= dropdown_x + max(self.dropdown_font.size(line)[0] for line in ["Lights OFF", "Arrow Up = Move Up", "Arrow Up = Move Facing Direction"]) + 80 and dropdown_y + 73 <= mouse_pos[1] <= dropdown_y + 98:
+                    elif dropdown_x <= mouse_pos[0] <= dropdown_x + max(self.dropdown_font.size(line)[0] \
+                                    for line in self.dropdown_options) + 80 \
+                                    and dropdown_y + 73 <= mouse_pos[1] <= dropdown_y + 98:
                         self.arrow_up_up_checked = False
                         self.arrow_up_facing_checked = True
                         self.game_state.normal_movement = False
@@ -270,29 +291,35 @@ class StartMenu:
 
                 # Close dropdowns if clicking outside their respective areas
                 if self.dropdown_open:
-                    dropdown_x = self.screen.get_width() // 2 - (max(self.dropdown_font.size(line)[0] for line in ["Lights OFF", "Arrow Up = Move Up", "Arrow Up = Move Facing Direction"]) + 80) // 2
+                    dropdown_x = self.screen.get_width() // 2 - (max(self.dropdown_font.size(line)[0] \
+                                for line in self.dropdown_options) + 80) // 2
                     dropdown_y = 235
-                    dropdown_width = max(self.dropdown_font.size(line)[0] for line in ["Lights OFF", "Arrow Up = Move Up", "Arrow Up = Move Facing Direction"]) + 80
-                    dropdown_height = len(["Lights OFF", "Arrow Up = Move Up", "Arrow Up = Move Facing Direction"]) * 32 + 16
-                    if not (dropdown_x <= mouse_pos[0] <= dropdown_x + dropdown_width and dropdown_y <= mouse_pos[1] <= dropdown_y + dropdown_height):
+                    dropdown_width = max(self.dropdown_font.size(line)[0] for line in self.dropdown_options) + 80
+                    dropdown_height = len(self.dropdown_options) * 32 + 16
+                    if not (dropdown_x <= mouse_pos[0] <= dropdown_x + dropdown_width \
+                            and dropdown_y <= mouse_pos[1] <= dropdown_y + dropdown_height):
                         if not (200 <= mouse_pos[0] <= 400 and 190 <= mouse_pos[1] <= 230):
                             self.dropdown_open = False
 
                 if self.options_dropdown_open:
-                    dropdown_x = self.screen.get_width() // 2 - (max(self.dropdown_font.size(line)[0] for line in ["Lights OFF", "Arrow Up = Move Up", "Arrow Up = Move Facing Direction"]) + 80) // 2
+                    dropdown_x = self.screen.get_width() // 2 - (max(self.dropdown_font.size(line)[0] \
+                                for line in self.dropdown_options) + 80) // 2
                     dropdown_y = 495
-                    dropdown_width = max(self.dropdown_font.size(line)[0] for line in ["Lights OFF", "Arrow Up = Move Up", "Arrow Up = Move Facing Direction"]) + 80
-                    dropdown_height = len(["Lights OFF", "Arrow Up = Move Up", "Arrow Up = Move Facing Direction"]) * 32 + 16
-                    if not (dropdown_x <= mouse_pos[0] <= dropdown_x + dropdown_width and dropdown_y <= mouse_pos[1] <= dropdown_y + dropdown_height):
+                    dropdown_width = max(self.dropdown_font.size(line)[0] for line in self.dropdown_options) + 80
+                    dropdown_height = len(self.dropdown_options) * 32 + 16
+                    if not (dropdown_x <= mouse_pos[0] <= dropdown_x + dropdown_width \
+                            and dropdown_y <= mouse_pos[1] <= dropdown_y + dropdown_height):
                         if not (200 <= mouse_pos[0] <= 400 and 450 <= mouse_pos[1] <= 490):
                             self.options_dropdown_open = False
 
         return None
 
+
     def is_e_clicked(self, mouse_pos):
         # Define the area around the letter "E"
         e_rect = pygame.Rect(self.e_position[0], self.e_position[1], 20, 40)  # Adjust the width and height as needed
         return e_rect.collidepoint(mouse_pos)
+
 
     def launch_level_editor(self):
         # Launch the level editor script

@@ -123,9 +123,13 @@ class ZoneTwo(BasicBoardElements):
                         print(f'Passing {element_info}')
                         return True
 
-        # Basic tiles are OK
+        # Check for basic tiles
         if element_type in self.basic_tile.mapping:
-            return True
+            # Check if Exit is inactive
+            if element_type == self.basic_tile.mapping[8] and not game_state.exit:
+                return False
+            else:
+                return True
 
         # Default case: Element not in mapping
         print(f"Warning: Unknown element {element_type} in check_zone_element_state")
