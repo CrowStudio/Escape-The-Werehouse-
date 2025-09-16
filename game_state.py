@@ -461,6 +461,8 @@ class GameState:
                 setattr(self, door_state, activated)
             elif 'open' in door_state:
                 setattr(self, door_state, not activated)
+            else:
+                setattr(self, door_state, activated)
 
             # Only print if state changed
             previous_state = self.previous_switch_states.get(element, False)

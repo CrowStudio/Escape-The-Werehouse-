@@ -360,6 +360,9 @@ class Zone2Tile:
         SLIDING_DOOR_VERTICAL_3_0: ('SD_V3_0_normally_closed', 'vertical sliding door 3_0'),
         SLIDING_DOOR_VERTICAL_4_0: ('SD_V4_0_normally_closed', 'vertical sliding door 4_0'),
 
+        # Momentary floor switch to activate Exit
+        ACTIVATE_EXIT:('activate_exit', 'exit', 'activate exit', 'momentary'),
+
         # Floor switches ON (NO):
         FLOOR_SWITCH_1_1: ('FS1_on', 'TD_U1_1_normally_open', 'floor switch_1_1', 'momentary'),
         FLOOR_SWITCH_2_1: ('FS2_on', 'TD_D1_1_normally_open', 'floor switch_2_1', 'momentary'),
@@ -381,7 +384,5 @@ class Zone2Tile:
         TRAP_DOOR_UP_1_0:('TD_U1_0_normally_closed','trap door 1_0'),
         TRAP_DOOR_DOWN_1_0:('TD_D1_0_normally_closed','trap door 1_0'),
         TRAP_DOOR_LEFT_1_0:('TD_L1_0_normally_closed','trap door 1_0'),
-        TRAP_DOOR_RIGHT_1_0:('TD_R1_0_normally_closed','trap door 1_0'),
-
-        ACTIVATE_EXIT:('activate_exit', 'exit', 'activate exit', 'momentary')
+        TRAP_DOOR_RIGHT_1_0:('TD_R1_0_normally_closed','trap door 1_0')
     }
