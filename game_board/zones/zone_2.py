@@ -3,7 +3,7 @@ import json
 import os
 from game_board.blitter import Blitter
 from game_board.elements.sprites import Sprite
-from game_board.zones.zone_2_tiles import Zone2Tiles
+from game_board.zones.zone_2_tile import Zone2Tile
 from game_board.basic_tile import BasicTile
 
 # Set paths for level data
@@ -17,16 +17,17 @@ with open(ZONE_2_PATH, 'r') as file:
 class ZoneTwo(Blitter):
     '''zone 2'''
     def __init__(self):
-        super().__init__(ZONE_DATA, Zone2Tiles)
+        super().__init__(ZONE_DATA, Zone2Tile)
+        self.basic_tile = BasicTile
 
     def check_zone_element_state(self, element, game_state, player_pos=None, boxes_pos=None):
         '''Check if a zone element is valid based on its type and game state.'''
         element_type = element[0]
         element_pos = element[1]
 
-        if element_type in Zone2Tiles.state_mapping:   # Look up the element in the mapping
-            entry = Zone2Tiles.state_mapping[element_type]
-            print('Element typ: ', entry)
+        if element_type in Zone2Tile.state_mapping:   # Look up the element in the mapping
+            entry = Zone2Tile.state_mapping[element_type]
+            print('Element type: ', entry)
 
             if isinstance(entry, tuple) and len(entry) == 4:  # Latching or momentary switches
                 switch_state, door_state, element_info, switch_type = entry
@@ -127,7 +128,7 @@ class ZoneTwo(Blitter):
         # Check for basic tiles
         if element_type in self.basic_tile.mapping:
             # Check if Exit is inactive
-            if element_type == BasicTile.mapping[8] and not game_state.exit:
+            if element_type == self.basic_tile.mapping[8] and not game_state.exit:
                 return False
             else:
                 return True
@@ -141,8 +142,8 @@ class ZoneTwo(Blitter):
         # Blit the floor tile
         self.game_board.blit(Sprite.FLOOR[i], pos)
         # Look up the element in the sprite mapping
-        if element in Zone2Tiles.sprite_mapping:
-            sprite_tuple, state_attr = Zone2Tiles.sprite_mapping[element]
+        if element in Zone2Tile.sprite_mapping:
+            sprite_tuple, state_attr = Zone2Tile.sprite_mapping[element]
             # Get the state of the element from game_state
             element_state = getattr(game_state, state_attr)
 
@@ -156,6 +157,7 @@ class ZoneTwo(Blitter):
 
             # Blit the selected sprite
             self.game_board.blit(sprite, pos)
+
 
     def blit_level_elements(self, game_state):
         super().blit_level_elements(game_state, blit_zone_element = self.blit_zone_element)

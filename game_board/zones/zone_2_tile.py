@@ -1,7 +1,7 @@
 from game_board.elements.sprites import Sprite
 
 # Tile type enumeration
-class Zone2Tiles:
+class Zone2Tile:
     SIZE            = 100 # Pixel width/height of the squared basic tile
     NUM_COLS        = 6   # Number of tiles for the X axis, default 6
     NUM_ROWS        = 6   # Number of tiles for the Y axis, default 6
@@ -9,55 +9,70 @@ class Zone2Tiles:
     HEIGHT_OFFSET   = 40                                # +40 pixels to compensate for info bar at top
     BOARD_HEIGHT    = (SIZE * NUM_ROWS) + HEIGHT_OFFSET # Default 600 + 40
 
-    WALL_SWITCH_UP_1_1          = "Z1U_1_1"
-    WALL_SWITCH_UP_2_1          = "Z1U_2_1"
-    WALL_SWITCH_DOWN_1_1        = "Z2D_1_1"
-    WALL_SWITCH_DOWN_2_1        = "Z2D_2_1"
-    WALL_SWITCH_LEFT_1_1        = "Z3L_1_1"
-    WALL_SWITCH_LEFT_2_1        = "Z3L_2_1"
-    WALL_SWITCH_RIGHT_1_1       = "Z4R_1_1"
-    WALL_SWITCH_RIGHT_2_1       = "Z4R_2_1"
-    WALL_SWITCH_UP_1_0          = "Z1U_1_0"
-    WALL_SWITCH_UP_2_0          = "Z1U_2_0"
-    WALL_SWITCH_DOWN_1_0        = "Z2D_1_0"
-    WALL_SWITCH_DOWN_2_0        = "Z2D_2_0"
-    WALL_SWITCH_LEFT_1_0        = "Z3L_1_0"
-    WALL_SWITCH_LEFT_2_0        = "Z3L_2_0"
-    WALL_SWITCH_RIGHT_1_0       = "Z4R_1_0"
-    WALL_SWITCH_RIGHT_2_0       = "Z4R_2_0"
-    SLIDING_DOOR_HORIZONTAL_1_1 = "Z5H_1_1"
-    SLIDING_DOOR_HORIZONTAL_2_1 = "Z5H_2_1"
-    SLIDING_DOOR_HORIZONTAL_3_1 = "Z5H_3_1"
-    SLIDING_DOOR_HORIZONTAL_4_1 = "Z5H_4_1"
-    SLIDING_DOOR_HORIZONTAL_1_0 = "Z5H_1_0"
-    SLIDING_DOOR_HORIZONTAL_2_0 = "Z5H_2_0"
-    SLIDING_DOOR_HORIZONTAL_3_0 = "Z5H_3_0"
-    SLIDING_DOOR_HORIZONTAL_4_0 = "Z5H_4_0"
-    SLIDING_DOOR_VERTICAL_1_1   = "Z6V_1_1"
-    SLIDING_DOOR_VERTICAL_2_1   = "Z6V_2_1"
-    SLIDING_DOOR_VERTICAL_3_1   = "Z6V_3_1"
-    SLIDING_DOOR_VERTICAL_4_1   = "Z6V_4_1"
-    SLIDING_DOOR_VERTICAL_1_0   = "Z6V_1_0"
-    SLIDING_DOOR_VERTICAL_2_0   = "Z6V_2_0"
-    SLIDING_DOOR_VERTICAL_3_0   = "Z6V_3_0"
-    SLIDING_DOOR_VERTICAL_4_0   = "Z6V_4_0"
-    FLOOR_SWITCH_1_1            = "Z7_1_1"
-    FLOOR_SWITCH_2_1            = "Z7_2_1"
-    FLOOR_SWITCH_3_1            = "Z7_3_1"
-    FLOOR_SWITCH_4_1            = "Z7_4_1"
-    FLOOR_SWITCH_1_0            = "Z7_1_0"
-    FLOOR_SWITCH_2_0            = "Z7_2_0"
-    FLOOR_SWITCH_3_0            = "Z7_3_0"
-    FLOOR_SWITCH_4_0            = "Z7_4_0"
-    TRAP_DOOR_UP_1_1            = "Z8U_1_1"
-    TRAP_DOOR_DOWN_1_1          = "Z8D_1_1"
-    TRAP_DOOR_LEFT_1_1          = "Z8L_1_1"
-    TRAP_DOOR_RIGHT_1_1         = "Z8R_1_1"
-    TRAP_DOOR_UP_1_0            = "Z8U_1_0"
-    TRAP_DOOR_DOWN_1_0          = "Z8D_1_0"
-    TRAP_DOOR_LEFT_1_0          = "Z8L_1_0"
-    TRAP_DOOR_RIGHT_1_0         = "Z8R_1_0"
-    ACTIVATE_EXIT               = "Z9"
+    # Zone (01-99),                 Element number (00-99),                 False(NA)/True (00-01),             Element Type (00-99)
+    # 00 = basic elements           To keep track of multiple instanses     NA = no states, passive element     00 = START
+    #                                                                                                           01 = PIT1
+    #                                                                                                           02 = PIT2
+    #                                                                                                           03 = PIT3
+    #                                                                                                           04 = PIT4
+    #                                                                                                           05 = BOTTOMLESS_PIT
+    #                                                                                                           06 = WALL
+    #                                                                                                           07 = FLOOR
+    #                                                                                                           08 = EXIT
+    #                                                                                                           09 = WALL_SWITCH_*
+    #                                                                                                           10 = FLOOR_SWITCH_*
+    #                                                                                                           11 = TRAP_DOOR_*
+    #                                                                                                           12 = SLIDING_DOOR_*
+
+    WALL_SWITCH_UP_1_1          = 102110110
+    WALL_SWITCH_UP_2_1          = 102120110
+    WALL_SWITCH_UP_1_0          = 102110010
+    WALL_SWITCH_UP_2_0          = 102120010
+    WALL_SWITCH_DOWN_1_1        = 102210110
+    WALL_SWITCH_DOWN_2_1        = 102220110
+    WALL_SWITCH_DOWN_1_0        = 102210010
+    WALL_SWITCH_DOWN_2_0        = 102220010
+    WALL_SWITCH_LEFT_1_1        = 102310110
+    WALL_SWITCH_LEFT_2_1        = 102320110
+    WALL_SWITCH_LEFT_1_0        = 102310010
+    WALL_SWITCH_LEFT_2_0        = 102320010
+    WALL_SWITCH_RIGHT_1_1       = 102410110
+    WALL_SWITCH_RIGHT_2_1       = 102420110
+    WALL_SWITCH_RIGHT_1_0       = 102410010
+    WALL_SWITCH_RIGHT_2_0       = 102420010
+    SLIDING_DOOR_HORIZONTAL_1_1 = 102510112
+    SLIDING_DOOR_HORIZONTAL_2_1 = 102520112
+    SLIDING_DOOR_HORIZONTAL_3_1 = 102530112
+    SLIDING_DOOR_HORIZONTAL_4_1 = 102540112
+    SLIDING_DOOR_HORIZONTAL_1_0 = 102510012
+    SLIDING_DOOR_HORIZONTAL_2_0 = 102520012
+    SLIDING_DOOR_HORIZONTAL_3_0 = 102530012
+    SLIDING_DOOR_HORIZONTAL_4_0 = 102540012
+    SLIDING_DOOR_VERTICAL_1_1   = 102610112
+    SLIDING_DOOR_VERTICAL_2_1   = 102620112
+    SLIDING_DOOR_VERTICAL_3_1   = 102630112
+    SLIDING_DOOR_VERTICAL_4_1   = 102640112
+    SLIDING_DOOR_VERTICAL_1_0   = 102610012
+    SLIDING_DOOR_VERTICAL_2_0   = 102620012
+    SLIDING_DOOR_VERTICAL_3_0   = 102630012
+    SLIDING_DOOR_VERTICAL_4_0   = 102640012
+    FLOOR_SWITCH_1_1            = 102710109
+    FLOOR_SWITCH_2_1            = 102720109
+    FLOOR_SWITCH_3_1            = 102730109
+    FLOOR_SWITCH_4_1            = 102740109
+    FLOOR_SWITCH_1_0            = 102710009
+    FLOOR_SWITCH_2_0            = 102720009
+    FLOOR_SWITCH_3_0            = 102730009
+    FLOOR_SWITCH_4_0            = 102740009
+    TRAP_DOOR_UP_1_1            = 102810111
+    TRAP_DOOR_DOWN_1_1          = 102820111
+    TRAP_DOOR_LEFT_1_1          = 102830111
+    TRAP_DOOR_RIGHT_1_1         = 102840111
+    TRAP_DOOR_UP_1_0            = 102810011
+    TRAP_DOOR_DOWN_1_0          = 102820011
+    TRAP_DOOR_LEFT_1_0          = 102830011
+    TRAP_DOOR_RIGHT_1_0         = 102840011
+    ACTIVATE_EXIT               = 102901009
 
     # Sprite mapping for zone elements
     sprite_mapping = {

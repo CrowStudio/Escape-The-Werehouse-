@@ -5,6 +5,7 @@ class GameState:
     def __init__(self, level):
         # Variable for ZoneLevelWrapper instance
         self.level = level
+        self.zone_tile = level.zone_tile
 
         # Variables for game lavels
         self.game = False  # False == tutorial levels, True == zone levels
@@ -115,6 +116,11 @@ class GameState:
         self.SD_V3_0_normally_closed = True
         self.SD_V4_0_normally_closed = True
 
+        # To keep track of momentary elements
+        self.momentary_elements = []
+        # To keep track of momentary switch states
+        self.previous_switch_states = {}
+
         # Variables for floor switch ON:
         self.FS1_on = False
         self.FS2_on = False
@@ -126,6 +132,7 @@ class GameState:
         self.FS2_off = False
         self.FS3_off = False
         self.FS4_off = False
+
 
         # Variables for trap doors OPEN (NO):
         # UP
@@ -152,6 +159,7 @@ class GameState:
         self.is_searching = False
         self.search = 0
         self.search_speed = 0.4
+
 
     # Check if player has reach Exit
     def check_level_complete(self):
@@ -424,3 +432,51 @@ class GameState:
                         self.level.display_game_over()
                         self.is_playing = False
                         return True
+
+
+    def check_momentary_switches(self):
+        '''Check all momentary switches (e.g., floor plates) every frame.'''
+        # Collect box positions
+        box_positions = [
+            (getattr(self, f'b{i}x'), getattr(self, f'b{i}y'))
+            for i in range(1, 5)
+            if getattr(self.level, f'box{i}')
+        ]
+
+        for element, element_pos in self.momentary_elements:
+            entry = self.zone_tile.state_mapping[element]
+            switch_state, door_state, _, _ = entry
+
+            # Check if player or box is at the element position
+            activated = (
+                (self.px, self.py) == element_pos
+                or any(box_pos == element_pos for box_pos in box_positions)
+            )
+
+            # Update switch state
+            setattr(self, switch_state, activated)
+
+            # Always update door state to match switch state
+            if 'closed' in door_state:
+                setattr(self, door_state, activated)
+            elif 'open' in door_state:
+                setattr(self, door_state, not activated)
+
+            # Only print if state changed
+            previous_state = self.previous_switch_states.get(element, False)
+            if activated != previous_state:
+                if activated:
+                    print(f'Switch type is: Momentary - {element} Engaging')
+                    if 'closed' in door_state:
+                        print('Opening trap door')
+                    elif 'open' in door_state:
+                        print('Closing trap door')
+                else:
+                    print(f'Switch type is: Momentary - {element} Disengaging')
+                    if 'closed' in door_state:
+                        print('Closing trap door')
+                    elif 'open' in door_state:
+                        print('Opening trap door')
+
+            # Update previous switch state
+            self.previous_switch_states[element] = activated

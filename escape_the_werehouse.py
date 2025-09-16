@@ -377,9 +377,19 @@ def main():
                 if game_state.new_level:
                     level.current_zone.level_index = game_state.current_level
                     mode_index = 0 if game_state.game == False else 1  # Check if it is tutorial level or game level
+                    level.current_zone.game_board.fill((30, 30, 30))
                     game_state.new_level = level.current_zone.generate_level(game_state, True, mode_index)
                     game_state.player_in_pit = False # Reset player
-                    level.current_zone.game_board.fill((30, 30, 30))
+
+                    # Initialize momentary_elements AFTER level generation
+                    game_state.momentary_elements = [
+                        (element, pos)
+                        for element, pos, _, _ in level.current_zone.elements
+                        if element in game_state.zone_tile.state_mapping
+                        and isinstance(game_state.zone_tile.state_mapping[element], tuple)
+                        and len(game_state.zone_tile.state_mapping[element]) == 4
+                        and 'latching' not in game_state.zone_tile.state_mapping[element][3]
+                    ]
 
                     # Fade in effect after resetting the level
                     level.current_zone.fade_in(game_state)
@@ -412,12 +422,15 @@ def main():
                     # Set background color
                     level.current_zone.game_board.fill((30, 30, 30))
 
+                    game_state.check_momentary_switches()
+
                     # Render the the game elements
                     level.current_zone.blit_level_elements(game_state)
                     level.current_zone.blit_box_1(game_state, 0, 0)
                     level.current_zone.blit_box_2(game_state, 0, 0)
                     level.current_zone.blit_box_3(game_state, 0, 0)
                     level.current_zone.blit_box_4(game_state, 0, 0)
+
 
                     # Render player with direction
                     if game_state.travel in [1, 2]:

@@ -1,7 +1,5 @@
 import pygame
-import json
 import math
-import os
 import random
 from random import randrange
 import time
@@ -10,22 +8,23 @@ from game_board.elements.sprites import Sprite
 
 class Blitter():
     '''Blitter'''
-    def __init__(self, ZONE_DATA, ZONE_TILES):
+    def __init__(self, ZONE_DATA, ZONE_TILE):
         '''__init__'''
         print("Blitter instance created")  # Debug statement
         self.zone_data = LevelData(ZONE_DATA)
+        self.zone_tile = ZONE_TILE
 
         # Generate a flat list in row-major order:
         self.tiles = [
-            (col * ZONE_TILES.SIZE, row * ZONE_TILES.SIZE)
-            for row in range(ZONE_TILES.NUM_ROWS)
-            for col in range( ZONE_TILES.NUM_COLS)
+            (col * ZONE_TILE.SIZE, row * ZONE_TILE.SIZE)
+            for row in range(ZONE_TILE.NUM_ROWS)
+            for col in range( ZONE_TILE.NUM_COLS)
         ]
 
-        self.seize = ZONE_TILES.SIZE
-        self.width = ZONE_TILES.BOARD_WIDTH
-        self.height = ZONE_TILES.BOARD_HEIGHT
-        self.height_offset = ZONE_TILES.HEIGHT_OFFSET
+        self.seize = ZONE_TILE.SIZE
+        self.width = ZONE_TILE.BOARD_WIDTH
+        self.height = ZONE_TILE.BOARD_HEIGHT
+        self.height_offset = ZONE_TILE.HEIGHT_OFFSET
 
         # Initialize game board size to zone values
         self.game_board = pygame.display.set_mode((self.width, (self.height)))  # Set the screen size to zone width x zone height
@@ -43,7 +42,7 @@ class Blitter():
         self.level_index = 0
 
         # Variable to store zone-specific element (tile) to be handled by dynamic method __zone_element__(
-        self.zone_element = ''
+        self.zone_element = 0
 
         # Default initial beam angle
         self.current_beam_angle = -1.55
@@ -177,22 +176,21 @@ class Blitter():
     def blit_level_elements(self, game_state, blit_zone_element=None):
         # dispatch: tile_code → (method, args_info)
         dispatch = {
-            0: (self.__start__, None),
-            1: (self.__pit_1__, 'in_pit1'),
-            2: (self.__pit_2__, 'in_pit2'),
-            3: (self.__pit_3__, 'in_pit3'),
-            4: (self.__pit_4__, 'in_pit4'),
-            5: (self.__pit_as_wall__, None),
-            6: (self.__floor__, 'floor'),
-            7: (self.__wall__, None),
-            8: (self.__exit__, 'exit'),
+            101000000: (self.__start__, None),
+            101010101: (self.__pit_1__, 'in_pit1'),
+            101020102: (self.__pit_2__, 'in_pit2'),
+            101030103: (self.__pit_3__, 'in_pit3'),
+            101040104: (self.__pit_4__, 'in_pit4'),
+            101050005: (self.__pit_as_wall__, None),
+            101060006: (self.__floor__, 'floor'),
+            101070007: (self.__wall__, None),
+            101080108: (self.__exit__, 'exit'),
             9: (self.__zone_element__, 'zone_element')
         }
 
         for element, pos, rand_floor, rand_pit in self.elements:
-            # Take care of zone-specific elements (strings)
-            if not isinstance(element, int):
-                self.zone_element = element
+            self.zone_element = element
+            if element % 100 > 8:
                 element = 9
 
             method, arg_info = dispatch[element]
@@ -211,16 +209,14 @@ class Blitter():
     def __get_method_arguments__(self, element, rand_floor, rand_pit, game_state, blit_zone_element):
         if element == 9:
             return (rand_floor, game_state, blit_zone_element)
-        elif element == 8:
+        elif element % 100  == 8:
             return (game_state, )
-        elif element == 6:
+        elif element % 100  == 6:
             return (rand_floor,)
-        elif element in (3, 4):
-            return (getattr(game_state, f'in_pit{element}'), rand_pit, game_state)
-        elif element in (1, 2):
-            return (getattr(game_state, f'in_pit{element}'), game_state)
-        else:
-            return ()
+        elif element % 100  in (3, 4):
+            return (getattr(game_state, f'in_pit{element %100}'), rand_pit, game_state)
+        elif element % 100  in (1, 2):
+            return (getattr(game_state, f'in_pit{element %100}'), game_state)
 
 
     # Setup of new level
