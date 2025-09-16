@@ -364,15 +364,15 @@ class Zone2Tile:
         ACTIVATE_EXIT:('activate_exit', 'exit', 'activate exit', 'momentary'),
 
         # Floor switches ON (NO):
-        FLOOR_SWITCH_1_1: ('FS1_on', 'TD_U1_1_normally_open', 'floor switch_1_1', 'momentary'),
-        FLOOR_SWITCH_2_1: ('FS2_on', 'TD_D1_1_normally_open', 'floor switch_2_1', 'momentary'),
-        FLOOR_SWITCH_3_1: ('FS3_on', 'TD_L1_1_normally_open', 'floor switch_3_1', 'momentary'),
-        FLOOR_SWITCH_4_1: ('FS4_on', 'TD_R1_1_normally_open', 'floor switch_4_1', 'momentary'),
+        FLOOR_SWITCH_1_1: ('FS1_on', 'TD_U1_1_normally_open', 'floor switch 1_1', 'momentary'),
+        FLOOR_SWITCH_2_1: ('FS2_on', 'TD_D1_1_normally_open', 'floor switch 2_1', 'momentary'),
+        FLOOR_SWITCH_3_1: ('FS3_on', 'TD_L1_1_normally_open', 'floor switch 3_1', 'momentary'),
+        FLOOR_SWITCH_4_1: ('FS4_on', 'TD_R1_1_normally_open', 'floor switch 4_1', 'momentary'),
         # Floor switches OFF (NC):
-        FLOOR_SWITCH_1_0: ('FS1_off', 'TD_U1_0_normally_closed', 'floor switch_1_0', 'momentary'),
-        FLOOR_SWITCH_2_0: ('FS2_off', 'TD_D1_0_normally_closed', 'floor switch_2_0', 'momentary'),
-        FLOOR_SWITCH_3_0: ('FS3_off', 'TD_L1_0_normally_closed', 'floor switch_3_0', 'momentary'),
-        FLOOR_SWITCH_4_0: ('FS4_off', 'TD_R1_0_normally_closed', 'floor switch_4_0', 'momentary'),
+        FLOOR_SWITCH_1_0: ('FS1_off', 'TD_U1_0_normally_closed', 'floor switch 1_0', 'momentary'),
+        FLOOR_SWITCH_2_0: ('FS2_off', 'TD_D1_0_normally_closed', 'floor switch 2_0', 'momentary'),
+        FLOOR_SWITCH_3_0: ('FS3_off', 'TD_L1_0_normally_closed', 'floor switch 3_0', 'momentary'),
+        FLOOR_SWITCH_4_0: ('FS4_off', 'TD_R1_0_normally_closed', 'floor switch 4_0', 'momentary'),
 
         # Trap doors OPEN (NO)
         TRAP_DOOR_UP_1_1:('TD_U1_1_normally_open','trap door 1_1'),

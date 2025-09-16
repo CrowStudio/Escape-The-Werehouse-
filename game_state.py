@@ -445,7 +445,7 @@ class GameState:
 
         for element, element_pos in self.momentary_elements:
             entry = self.zone_tile.state_mapping[element]
-            switch_state, door_state, _, _ = entry
+            switch_state, door_state, switch_name, _ = entry
 
             # Check if player or box is at the element position
             activated = (
@@ -467,18 +467,33 @@ class GameState:
             # Only print if state changed
             previous_state = self.previous_switch_states.get(element, False)
             if activated != previous_state:
+                # Print player position if player on element position
+                if (self.px, self.py) == element_pos:
+                    print('Player position: ', (self.px, self.py))
+                    print('Element pos: ', element_pos)
+                elif any(box_pos == element_pos for box_pos in box_positions):
+                    # Print box position if box on element position
+                    for box_pos in box_positions:
+                        if box_pos == element_pos:
+                            print('Box position:', box_pos)
+                            print('Element pos: ', element_pos)
+
                 if activated:
-                    print(f'Switch type is: Momentary - {element} Engaging')
+                    print(f'Switch type is: Momentary - Engaging {switch_name} ')
                     if 'closed' in door_state:
                         print('Opening trap door')
                     elif 'open' in door_state:
                         print('Closing trap door')
+                    else:
+                        print('Exit activated!')
                 else:
-                    print(f'Switch type is: Momentary - {element} Disengaging')
+                    print(f'Switch type is: Momentary - Disengaging {switch_name} ')
                     if 'closed' in door_state:
                         print('Closing trap door')
                     elif 'open' in door_state:
                         print('Opening trap door')
+                    else:
+                        print('Exit deactivated!')
 
             # Update previous switch state
             self.previous_switch_states[element] = activated

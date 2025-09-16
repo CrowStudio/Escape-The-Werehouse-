@@ -23,7 +23,6 @@ class ZoneTwo(Blitter):
     def check_zone_element_state(self, element, game_state, player_pos=None, boxes_pos=None):
         '''Check if a zone element is valid based on its type and game state.'''
         element_type = element[0]
-        element_pos = element[1]
 
         if element_type in Zone2Tile.state_mapping:   # Look up the element in the mapping
             entry = Zone2Tile.state_mapping[element_type]
@@ -31,45 +30,45 @@ class ZoneTwo(Blitter):
 
             if isinstance(entry, tuple) and len(entry) == 4:  # Latching or momentary switches
                 switch_state, door_state, element_info, switch_type = entry
-                if 'latching' in switch_type:
-                    print('Switch type is: Latching')
-                    latching = True
-                else:
-                    print('Switch type is: Momentary')
-                    latching = False
 
-                if latching:  # Wall switches (latching)
+                if 'latching' in switch_type:  # Wall switches (latching)
                     # Invert switch state
                     switch_value = getattr(game_state, switch_state)
                     setattr(game_state, switch_state, not switch_value)
-                    print(f'Activating {element_info}' if getattr(game_state, switch_state) else f'Deactivating {element_info}')
+                    new_switch_value = not switch_value
+
+                    # Print activation/deactivation with the requested format
+                    if new_switch_value:
+                        print(f'Switch type is: Latching - Activating {element_info}')
+                    else:
+                        print(f'Switch type is: Latching - Deactivating {element_info}')
 
                     # Invert door state
                     door_value = getattr(game_state, door_state)
                     setattr(game_state, door_state, not door_value)
                     # Sliding doors output
-                    if 'closed' in door_state and not switch_value:
-                        print('Opening sliding door')
-                    elif 'closed' in door_state and not door_value:
-                        print('Closing sliding door')
-                    if 'open' in door_state and switch_value:
-                        print('Opening sliding door')
-                    elif 'open' in door_state and not door_value:
-                        print('Closing sliding door')
+
+                    # Sliding doors output
+                    if 'closed' in door_state:
+                        if not switch_value:
+                            print('Opening sliding door')
+                        else:
+                            print('Closing sliding door')
+                    elif 'open' in door_state:
+                        if switch_value:
+                            print('Opening sliding door')
+                        else:
+                            print('Closing sliding door')
 
                     return True
 
                 else:  # Floor switches (momentary) - state updates in main game loop
-                    print('Player pos: ', player_pos)
-                    print('Boxes pos: ', boxes_pos)
-                    print('Element pos: ', element_pos)
-
                     return True
 
             else:  # Check sliding door, or trap door status
                 door_state, element_info = entry
                 active = getattr(game_state, door_state)
-                if 'SD' in door_state:  # Sliding doors status
+                if 'SD' in door_state:  # Sliding door status
                     if active:
                         print(f'The {element_info} is closed!')
                         return False
@@ -77,13 +76,14 @@ class ZoneTwo(Blitter):
                         print(f'Passing {element_info}')
                         return True
 
-                else:  # Trap doors status
+                elif 'TD' in door_state:  # Trap door status
                     if active:
                         print(f'The {element_info} is open!')
                         return False
                     else:
                         print(f'Passing {element_info}')
                         return True
+
 
         # Check for basic tiles
         if element_type in self.basic_tile.mapping:
