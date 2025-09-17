@@ -225,7 +225,7 @@ class StartMenu:
                 # Check if a level is selected from the dropdown
                 elif self.dropdown_open and 200 <= mouse_pos[0] <= 400 and 235 <= mouse_pos[1] <= 475:
                     level_index = (mouse_pos[1] - 235) // 32
-                    levels = self.level.no_of_levels[0] if self.tutorial_checked else self.level.no_of_levels[1]
+                    levels = self.level.no_of_levels[0] if self.tutorial_checked else self.level.no_of_levels
                     if level_index < levels:
                         self.selected_level = level_index
                         self.dropdown_open = False

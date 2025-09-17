@@ -333,7 +333,7 @@ def main():
     # Initialize game components
     level = ZoneLevelWrapper()
     audio = AudioManager()
-    game_state = GameState(level.current_zone)
+    game_state = GameState(level)
     high_scores = ScoreManager(level.current_zone)
     start_menu = StartMenu(level.current_zone, game_state)
 
@@ -410,6 +410,7 @@ def main():
                 # Check level completion
                 if game_state.check_level_complete():
                     game_state.handle_level_complete(high_scores)
+
                     if not game_state.is_playing:
                         high_scores.from_start_screen = False  # Set the flag to False
                         high_scores.display_scores()

@@ -20,6 +20,9 @@ class ZoneTwo(Blitter):
         super().__init__(ZONE_DATA, Zone2Tile)
         self.basic_tile = BasicTile
 
+        # Count the number of levels
+        self.no_of_levels = len(ZONE_DATA["levels"])
+
     def check_zone_element_state(self, element, game_state, player_pos=None, boxes_pos=None):
         '''Check if a zone element is valid based on its type and game state.'''
         element_type = element[0]

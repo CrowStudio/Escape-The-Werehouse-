@@ -11,7 +11,7 @@ class Blitter():
     def __init__(self, ZONE_DATA, ZONE_TILE):
         '''__init__'''
         print("Blitter instance created")  # Debug statement
-        self.zone_data = LevelData(ZONE_DATA)
+        self.zone_data= LevelData(ZONE_DATA)
         self.zone_tile = ZONE_TILE
 
         # Generate a flat list in row-major order:

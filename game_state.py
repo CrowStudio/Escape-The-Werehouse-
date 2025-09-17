@@ -4,8 +4,9 @@ from game_board.basic_tile import BasicTile
 class GameState:
     def __init__(self, level):
         # Variable for ZoneLevelWrapper instance
-        self.level = level
-        self.zone_tile = level.zone_tile
+        self.zone = level
+        self.level = level.zone[self.zone.current_zone_index]
+        self.zone_tile = self.level.zone_tile
 
         # Variables for game lavels
         self.game = False  # False == tutorial levels, True == zone levels
@@ -201,7 +202,14 @@ class GameState:
             self.moves = 0
             self.total_moves = 0
             self.lives = 3
-        elif self.game == True and self.current_level >= self.level.no_of_levels[1]: # set [1] to current_zone_index instead
+
+        elif self.game == True and self.current_level >= self.level.no_of_levels and self.zone.current_zone_index < self.zone.no_of_zones:
+            self.zone.current_zone_index += 1
+            self.zone.switch_to_next_zone()
+            self.current_level = 0
+            self.moves = 0
+
+        else:
             # Debug statements
             print('Congratulations! You finished the last level!')
             print(f'Your have made a total of {self.total_moves} successful moves!')
