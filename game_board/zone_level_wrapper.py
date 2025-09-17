@@ -10,5 +10,6 @@ class ZoneLevelWrapper:
         self.current_zone = self.zone[self.current_zone_index]
 
     def switch_to_next_zone(self):
+        self.current_zone_index += 1
         self.current_zone = self.zone[self.current_zone_index]
         print(f"Entering zone {self.current_zone_index + 1}")

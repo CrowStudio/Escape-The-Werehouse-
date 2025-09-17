@@ -14,6 +14,7 @@ class Blitter():
         self.zone_data= LevelData(ZONE_DATA)
         self.zone_tile = ZONE_TILE
 
+
         # Generate a flat list in row-major order:
         self.tiles = [
             (col * ZONE_TILE.SIZE, row * ZONE_TILE.SIZE)
@@ -38,6 +39,12 @@ class Blitter():
         self.box = []
         self.pit_box = []
 
+        # Variables for boxes
+        self.box1 = None
+        self.box2 = None
+        self.box3 = None
+        self.box4 = None
+
         # Variable to keep track of level to blit
         self.level_index = 0
 
@@ -52,7 +59,6 @@ class Blitter():
         self.satus_font = pygame.font.SysFont('Lucida Console', 24)  # Font for UI text
         self.warning_font = pygame.font.SysFont('Arial Black', 42) # Font for player in pit
         self.game_over_font = pygame.font.SysFont('Arial Black', 72)  # Font for GAME OVER
-
 
     # Blit start tile
     def __start__(self, pos):

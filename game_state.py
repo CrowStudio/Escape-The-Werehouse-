@@ -5,7 +5,7 @@ class GameState:
     def __init__(self, level):
         # Variable for ZoneLevelWrapper instance
         self.zone = level
-        self.level = level.zone[self.zone.current_zone_index]
+        self.level = self.zone.current_zone
         self.zone_tile = self.level.zone_tile
 
         # Variables for game lavels
@@ -162,6 +162,10 @@ class GameState:
         self.search_speed = 0.4
 
 
+    def update_zone_tiles(self):
+        self.level = self.zone.current_zone
+        self.zone_tile = self.level.zone_tile
+
     # Check if player has reach Exit
     def check_level_complete(self):
         # Check if player is on exit tile
@@ -204,12 +208,12 @@ class GameState:
             self.lives = 3
 
         elif self.game == True and self.current_level >= self.level.no_of_levels and self.zone.current_zone_index < self.zone.no_of_zones:
-            self.zone.current_zone_index += 1
-            self.zone.switch_to_next_zone()
             self.current_level = 0
             self.moves = 0
+            self.zone.switch_to_next_zone()
+            self.update_zone_tiles()
 
-        else:
+        elif self.game == True and self.current_level >= self.level.no_of_levels and self.zone.current_zone_index >= self.zone.no_of_zones:
             # Debug statements
             print('Congratulations! You finished the last level!')
             print(f'Your have made a total of {self.total_moves} successful moves!')

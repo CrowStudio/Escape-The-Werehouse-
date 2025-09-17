@@ -62,7 +62,7 @@
     "levels": [
         {
             "level": 1,
-            "title": "Debug Level",
+            "title": "Trip Trap Doors",
             "map": [
               [
                 "FLOOR_SWITCH_2_1",
