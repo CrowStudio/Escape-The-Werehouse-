@@ -22,15 +22,15 @@ class BasicTile:
     #                                                                                                       11 = TRAP_DOOR_*
     #                                                                                                       12 = SLIDING_DOOR_*
 
-    START       = 101000000
-    PIT1        = 101010101
-    PIT2        = 101020102
-    PIT3        = 101030103
-    PIT4        = 101040104
-    PIT_WALL    = 101050005
-    FLOOR       = 101060006
-    WALL        = 101070007
-    EXIT        = 101080108
+    START           = 101000000
+    PIT1            = 101010101
+    PIT2            = 101020102
+    PIT3            = 101030103
+    PIT4            = 101040104
+    BOTTOMLESS_PIT  = 101050005
+    FLOOR           = 101060006
+    WALL            = 101070007
+    EXIT            = 101080108
 
     mapping = [
             START,
@@ -38,7 +38,7 @@ class BasicTile:
             PIT2,
             PIT3,
             PIT4,
-            PIT_WALL,
+            BOTTOMLESS_PIT,
             FLOOR,
             WALL,
             EXIT

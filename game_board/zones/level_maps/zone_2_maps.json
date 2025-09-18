@@ -5,7 +5,7 @@
     "PIT2": 101020102,
     "PIT3": 101030103,
     "PIT4": 101040104,
-    "PIT_WALL": 101050005,
+    "BOTTOMLESS_PIT": 101050005,
     "FLOOR": 101060006,
     "WALL": 101070007,
     "EXIT": 101080108,
@@ -240,7 +240,7 @@
                     "FLOOR",
                     "FLOOR",
                     "FLOOR",
-                    "PIT_WALL"
+                    "BOTTOMLESS_PIT"
                 ],
                 [
                     "FLOOR",
@@ -248,12 +248,12 @@
                     "FLOOR",
                     "WALL",
                     "FLOOR",
-                    "PIT_WALL"
+                    "BOTTOMLESS_PIT"
                 ],
                 [
-                    "PIT_WALL",
-                    "PIT_WALL",
-                    "PIT_WALL",
+                    "BOTTOMLESS_PIT",
+                    "BOTTOMLESS_PIT",
+                    "BOTTOMLESS_PIT",
                     "PIT2",
                     "PIT1",
                     "WALL"
@@ -267,7 +267,7 @@
                     "FLOOR"
                 ],
                 [
-                    "PIT_WALL",
+                    "BOTTOMLESS_PIT",
                     "FLOOR",
                     "WALL",
                     "FLOOR",
@@ -275,9 +275,9 @@
                     "FLOOR"
                 ],
                 [
-                    "PIT_WALL",
+                    "BOTTOMLESS_PIT",
                     "START",
-                    "PIT_WALL",
+                    "BOTTOMLESS_PIT",
                     "WALL",
                     "WALL",
                     "WALL"

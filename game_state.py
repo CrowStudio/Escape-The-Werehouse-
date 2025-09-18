@@ -296,7 +296,7 @@ class GameState:
                     return True
                 elif element[0] == BasicTile.PIT4 and (not self.pit4 or not self.is_pulling):
                     return True
-                elif element[0] in [BasicTile.WALL, BasicTile.PIT_WALL]:
+                elif element[0] in [BasicTile.WALL, BasicTile.BOTTOMLESS_PIT]:
                     return False
                 else:
                     return level.check_zone_element_state(element, game_state=self, player_pos=(new_x, new_y))
@@ -343,7 +343,7 @@ class GameState:
                 if element[0] in [BasicTile.START, BasicTile.FLOOR, BasicTile.EXIT,
                                 BasicTile.PIT1, BasicTile.PIT2, BasicTile.PIT3, BasicTile.PIT4]:
                     return self.__check_for_obstructing_boxes__(level, push_x, push_y)
-                elif element[0] in [BasicTile.WALL, BasicTile.PIT_WALL]:
+                elif element[0] in [BasicTile.WALL, BasicTile.BOTTOMLESS_PIT]:
                     return False
                 else:
                     # Check for obstructing boxes
