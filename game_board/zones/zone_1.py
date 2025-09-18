@@ -16,11 +16,15 @@ class ZoneOne(Blitter):
     '''zone 1'''
     def __init__(self):
         super().__init__(ZONE_DATA, BasicTile)
+        self.basic_tile = BasicTile
+
+        # Count the number of levels
+        self.no_of_zone_levels = len(ZONE_DATA["levels"])
 
     def check_zone_element_state(self, element, game_state, player_pos=None, boxes_pos=None):
         element_type = element[0]
         # Basic tiles are OK
-        if element_type in BasicTile.mapping:
+        if element_type in self.basic_tile.mapping:
             return True
 
     def blit_zone_element(self, element, pos, i, game_state):

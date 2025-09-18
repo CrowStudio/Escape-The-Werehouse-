@@ -2,9 +2,11 @@ import pygame
 from game_board.basic_tile import BasicTile
 
 class GameState:
-    def __init__(self, level):
+    def __init__(self, zone):
         # Variable for ZoneLevelWrapper instance
-        self.level = level
+        self.zone = zone
+        self.zone_level = self.zone.current_level_set
+        self.zone_tile = self.zone_level.zone_tile
 
         # Variables for game lavels
         self.game = False  # False == tutorial levels, True == zone levels
@@ -115,6 +117,11 @@ class GameState:
         self.SD_V3_0_normally_closed = True
         self.SD_V4_0_normally_closed = True
 
+        # To keep track of momentary elements
+        self.momentary_elements = []
+        # To keep track of momentary switch states
+        self.previous_switch_states = {}
+
         # Variables for floor switch ON:
         self.FS1_on = False
         self.FS2_on = False
@@ -126,6 +133,7 @@ class GameState:
         self.FS2_off = False
         self.FS3_off = False
         self.FS4_off = False
+
 
         # Variables for trap doors OPEN (NO):
         # UP
@@ -153,10 +161,15 @@ class GameState:
         self.search = 0
         self.search_speed = 0.4
 
+
+    def update_zone_tiles(self):
+        self.zone_level = self.zone.current_level_set
+        self.zone_tile = self.zone_level.zone_tile
+
     # Check if player has reach Exit
     def check_level_complete(self):
         # Check if player is on exit tile
-        for element in self.level.elements:
+        for element in self.zone_level.elements:
             if element[0] == BasicTile.EXIT:
                 if (self.px, self.py) == element[1]:  # Player position matches exit position
                     self.travel = 0
@@ -168,14 +181,14 @@ class GameState:
     # Handle actions when a level is completed
     def handle_level_complete(self, high_scores):
         # Render one last frame with player on exit
-        self.level.blit_level(self)
+        self.zone_level.blit_level(self)
 
         # Show score for completed level
         if self.game:
             # Blit status bar
-            self.level.blit_status_bar(self)
+            self.zone_level.blit_status_bar(self)
             # Blit stars
-            self.level.blit_stars(self)
+            self.zone_level.blit_stars(self)
             pygame.time.wait(300)
 
         # Increment level counter
@@ -184,7 +197,7 @@ class GameState:
         self.new_level = True
 
         # Handle mode transitions
-        if self.game == False and self.current_level >= self.level.no_of_levels[0]:
+        if self.game == False and self.current_level >= self.zone_level.no_of_tutorial_levels:
             # Debug statement
             print('Well done, you finished the Tutorials! Now try to Escape the Werehouse!')
             # Set game states
@@ -193,7 +206,18 @@ class GameState:
             self.moves = 0
             self.total_moves = 0
             self.lives = 3
-        elif self.game == True and self.current_level >= self.level.no_of_levels[1]: # set [1] to current_zone_index instead
+
+            return self.zone.current_zone_index
+
+        elif self.game == True and self.current_level >= self.zone_level.no_of_zone_levels and self.zone.current_zone_index < self.zone.no_of_zones:
+            self.current_level = 0
+            self.moves = 0
+            self.zone.switch_to_next_zone()
+            self.update_zone_tiles()
+
+            return self.zone.current_zone_index
+
+        elif self.game == True and self.current_level >= self.zone_level.no_of_zone_levels and self.zone.current_zone_index >= self.zone.no_of_zones:
             # Debug statements
             print('Congratulations! You finished the last level!')
             print(f'Your have made a total of {self.total_moves} successful moves!')
@@ -205,6 +229,8 @@ class GameState:
 
             print("Displaying high scores...")  # Debug statement
             high_scores.display_scores()
+
+            return self.zone.current_zone_index
 
 
     # Reset the game state variables related to movement at the start of each frame.
@@ -235,7 +261,7 @@ class GameState:
 
     # Move within game board
     def is_player_within_game_board(self, new_x, new_y):
-        if (new_x < 0 or new_x > self.level.width) or (new_y < 0 or new_y > self.level.height):
+        if (new_x < 0 or new_x > self.zone_level.width) or (new_y < 0 or new_y > self.zone_level.height):
             return False
         else:
             return True
@@ -243,7 +269,7 @@ class GameState:
 
     # Move within game board
     def is_box_within_game_board(self, new_x, new_y):
-        if (new_x < 0 or new_x > self.level.width-100) or (new_y < 0 or new_y > self.level.height-100):
+        if (new_x < 0 or new_x > self.zone_level.width-100) or (new_y < 0 or new_y > self.zone_level.height-100):
             return False
         else:
             return True
@@ -270,7 +296,7 @@ class GameState:
                     return True
                 elif element[0] == BasicTile.PIT4 and (not self.pit4 or not self.is_pulling):
                     return True
-                elif element[0] in [BasicTile.WALL, BasicTile.PIT_WALL]:
+                elif element[0] in [BasicTile.WALL, BasicTile.BOTTOMLESS_PIT]:
                     return False
                 else:
                     return level.check_zone_element_state(element, game_state=self, player_pos=(new_x, new_y))
@@ -317,7 +343,7 @@ class GameState:
                 if element[0] in [BasicTile.START, BasicTile.FLOOR, BasicTile.EXIT,
                                 BasicTile.PIT1, BasicTile.PIT2, BasicTile.PIT3, BasicTile.PIT4]:
                     return self.__check_for_obstructing_boxes__(level, push_x, push_y)
-                elif element[0] in [BasicTile.WALL, BasicTile.PIT_WALL]:
+                elif element[0] in [BasicTile.WALL, BasicTile.BOTTOMLESS_PIT]:
                     return False
                 else:
                     # Check for obstructing boxes
@@ -340,7 +366,7 @@ class GameState:
         }
 
         # Look for pit element
-        for element in self.level.elements:
+        for element in self.zone_level.elements:
             position, pit_type = element[1], element[0]
 
             # Check if the current element is a pit and matches the given coordinates
@@ -356,13 +382,13 @@ class GameState:
                     print(f"Box {box_num} fell into pit {pit_type} (C:{int(bx/100+1)}, R:{int(by/100+1)})")  # Debug statement
 
                     if box_num == 1:
-                        self.level.box1 = False
+                        self.zone_level.box1 = False
                     elif box_num == 2:
-                        self.level.box2 = False
+                        self.zone_level.box2 = False
                     elif box_num == 3:
-                        self.level.box3 = False
+                        self.zone_level.box3 = False
                     elif box_num == 4:
-                        self.level.box4 = False
+                        self.zone_level.box4 = False
                     return True
 
                 return False
@@ -382,7 +408,7 @@ class GameState:
         }
 
         # Look for pit element
-        for element in self.level.elements:
+        for element in self.zone_level.elements:
             position, pit_type = element[1], element[0]
 
             # Check if the current element is a pit and matches the given coordinates
@@ -402,7 +428,7 @@ class GameState:
                     # Update player position to the pit
                     self.px, self.py = px, py
 
-                    self.level.blit_level(self)
+                    self.zone_level.blit_level(self)
                     # Update the display
                     pygame.display.flip()
 
@@ -410,7 +436,7 @@ class GameState:
                     print(f"Oh no! Player fell into pit {pit_type} (C:{int(px/100+1)}, R:{int(py/100+1)})")
 
                     # Fade out effect
-                    self.level.fade_out(self)
+                    self.zone_level.fade_out(self)
 
                     # Reset level
                     if self.lives > 0:
@@ -421,6 +447,71 @@ class GameState:
                         return False
                     # Game Over
                     else:
-                        self.level.display_game_over()
+                        self.zone_level.display_game_over()
                         self.is_playing = False
                         return True
+
+
+    def check_momentary_switches(self):
+        '''Check all momentary switches (e.g., floor plates) every frame.'''
+        # Collect box positions
+        box_positions = [
+            (getattr(self, f'b{i}x'), getattr(self, f'b{i}y'))
+            for i in range(1, 5)
+            if getattr(self.zone_level, f'box{i}')
+        ]
+
+        for element, element_pos in self.momentary_elements:
+            entry = self.zone_tile.state_mapping[element]
+            switch_state, door_state, switch_name, _ = entry
+
+            # Check if player or box is at the element position
+            activated = (
+                (self.px, self.py) == element_pos
+                or any(box_pos == element_pos for box_pos in box_positions)
+            )
+
+            # Update switch state
+            setattr(self, switch_state, activated)
+
+            # Always update door state to match switch state
+            if 'closed' in door_state:
+                setattr(self, door_state, activated)
+            elif 'open' in door_state:
+                setattr(self, door_state, not activated)
+            else:
+                setattr(self, door_state, activated)
+
+            # Only print if state changed
+            previous_state = self.previous_switch_states.get(element, False)
+            if activated != previous_state:
+                # Print player position if player on element position
+                if (self.px, self.py) == element_pos:
+                    print('Player position: ', (self.px, self.py))
+                    print('Element pos: ', element_pos)
+                elif any(box_pos == element_pos for box_pos in box_positions):
+                    # Print box position if box on element position
+                    for box_pos in box_positions:
+                        if box_pos == element_pos:
+                            print('Box position:', box_pos)
+                            print('Element pos: ', element_pos)
+
+                if activated:
+                    print(f'Switch type is: Momentary - Engaging {switch_name} ')
+                    if 'closed' in door_state:
+                        print('Opening trap door')
+                    elif 'open' in door_state:
+                        print('Closing trap door')
+                    else:
+                        print('Exit activated!')
+                else:
+                    print(f'Switch type is: Momentary - Disengaging {switch_name} ')
+                    if 'closed' in door_state:
+                        print('Closing trap door')
+                    elif 'open' in door_state:
+                        print('Opening trap door')
+                    else:
+                        print('Exit deactivated!')
+
+            # Update previous switch state
+            self.previous_switch_states[element] = activated

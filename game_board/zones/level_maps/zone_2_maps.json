@@ -1,116 +1,116 @@
 {
   "game_board_elements": {
-    "START": 0,
-    "PIT1": 1,
-    "PIT2": 2,
-    "PIT3": 3,
-    "PIT4": 4,
-    "PIT_WALL": 5,
-    "FLOOR": 6,
-    "WALL": 7,
-    "EXIT": 8,
-    "WALL_SWITCH_UP_1_1": "Z1U_1_1",
-    "WALL_SWITCH_UP_2_1": "Z1U_2_1",
-    "WALL_SWITCH_UP_1_0": "Z1U_1_0",
-    "WALL_SWITCH_UP_2_0": "Z1U_2_0",
-    "WALL_SWITCH_DOWN_1_1": "Z2D_1_1",
-    "WALL_SWITCH_DOWN_2_1": "Z2D_2_1",
-    "WALL_SWITCH_DOWN_1_0": "Z2D_1_0",
-    "WALL_SWITCH_DOWN_2_0": "Z2D_2_0",
-    "WALL_SWITCH_LEFT_1_1": "Z3L_1_1",
-    "WALL_SWITCH_LEFT_2_1": "Z3L_2_1",
-    "WALL_SWITCH_LEFT_1_0": "Z3L_1_0",
-    "WALL_SWITCH_LEFT_2_0": "Z3L_2_0",
-    "WALL_SWITCH_RIGHT_1_1": "Z4R_1_1",
-    "WALL_SWITCH_RIGHT_2_1": "Z4R_2_1",
-    "WALL_SWITCH_RIGHT_1_0": "Z4R_1_0",
-    "WALL_SWITCH_RIGHT_2_0": "Z4R_2_0",
-    "SLIDING_DOOR_HORIZONTAL_1_1": "Z5H_1_1",
-    "SLIDING_DOOR_HORIZONTAL_2_1": "Z5H_2_1",
-    "SLIDING_DOOR_HORIZONTAL_3_1": "Z5H_3_1",
-    "SLIDING_DOOR_HORIZONTAL_4_1": "Z5H_4_1",
-    "SLIDING_DOOR_HORIZONTAL_1_0": "Z5H_1_0",
-    "SLIDING_DOOR_HORIZONTAL_2_0": "Z5H_2_0",
-    "SLIDING_DOOR_HORIZONTAL_3_0": "Z5H_3_0",
-    "SLIDING_DOOR_HORIZONTAL_4_0": "Z5H_4_0",
-    "SLIDING_DOOR_VERTICAL_1_1": "Z6V_1_1",
-    "SLIDING_DOOR_VERTICAL_2_1": "Z6V_2_1",
-    "SLIDING_DOOR_VERTICAL_3_1": "Z6V_3_1",
-    "SLIDING_DOOR_VERTICAL_4_1": "Z6V_4_1",
-    "SLIDING_DOOR_VERTICAL_1_0": "Z6V_1_0",
-    "SLIDING_DOOR_VERTICAL_2_0": "Z6V_2_0",
-    "SLIDING_DOOR_VERTICAL_3_0": "Z6V_3_0",
-    "SLIDING_DOOR_VERTICAL_4_0": "Z6V_4_0",
-    "FLOOR_SWITCH_1_1": "Z7_1_1",
-    "FLOOR_SWITCH_2_1": "Z7_2_1",
-    "FLOOR_SWITCH_3_1": "Z7_3_1",
-    "FLOOR_SWITCH_4_1": "Z7_4_1",
-    "FLOOR_SWITCH_1_0": "Z7_1_0",
-    "FLOOR_SWITCH_2_0": "Z7_2_0",
-    "FLOOR_SWITCH_3_0": "Z7_3_0",
-    "FLOOR_SWITCH_4_0": "Z7_4_0",
-    "TRAP_DOOR_UP_1_1": "Z8U_1_1",
-    "TRAP_DOOR_DOWN_1_1": "Z8D_1_1",
-    "TRAP_DOOR_LEFT_1_1": "Z8L_1_1",
-    "TRAP_DOOR_RIGHT_1_1": "Z8R_1_1",
-    "TRAP_DOOR_UP_1_0": "Z8U_1_0",
-    "TRAP_DOOR_DOWN_1_0": "Z8D_1_0",
-    "TRAP_DOOR_LEFT_1_0": "Z8L_1_0",
-    "TRAP_DOOR_RIGHT_1_0": "Z8R_1_0",
-    "ACTIVATE_EXIT": "Z9"
+    "START": 101000000,
+    "PIT1": 101010101,
+    "PIT2": 101020102,
+    "PIT3": 101030103,
+    "PIT4": 101040104,
+    "BOTTOMLESS_PIT": 101050005,
+    "FLOOR": 101060006,
+    "WALL": 101070007,
+    "EXIT": 101080108,
+    "WALL_SWITCH_UP_1_1": 102110110,
+    "WALL_SWITCH_UP_2_1": 102120110,
+    "WALL_SWITCH_UP_1_0": 102110010,
+    "WALL_SWITCH_UP_2_0": 102120010,
+    "WALL_SWITCH_DOWN_1_1": 102210110,
+    "WALL_SWITCH_DOWN_2_1": 102220110,
+    "WALL_SWITCH_DOWN_1_0": 102210010,
+    "WALL_SWITCH_DOWN_2_0": 102220010,
+    "WALL_SWITCH_LEFT_1_1": 102310110,
+    "WALL_SWITCH_LEFT_2_1": 102320110,
+    "WALL_SWITCH_LEFT_1_0": 102310010,
+    "WALL_SWITCH_LEFT_2_0": 102320010,
+    "WALL_SWITCH_RIGHT_1_1": 102410110,
+    "WALL_SWITCH_RIGHT_2_1": 102420110,
+    "WALL_SWITCH_RIGHT_1_0": 102410010,
+    "WALL_SWITCH_RIGHT_2_0": 102420010,
+    "SLIDING_DOOR_HORIZONTAL_1_1": 102510112,
+    "SLIDING_DOOR_HORIZONTAL_2_1": 102520112,
+    "SLIDING_DOOR_HORIZONTAL_3_1": 102530112,
+    "SLIDING_DOOR_HORIZONTAL_4_1": 102540112,
+    "SLIDING_DOOR_HORIZONTAL_1_0": 102510012,
+    "SLIDING_DOOR_HORIZONTAL_2_0": 102520012,
+    "SLIDING_DOOR_HORIZONTAL_3_0": 102530012,
+    "SLIDING_DOOR_HORIZONTAL_4_0": 102540012,
+    "SLIDING_DOOR_VERTICAL_1_1": 102610112,
+    "SLIDING_DOOR_VERTICAL_2_1": 102620112,
+    "SLIDING_DOOR_VERTICAL_3_1": 102630112,
+    "SLIDING_DOOR_VERTICAL_4_1": 102640112,
+    "SLIDING_DOOR_VERTICAL_1_0": 102610012,
+    "SLIDING_DOOR_VERTICAL_2_0": 102620012,
+    "SLIDING_DOOR_VERTICAL_3_0": 102630012,
+    "SLIDING_DOOR_VERTICAL_4_0": 102640012,
+    "FLOOR_SWITCH_1_1": 102710109,
+    "FLOOR_SWITCH_2_1": 102720109,
+    "FLOOR_SWITCH_3_1": 102730109,
+    "FLOOR_SWITCH_4_1": 102740109,
+    "FLOOR_SWITCH_1_0": 102710009,
+    "FLOOR_SWITCH_2_0": 102720009,
+    "FLOOR_SWITCH_3_0": 102730009,
+    "FLOOR_SWITCH_4_0": 102740009,
+    "TRAP_DOOR_UP_1_1": 102810111,
+    "TRAP_DOOR_DOWN_1_1": 102820111,
+    "TRAP_DOOR_LEFT_1_1": 102830111,
+    "TRAP_DOOR_RIGHT_1_1": 102840111,
+    "TRAP_DOOR_UP_1_0": 102810011,
+    "TRAP_DOOR_DOWN_1_0": 102820011,
+    "TRAP_DOOR_LEFT_1_0": 102830011,
+    "TRAP_DOOR_RIGHT_1_0": 102840011,
+    "ACTIVATE_EXIT": 102901009
   },
     "levels": [
         {
             "level": 1,
-            "title": "Debug Level",
+            "title": "Trip Trap Doors",
             "map": [
               [
-                "TRAP_DOOR_UP_1_0",
+                "FLOOR_SWITCH_2_1",
+                "FLOOR",
+                "FLOOR",
+                "FLOOR",
+                "FLOOR",
+                "FLOOR"
+              ],
+              [
+                "WALL",
+                "SLIDING_DOOR_HORIZONTAL_3_1",
+                "WALL",
+                "FLOOR",
+                "FLOOR",
+                "FLOOR"
+              ],
+              [
+                "WALL_SWITCH_LEFT_2_0",
+                "FLOOR",
+                "FLOOR",
+                "WALL",
+                "FLOOR",
+                "FLOOR"
+              ],
+              [
+                "WALL",
+                "WALL",
                 "TRAP_DOOR_UP_1_1",
-                "SLIDING_DOOR_HORIZONTAL_1_1",
-                "SLIDING_DOOR_HORIZONTAL_1_0",
-                "ACTIVATE_EXIT",
-                "EXIT"
+                "WALL",
+                "FLOOR",
+                "FLOOR_SWITCH_3_0"
               ],
               [
-                "FLOOR_SWITCH_1_0",
+                "FLOOR",
                 "FLOOR_SWITCH_1_1",
-                "WALL_SWITCH_UP_1_0",
-                "WALL_SWITCH_UP_1_1",
                 "FLOOR",
+                "WALL",
+                "TRAP_DOOR_DOWN_1_1",
                 "FLOOR"
               ],
               [
-                "FLOOR",
-                "FLOOR",
-                "FLOOR",
-                "FLOOR",
-                "FLOOR",
+                "WALL",
+                "START",
+                "WALL",
+                "EXIT",
+                "TRAP_DOOR_LEFT_1_0",
                 "FLOOR"
-              ],
-              [
-                "FLOOR",
-                "FLOOR",
-                "FLOOR",
-                "FLOOR",
-                "FLOOR",
-                "FLOOR"
-              ],
-              [
-                "FLOOR",
-                "FLOOR",
-                "FLOOR",
-                "FLOOR",
-                "FLOOR",
-                "FLOOR"
-              ],
-              [
-                "SLIDING_DOOR_VERTICAL_1_0",
-                "SLIDING_DOOR_VERTICAL_2_0",
-                "PIT1",
-                "PIT2",
-                "FLOOR",
-                "START"
               ]
             ],
             "active_boxes": [
@@ -122,28 +122,28 @@
             "box_positions": [
                 [
                     0,
-                    3
+                    4
                 ],
                 [
                     1,
-                    3
+                    2
                 ],
                 [
-                    2,
-                    3
+                    5,
+                    0
                 ],
                 [
-                    3,
+                    5,
                     3
                 ]
             ],
             "player_start": [
-                5,
-                3
+                1,
+                5
             ],
-            "player_direction": "left",
-            "exit_active": false,
-            "score": 35
+            "player_direction": "up",
+            "exit_active": true,
+            "score": 32
         },
         {
             "level": 2,
@@ -163,11 +163,11 @@
               "WALL",
               "WALL",
               "WALL",
-              "SLIDING_DOOR_HORIZONTAL_1_1"
+              "SLIDING_DOOR_HORIZONTAL_2_1"
             ],
             [
               "FLOOR",
-              "SLIDING_DOOR_VERTICAL_1_0",
+              "SLIDING_DOOR_VERTICAL_4_0",
               "FLOOR",
               "FLOOR",
               "FLOOR",
@@ -240,7 +240,7 @@
                     "FLOOR",
                     "FLOOR",
                     "FLOOR",
-                    "PIT_WALL"
+                    "BOTTOMLESS_PIT"
                 ],
                 [
                     "FLOOR",
@@ -248,12 +248,12 @@
                     "FLOOR",
                     "WALL",
                     "FLOOR",
-                    "PIT_WALL"
+                    "BOTTOMLESS_PIT"
                 ],
                 [
-                    "PIT_WALL",
-                    "PIT_WALL",
-                    "PIT_WALL",
+                    "BOTTOMLESS_PIT",
+                    "BOTTOMLESS_PIT",
+                    "BOTTOMLESS_PIT",
                     "PIT2",
                     "PIT1",
                     "WALL"
@@ -267,7 +267,7 @@
                     "FLOOR"
                 ],
                 [
-                    "PIT_WALL",
+                    "BOTTOMLESS_PIT",
                     "FLOOR",
                     "WALL",
                     "FLOOR",
@@ -275,9 +275,9 @@
                     "FLOOR"
                 ],
                 [
-                    "PIT_WALL",
+                    "BOTTOMLESS_PIT",
                     "START",
-                    "PIT_WALL",
+                    "BOTTOMLESS_PIT",
                     "WALL",
                     "WALL",
                     "WALL"

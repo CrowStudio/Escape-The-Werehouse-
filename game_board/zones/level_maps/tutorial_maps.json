@@ -1,14 +1,14 @@
 {
   "game_board_elements": {
-    "START": 0,
-    "PIT1": 1,
-    "PIT2": 2,
-    "PIT3": 3,
-    "PIT4": 4,
-    "PIT_WALL": 5,
-    "FLOOR": 6,
-    "WALL": 7,
-    "EXIT": 8
+    "START": 101000000,
+    "PIT1": 101010101,
+    "PIT2": 101020102,
+    "PIT3": 101030103,
+    "PIT4": 101040104,
+    "BOTTOMLESS_PIT": 101050005,
+    "FLOOR": 101060006,
+    "WALL": 101070007,
+    "EXIT": 101080108
   },
   "debug_level": {
     "level": 0,

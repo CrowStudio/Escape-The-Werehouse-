@@ -12,7 +12,7 @@ TILE_TYPES = {
     'START': 'Start',
     'EXIT': 'Exit',
     'FLOOR': 'Floor',
-    'PIT_WALL': 'Pit',
+    'BOTTOMLESS_PIT': 'Pit',
     'WALL': 'Wall',
     'PIT1': 'Pit1',
     'PIT2': 'Pit2',
@@ -32,7 +32,7 @@ TILE_IMAGES = {
     'PIT2': Sprite.PIT,
     'PIT3': Sprite.PIT,
     'PIT4': Sprite.PIT,
-    'PIT_WALL': Sprite.PIT,
+    'BOTTOMLESS_PIT': Sprite.PIT,
     'EXIT': Sprite.EXIT[1],
     'BOX1': Sprite.BOXES[8],  # Box with number 1
     'BOX2': Sprite.BOXES[9],  # Box with number 2
@@ -48,7 +48,7 @@ TILE_BUTTON_COLORS = {
     'PIT2': (0, 0, 255),
     'PIT3': (0, 0, 255),
     'PIT4': (0, 0, 255),
-    'PIT_WALL': (0, 0, 139),
+    'BOTTOMLESS_PIT': (0, 0, 139),
     'EXIT': (64, 224, 208),
     'BOX1': (165, 42, 42),
     'BOX2': (165, 42, 42),

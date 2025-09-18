@@ -1,25 +1,21 @@
 import pygame
 import json
 import os
+import glob
 import sys
 from game_board.basic_tile import BasicTile
 
 # Set paths for level data
 DIR_PATH = os.path.dirname(os.path.abspath(__file__))
-
-# Navigate one level up and into the game_board\zones\level_maps\
-ZONE_1_PATH = os.path.join(DIR_PATH, '..', 'game_board', 'zones', 'level_maps', 'zone_1_maps.json')
-
-# Load the zone maps to be able to calculate the total score
-with open(ZONE_1_PATH, 'r') as maps_file:
-    ZONE_1_DATA = json.load(maps_file)
+LEVEL_MAPS_PATH = os.path.join(DIR_PATH, '..', 'game_board', 'zones', 'level_maps')
 
 # Set path for the high_scores.py file
 HIGH_SCORE_PATH = os.path.join(DIR_PATH, 'high_scores.py')
 
 class ScoreManager:
-    def __init__(self, level):
-        self.level = level
+    def __init__(self):
+        # Initialize game board size to zone values
+        self.game_board = pygame.display.set_mode((BasicTile.BOARD_WIDTH, BasicTile.BOARD_HEIGHT))  # Set the screen size to zone width x zone height
 
         self.scores = self.load_scores()
         self.latest_score = None  # Track the latest added score
@@ -56,35 +52,36 @@ class ScoreManager:
 
 
     def load_scores(self):
-        # Calculate the adjusted scores for each level
-        adjusted_scores = [
-            sum(level['score'] + 1 for level in ZONE_1_DATA['levels']),
-            sum(level['score'] + 2 for level in ZONE_1_DATA['levels']),
-            sum(level['score'] + 3 for level in ZONE_1_DATA['levels'])
-        ]
+        # Dynamically detect all zone files
+        zone_files = glob.glob(os.path.join(LEVEL_MAPS_PATH, 'zone_*_maps.json'))
+        total_score = 0
 
-        # Define the default scores with adjusted values
-        default_scores = [
-            (adjusted_scores[0], 'who'),
-            (adjusted_scores[1], 'are'),
-            (adjusted_scores[2], 'you')
+        # Sum all level scores across all zones
+        for zone_file in zone_files:
+            with open(zone_file, 'r') as maps_file:
+                zone_data = json.load(maps_file)
+                total_score += sum(level['score'] for level in zone_data['levels'])
+
+        # Apply adjustments to the total score
+        adjusted_scores = [
+            (total_score + 1, 'who'),  # Total score + 1
+            (total_score + 3, 'are'),  # Total score + 3 (one inccorect move +1)
+            (total_score + 5, 'you')   # Total score + 5 (two inccorect moves +1)
         ]
 
         if not os.path.exists(HIGH_SCORE_PATH):
             with open(HIGH_SCORE_PATH, 'w') as file:
-                file.write(f'SCORES = {default_scores}')
+                file.write(f'SCORES = {adjusted_scores}')
 
         try:
             with open(HIGH_SCORE_PATH, 'r') as file:
                 content = file.read()
-                # Extract scores from the file content
                 scores = eval(content.split('=')[1])
                 return scores
         except Exception as e:
             print(f"Error loading scores: {e}")
+            return adjusted_scores
 
-        # Return default scores if loading fails
-        return default_scores
 
     # Save the current scores to a file
     def save_scores(self):
@@ -94,7 +91,7 @@ class ScoreManager:
 
     def display_scores(self):
         # Fill background with dark color
-        self.level.game_board.fill((30, 30, 30))
+        self.game_board.fill((30, 30, 30))
 
         # Set window caption
         pygame.display.set_caption('High Scores')
@@ -102,7 +99,7 @@ class ScoreManager:
         # Render the title at the top center
         title_text = self.hig_score_font.render('High Scores', True, (255, 215, 115))
         title_rect = title_text.get_rect(center=(BasicTile.BOARD_WIDTH // 2, 120))
-        self.level.game_board.blit(title_text, title_rect)
+        self.game_board.blit(title_text, title_rect)
 
         # Define spacing between columns
         spacing = 20
@@ -168,22 +165,22 @@ class ScoreManager:
                 index_shadow = self.hig_score_font.render(row["index_str"], True, (255, 215, 0))
                 initials_shadow = self.hig_score_font.render(row["initials_str"], True, (255, 215, 0))
                 score_shadow = self.hig_score_font.render(row["score_str"], True, (255, 215, 0))
-                self.level.game_board.blit(index_shadow, (index_x + offset, y_pos + offset))
-                self.level.game_board.blit(initials_shadow, (initials_x + offset, y_pos + offset))
-                self.level.game_board.blit(score_shadow, (score_x + offset, y_pos + offset))
+                self.game_board.blit(index_shadow, (index_x + offset, y_pos + offset))
+                self.game_board.blit(initials_shadow, (initials_x + offset, y_pos + offset))
+                self.game_board.blit(score_shadow, (score_x + offset, y_pos + offset))
 
             # Blit the main texts in white.
-            self.level.game_board.blit(row["index_surface"], (index_x, y_pos))
-            self.level.game_board.blit(row["initials_surface"], (initials_x, y_pos))
-            self.level.game_board.blit(row["score_surface"], (score_x, y_pos))
+            self.game_board.blit(row["index_surface"], (index_x, y_pos))
+            self.game_board.blit(row["initials_surface"], (initials_x, y_pos))
+            self.game_board.blit(row["score_surface"], (score_x, y_pos))
 
         # Optionally, display a 'Back' button if coming from the start screen
         if self.from_start_screen:
             back_button = pygame.Rect(200, 500, 200, 40)  # Adjusted back button position
-            pygame.draw.rect(self.level.game_board, (255, 255, 255), back_button, 2)
+            pygame.draw.rect(self.game_board, (255, 255, 255), back_button, 2)
             back_text = self.font.render('Back', True, (255, 255, 255))
             back_text_center = back_text.get_rect(center=(BasicTile.BOARD_WIDTH // 2, 520))
-            self.level.game_board.blit(back_text, back_text_center)
+            self.game_board.blit(back_text, back_text_center)
             pygame.display.flip()
         else:
             pygame.display.flip()
@@ -215,24 +212,24 @@ class ScoreManager:
                             if len(text) < 3:
                                 text += event.unicode.upper()
 
-            self.level.game_board.fill((30, 30, 30))
+            self.game_board.fill((30, 30, 30))
             # Show celebration text
             celebration_text = self.font.render('Congratulations!', True, (255, 255, 255))
             celebration_center = celebration_text.get_rect(center=(BasicTile.BOARD_WIDTH // 2, 30))
-            self.level.game_board.blit(celebration_text, celebration_center)
+            self.game_board.blit(celebration_text, celebration_center)
             three_text = self.font.render('You made it to the top three!', True, (255, 255, 255))
             three_center = three_text.get_rect(center=(BasicTile.BOARD_WIDTH // 2, 60))
-            self.level.game_board.blit(three_text, three_center)
+            self.game_board.blit(three_text, three_center)
 
             # Show prompt text
             prompt_text = self.font.render('Enter your initials:', True, (255, 255, 255))
             prompt_center = prompt_text.get_rect(center=(BasicTile.BOARD_WIDTH // 2, 90))
-            self.level.game_board.blit(prompt_text, prompt_center)
+            self.game_board.blit(prompt_text, prompt_center)
 
             # Blit input text
             txt_surface = self.font.render(text, True, color)
             text_center = txt_surface.get_rect(center=input_box.center)
-            self.level.game_board.blit(txt_surface, text_center)
+            self.game_board.blit(txt_surface, text_center)
 
             pygame.display.flip()
 

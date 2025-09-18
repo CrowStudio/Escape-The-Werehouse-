@@ -3,7 +3,7 @@ import json
 import os
 from game_board.blitter import Blitter
 from game_board.elements.sprites import Sprite
-from game_board.zones.zone_2_tiles import Zone2Tiles
+from game_board.zones.zone_2_tile import Zone2Tile
 from game_board.basic_tile import BasicTile
 
 # Set paths for level data
@@ -17,98 +17,61 @@ with open(ZONE_2_PATH, 'r') as file:
 class ZoneTwo(Blitter):
     '''zone 2'''
     def __init__(self):
-        super().__init__(ZONE_DATA, Zone2Tiles)
+        super().__init__(ZONE_DATA, Zone2Tile)
+        self.basic_tile = BasicTile
+
+        # Count the number of levels
+        self.no_of_zone_levels = len(ZONE_DATA["levels"])
 
     def check_zone_element_state(self, element, game_state, player_pos=None, boxes_pos=None):
         '''Check if a zone element is valid based on its type and game state.'''
         element_type = element[0]
-        element_pos = element[1]
 
-        if element_type in Zone2Tiles.state_mapping:   # Look up the element in the mapping
-            entry = Zone2Tiles.state_mapping[element_type]
-            print('Element typ: ', entry)
+        if element_type in Zone2Tile.state_mapping:   # Look up the element in the mapping
+            entry = Zone2Tile.state_mapping[element_type]
+            print('Element type: ', entry)
 
             if isinstance(entry, tuple) and len(entry) == 4:  # Latching or momentary switches
                 switch_state, door_state, element_info, switch_type = entry
-                if 'latching' in switch_type:
-                    print('Switch type is: Latching')
-                    latching = True
-                else:
-                    print('Switch type is: Momentary')
-                    latching = False
 
-                if latching:  # Wall switches (latching)
+                if 'latching' in switch_type:  # Wall switches (latching)
                     # Invert switch state
                     switch_value = getattr(game_state, switch_state)
                     setattr(game_state, switch_state, not switch_value)
-                    print(f'Activating {element_info}' if getattr(game_state, switch_state) else f'Deactivating {element_info}')
+                    new_switch_value = not switch_value
+
+                    # Print activation/deactivation with the requested format
+                    if new_switch_value:
+                        print(f'Switch type is: Latching - Activating {element_info}')
+                    else:
+                        print(f'Switch type is: Latching - Deactivating {element_info}')
 
                     # Invert door state
                     door_value = getattr(game_state, door_state)
                     setattr(game_state, door_state, not door_value)
                     # Sliding doors output
-                    if 'closed' in door_state and not switch_value:
-                        print('Opening sliding door')
-                    elif 'closed' in door_state and not door_value:
-                        print('Closing sliding door')
-                    if 'open' in door_state and switch_value:
-                        print('Opening sliding door')
-                    elif 'open' in door_state and not door_value:
-                        print('Closing sliding door')
+
+                    # Sliding doors output
+                    if 'closed' in door_state:
+                        if not switch_value:
+                            print('Opening sliding door')
+                        else:
+                            print('Closing sliding door')
+                    elif 'open' in door_state:
+                        if switch_value:
+                            print('Opening sliding door')
+                        else:
+                            print('Closing sliding door')
 
                     return True
 
-                ##############################################################
-                # Need to refactor code to be able to update this each frame #
-                ##############################################################
-
-                else:  # Floor switches (momentary)
-                    print('Player pos: ', player_pos)
-                    print('Boxes pos: ', boxes_pos)
-                    print('Element pos: ', element_pos)
-
-
-                    activated = (player_pos == element_pos) or (boxes_pos and element_pos in boxes_pos)
-
-                    if activated:
-                        print('Engaging', element_info)
-                        # Invert switch state
-                        setattr(game_state, switch_state, activated)
-                        switch_value = getattr(game_state, switch_state)
-                        print(switch_value)
-
-                        # Invert door state
-                        setattr(game_state, door_state, activated)
-                        door_value = getattr(game_state, door_state)
-                        print(door_value)
-
-                    else:
-                        print('Disengaging', element_info)
-                        # Invert switch state
-                        setattr(game_state, switch_state, activated)
-                        switch_value = getattr(game_state, switch_state)
-                        print(switch_value)
-
-                        # Invert door state
-                        setattr(game_state, door_state, activated)
-                        door_value = getattr(game_state, door_state)
-                        print(door_value)
-
-                    # Trap doors output
-                    if 'closed' in door_state and activated:
-                        print('Opening trap door')
-                    elif 'closed' in door_state and not activated:
-                        print('Closing trap door')
-                    if 'open' in door_state and activated:
-                        print('Opening trap door')
-                    elif 'open' in door_state and not activated:
-                        print('Closing trap door')
+                else:  # Floor switches (momentary) - state updates in main game loop
                     return True
 
             else:  # Check sliding door, or trap door status
                 door_state, element_info = entry
                 active = getattr(game_state, door_state)
-                if 'SD' in door_state:  # Sliding doors status
+                if 'SD' in door_state:  # Sliding door status
                     if active:
                         print(f'The {element_info} is closed!')
                         return False
@@ -116,7 +79,7 @@ class ZoneTwo(Blitter):
                         print(f'Passing {element_info}')
                         return True
 
-                else:  # Trap doors status
+                elif 'TD' in door_state:  # Trap door status
                     if active:
                         print(f'The {element_info} is open!')
                         return False
@@ -124,10 +87,11 @@ class ZoneTwo(Blitter):
                         print(f'Passing {element_info}')
                         return True
 
+
         # Check for basic tiles
         if element_type in self.basic_tile.mapping:
             # Check if Exit is inactive
-            if element_type == BasicTile.mapping[8] and not game_state.exit:
+            if element_type == self.basic_tile.mapping[8] and not game_state.exit:
                 return False
             else:
                 return True
@@ -141,8 +105,8 @@ class ZoneTwo(Blitter):
         # Blit the floor tile
         self.game_board.blit(Sprite.FLOOR[i], pos)
         # Look up the element in the sprite mapping
-        if element in Zone2Tiles.sprite_mapping:
-            sprite_tuple, state_attr = Zone2Tiles.sprite_mapping[element]
+        if element in Zone2Tile.sprite_mapping:
+            sprite_tuple, state_attr = Zone2Tile.sprite_mapping[element]
             # Get the state of the element from game_state
             element_state = getattr(game_state, state_attr)
 
@@ -156,6 +120,7 @@ class ZoneTwo(Blitter):
 
             # Blit the selected sprite
             self.game_board.blit(sprite, pos)
+
 
     def blit_level_elements(self, game_state):
         super().blit_level_elements(game_state, blit_zone_element = self.blit_zone_element)
