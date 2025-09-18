@@ -207,11 +207,15 @@ class GameState:
             self.total_moves = 0
             self.lives = 3
 
+            return self.zone.current_zone_index
+
         elif self.game == True and self.current_level >= self.zone_level.no_of_zone_levels and self.zone.current_zone_index < self.zone.no_of_zones:
             self.current_level = 0
             self.moves = 0
             self.zone.switch_to_next_zone()
             self.update_zone_tiles()
+
+            return self.zone.current_zone_index
 
         elif self.game == True and self.current_level >= self.zone_level.no_of_zone_levels and self.zone.current_zone_index >= self.zone.no_of_zones:
             # Debug statements
@@ -225,6 +229,8 @@ class GameState:
 
             print("Displaying high scores...")  # Debug statement
             high_scores.display_scores()
+
+            return self.zone.current_zone_index
 
 
     # Reset the game state variables related to movement at the start of each frame.

@@ -408,8 +408,16 @@ def main():
                     game_state.debounce_timer -= 1
 
                 # Check level completion
-                if game_state.check_level_complete():
-                    game_state.handle_level_complete(high_scores)
+                level_complete = game_state.check_level_complete()
+
+                # Handle level completion
+                if level_complete:
+                    previous_zone = zone.current_zone_index
+                    active_zone = game_state.handle_level_complete(high_scores)
+
+                    # Update the zone reference for the start_menu object when zone.current_zone_index changes
+                    if active_zone != previous_zone:
+                        start_menu = StartMenu(zone, game_state)
 
                     if not game_state.is_playing:
                         high_scores.from_start_screen = False  # Set the flag to False
@@ -419,7 +427,7 @@ def main():
                     # Fade out effect
                     zone.current_level_set.fade_out(game_state)
 
-                if not game_state.player_in_pit and not game_state.check_level_complete():
+                if not game_state.player_in_pit and not level_complete:
                     # Set background color
                     zone.current_level_set.game_board.fill((30, 30, 30))
 
