@@ -19,7 +19,7 @@ class ZoneOne(Blitter):
         self.basic_tile = BasicTile
 
         # Count the number of levels
-        self.no_of_levels = len(ZONE_DATA["levels"])
+        self.no_of_zone_levels = len(ZONE_DATA["levels"])
 
     def check_zone_element_state(self, element, game_state, player_pos=None, boxes_pos=None):
         element_type = element[0]

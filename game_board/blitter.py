@@ -11,7 +11,7 @@ class Blitter():
     def __init__(self, ZONE_DATA, ZONE_TILE):
         '''__init__'''
         print("Blitter instance created")  # Debug statement
-        self.zone_data= LevelData(ZONE_DATA)
+        self.zone_data = LevelData(ZONE_DATA)
         self.zone_tile = ZONE_TILE
 
 
@@ -30,9 +30,8 @@ class Blitter():
         # Initialize game board size to zone values
         self.game_board = pygame.display.set_mode((self.width, (self.height)))  # Set the screen size to zone width x zone height
 
-        # Variable to keep track of numbers of Levels
-        self.no_of_levels = [sum(type(i) == type([]) for i in self.zone_data.level_maps[0])]
-        self.no_of_levels.append(sum(type(i) == type([]) for i in self.zone_data.level_maps[1]))
+        # Variable to keep track of numbers of tutorial levels
+        self.no_of_tutorial_levels = len(self.zone_data.tutorial_maps)
 
         # Lists for creation of Levels
         self.elements = []
