@@ -49,10 +49,6 @@ class GameState:
         self.b4x = 0
         self.b4y = 0
 
-        # Variables for active/inactive Exit
-        self.exit = False
-        self.activate_exit = False  # Variable for Exit switch
-
         # Variables for active/inactive Pit
         self.pit1 = True
         self.pit2 = True
@@ -64,6 +60,22 @@ class GameState:
         self.in_pit2 = False
         self.in_pit3 = False
         self.in_pit4 = False
+
+        # Variables for active/inactive Exit
+        self.exit = False
+
+        # Variables for game options
+        self.lights_out = False
+        self.is_searching = False
+        self.search = 0
+        self.search_speed = 0.4
+
+        self.initialize_zone_elements()
+
+
+    def initialize_zone_elements(self):
+        # Variable for Exit switch
+        self.activate_exit = False
 
         # Variables for wall switches ON:
         # UP
@@ -155,16 +167,10 @@ class GameState:
         # RIGHT
         self.TD_R1_0_normally_closed = False
 
-        # Variables for game options
-        self.lights_out = False
-        self.is_searching = False
-        self.search = 0
-        self.search_speed = 0.4
-
-
     def update_zone_tiles(self):
         self.zone_level = self.zone.current_level_set
         self.zone_tile = self.zone_level.zone_tile
+        self.initialize_zone_elements()
 
     # Check if player has reach Exit
     def check_level_complete(self):
@@ -296,7 +302,9 @@ class GameState:
                     return True
                 elif element[0] == BasicTile.PIT4 and (not self.pit4 or not self.is_pulling):
                     return True
-                elif element[0] in [BasicTile.WALL, BasicTile.BOTTOMLESS_PIT]:
+                elif element[0] == BasicTile.BOTTOMLESS_PIT:
+                    return True
+                elif element[0] == BasicTile.WALL:
                     return False
                 else:
                     return level.check_zone_element_state(element, game_state=self, player_pos=(new_x, new_y))
@@ -341,9 +349,9 @@ class GameState:
         for element in level.elements:
             if element[1] == (push_x, push_y):
                 if element[0] in [BasicTile.START, BasicTile.FLOOR, BasicTile.EXIT,
-                                BasicTile.PIT1, BasicTile.PIT2, BasicTile.PIT3, BasicTile.PIT4]:
+                                BasicTile.PIT1, BasicTile.PIT2, BasicTile.PIT3, BasicTile.PIT4, BasicTile.BOTTOMLESS_PIT]:
                     return self.__check_for_obstructing_boxes__(level, push_x, push_y)
-                elif element[0] in [BasicTile.WALL, BasicTile.BOTTOMLESS_PIT]:
+                elif element[0] == BasicTile.WALL:
                     return False
                 else:
                     # Check for obstructing boxes
@@ -362,15 +370,28 @@ class GameState:
             BasicTile.PIT1: ('pit1', 'in_pit1'),
             BasicTile.PIT2: ('pit2', 'in_pit2'),
             BasicTile.PIT3: ('pit3', 'in_pit3'),
-            BasicTile.PIT4: ('pit4', 'in_pit4')
+            BasicTile.PIT4: ('pit4', 'in_pit4'),
+            BasicTile.BOTTOMLESS_PIT: ('bottomless_pit')
         }
 
         # Look for pit element
         for element in self.zone_level.elements:
             position, pit_type = element[1], element[0]
 
-            # Check if the current element is a pit and matches the given coordinates
-            if position == (bx, by) and pit_type in pit_mapping:
+            # Check if the current element is a bottomless pit and matches the given coordinates
+            if position == (bx, by) and pit_mapping.get(pit_type) == 'bottomless_pit':
+                if box_num == 1:
+                    self.zone_level.box1 = False
+                elif box_num == 2:
+                    self.zone_level.box2 = False
+                elif box_num == 3:
+                    self.zone_level.box3 = False
+                elif box_num == 4:
+                    self.zone_level.box4 = False
+                return True
+
+            # Check if the current element is pit1-pit4 and matches the given coordinates
+            elif position == (bx, by) and pit_type in pit_mapping and not pit_mapping == 'bottomless_pit':
                 pit_state, in_pit = pit_mapping[pit_type]
                 pit_active = getattr(self, pit_state)
 
@@ -404,7 +425,8 @@ class GameState:
             BasicTile.PIT1: ('pit1'),
             BasicTile.PIT2: ('pit2'),
             BasicTile.PIT3: ('pit3'),
-            BasicTile.PIT4: ('pit4')
+            BasicTile.PIT4: ('pit4'),
+            BasicTile.BOTTOMLESS_PIT: ('bottomless_pit')
         }
 
         # Look for pit element
@@ -414,7 +436,10 @@ class GameState:
             # Check if the current element is a pit and matches the given coordinates
             if position == (px, py) and pit_type in pit_mapping:
                 pit_state = pit_mapping[pit_type]
-                pit_active = getattr(self, pit_state)
+                if not element[0] == BasicTile.BOTTOMLESS_PIT:
+                    pit_active = getattr(self, pit_state)
+                else:
+                    pit_active = True
 
                 # Only proceed if the pit is active
                 if pit_active:
@@ -433,7 +458,7 @@ class GameState:
                     pygame.display.flip()
 
                     # Debug statement to check player position
-                    print(f"Oh no! Player fell into pit {pit_type} (C:{int(px/100+1)}, R:{int(py/100+1)})")
+                    print(f"Oh no! You fell into a pit {pit_type} (C:{int(px/100+1)}, R:{int(py/100+1)})")
 
                     # Fade out effect
                     self.zone_level.fade_out(self)

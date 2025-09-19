@@ -377,6 +377,7 @@ def main():
                 if game_state.new_level:
                     zone.current_level_set.level_index = game_state.current_level
                     mode_index = 0 if game_state.game == False else 1  # Check if it is tutorial level or game level
+                    game_state.initialize_zone_elements()
                     zone.current_level_set.game_board.fill((30, 30, 30))
                     game_state.new_level = zone.current_level_set.generate_level(game_state, True, mode_index)
                     game_state.player_in_pit = False # Reset player

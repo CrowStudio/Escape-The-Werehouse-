@@ -88,7 +88,7 @@ class Blitter():
         self.__pit_common__(game_state, pos, box, 4,  eye_index=i)
 
     # Blit pit_as_wall tile
-    def __pit_as_wall__(self, pos):
+    def __bottomless_pit__(self, pos):
         # identical to a “dead” pit
         self.game_board.blit(Sprite.PIT, pos)
 
@@ -186,7 +186,7 @@ class Blitter():
             101020102: (self.__pit_2__, 'in_pit2'),
             101030103: (self.__pit_3__, 'in_pit3'),
             101040104: (self.__pit_4__, 'in_pit4'),
-            101050005: (self.__pit_as_wall__, None),
+            101050005: (self.__bottomless_pit__, None),
             101060006: (self.__floor__, 'floor'),
             101070007: (self.__wall__, None),
             101080108: (self.__exit__, 'exit'),
