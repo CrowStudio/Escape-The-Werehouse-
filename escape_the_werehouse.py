@@ -263,7 +263,6 @@ def move_player_and_boxes(level, audio, game_state):
         print('Cannot move in that direction!')
         return False  # Don't move if invalid
 
-
     # Handle box movement
     if game_state.is_pulling:
         # Calculate position behind player

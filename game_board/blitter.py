@@ -87,7 +87,7 @@ class Blitter():
     def __pit_4__(self, pos, box, i, game_state):
         self.__pit_common__(game_state, pos, box, 4,  eye_index=i)
 
-    # Blit pit_as_wall tile
+    # Blit pit tile
     def __bottomless_pit__(self, pos):
         # identical to a “dead” pit
         self.game_board.blit(Sprite.PIT, pos)
