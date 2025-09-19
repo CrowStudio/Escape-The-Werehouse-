@@ -263,9 +263,6 @@ def move_player_and_boxes(level, audio, game_state):
         print('Cannot move in that direction!')
         return False  # Don't move if invalid
 
-    # Check if player falls into pit
-    if game_state.check_player_in_pit(new_x, new_y, audio):
-        return False  # Movement was valid but player fell
 
     # Handle box movement
     if game_state.is_pulling:
@@ -296,6 +293,7 @@ def move_player_and_boxes(level, audio, game_state):
             game_state.b1x = new_x + (new_x - x)
             game_state.b1y = new_y + (new_y - y)
             if game_state.check_box_in_pit(1, game_state.b1x, game_state.b1y):
+                audio.play_sound('move')
                 audio.play_sound('fall')
             else:
                 audio.play_sound('move')
@@ -303,6 +301,7 @@ def move_player_and_boxes(level, audio, game_state):
             game_state.b2x = new_x + (new_x - x)
             game_state.b2y = new_y + (new_y - y)
             if game_state.check_box_in_pit(2, game_state.b2x, game_state.b2y):
+                audio.play_sound('move')
                 audio.play_sound('fall')
             else:
                 audio.play_sound('move')
@@ -310,6 +309,7 @@ def move_player_and_boxes(level, audio, game_state):
             game_state.b3x = new_x + (new_x - x)
             game_state.b3y = new_y + (new_y - y)
             if game_state.check_box_in_pit(3, game_state.b3x, game_state.b3y):
+                audio.play_sound('move')
                 audio.play_sound('fall')
             else:
                 audio.play_sound('move')
@@ -317,16 +317,21 @@ def move_player_and_boxes(level, audio, game_state):
             game_state.b4x = new_x + (new_x - x)
             game_state.b4y = new_y + (new_y - y)
             if game_state.check_box_in_pit(4, game_state.b4x, game_state.b4y):
+                audio.play_sound('move')
                 audio.play_sound('fall')
             else:
                 audio.play_sound('move')
 
-    # Move player to new position
-    print('Moving')
-    game_state.px = new_x
-    game_state.py = new_y
+    # Check if player falls into pit
+    if game_state.check_player_in_pit(new_x, new_y, audio):
+        return False  # Movement was valid but player fell
 
-    return True
+    else:  # Move player to new position
+        print('Moving')
+        game_state.px = new_x
+        game_state.py = new_y
+
+        return True
 
 
 def main():
