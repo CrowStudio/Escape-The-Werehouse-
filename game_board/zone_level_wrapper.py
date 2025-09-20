@@ -3,8 +3,8 @@ from game_board.zones.zone_1 import ZoneOne
 from game_board.zones.zone_2 import ZoneTwo
 
 class ZoneLevelWrapper:
-    def __init__(self):
-        self.zone = [ZoneOne(), ZoneTwo()]
+    def __init__(self, audio):
+        self.zone = [ZoneOne(audio), ZoneTwo(audio)]
         self.no_of_zones = len(self.zone) -1  # to compensate for zone index that starts at 0
         self.current_zone_index = 0
         self.current_level_set = self.zone[self.current_zone_index]

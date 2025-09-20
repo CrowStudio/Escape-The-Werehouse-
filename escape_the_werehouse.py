@@ -335,9 +335,9 @@ def move_player_and_boxes(level, audio, game_state):
 
 def main():
     # Initialize game components
-    audio = AudioManager()
     high_scores = ScoreManager()
-    zone = ZoneLevelWrapper()
+    audio = AudioManager()
+    zone = ZoneLevelWrapper(audio)
     game_state = GameState(zone)
     start_menu = StartMenu(zone, game_state)
 
@@ -436,7 +436,7 @@ def main():
                     # Set background color
                     zone.current_level_set.game_board.fill((30, 30, 30))
 
-                    game_state.check_momentary_switches()
+                    game_state.check_momentary_switches(audio)
 
                     # Render the the game elements
                     zone.current_level_set.blit_level_elements(game_state)

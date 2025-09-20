@@ -14,12 +14,14 @@ with open(ZONE_1_PATH, 'r') as file:
 
 class ZoneOne(Blitter):
     '''zone 1'''
-    def __init__(self):
-        super().__init__(ZONE_DATA, BasicTile)
-        self.basic_tile = BasicTile
+    def __init__(self, audio):
+        self.audio = audio
 
         # Count the number of levels
         self.no_of_zone_levels = len(ZONE_DATA["levels"])
+
+        super().__init__(ZONE_DATA, BasicTile)
+        self.basic_tile = BasicTile
 
     def check_zone_element_state(self, element, game_state, player_pos=None, boxes_pos=None):
         element_type = element[0]

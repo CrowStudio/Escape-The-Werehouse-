@@ -16,12 +16,14 @@ with open(ZONE_2_PATH, 'r') as file:
 
 class ZoneTwo(Blitter):
     '''zone 2'''
-    def __init__(self):
-        super().__init__(ZONE_DATA, Zone2Tile)
-        self.basic_tile = BasicTile
+    def __init__(self, audio):
+        self.audio = audio
 
         # Count the number of levels
         self.no_of_zone_levels = len(ZONE_DATA["levels"])
+
+        super().__init__(ZONE_DATA, Zone2Tile)
+        self.basic_tile = BasicTile
 
     def check_zone_element_state(self, element, game_state, player_pos=None, boxes_pos=None):
         '''Check if a zone element is valid based on its type and game state.'''
@@ -43,8 +45,10 @@ class ZoneTwo(Blitter):
                     # Print activation/deactivation with the requested format
                     if new_switch_value:
                         print(f'Switch type is: Latching - Activating {element_info}')
+                        self.audio.play_sound('sliding_door_opening')
                     else:
                         print(f'Switch type is: Latching - Deactivating {element_info}')
+                        self.audio.play_sound('sliding_door_closing')
 
                     # Invert door state
                     door_value = getattr(game_state, door_state)
