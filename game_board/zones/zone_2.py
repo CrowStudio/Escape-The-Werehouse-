@@ -18,11 +18,12 @@ class ZoneTwo(Blitter):
     '''zone 2'''
     def __init__(self, audio):
         self.audio = audio
-        super().__init__(ZONE_DATA, Zone2Tile)
-        self.basic_tile = BasicTile
 
         # Count the number of levels
         self.no_of_zone_levels = len(ZONE_DATA["levels"])
+
+        super().__init__(ZONE_DATA, Zone2Tile)
+        self.basic_tile = BasicTile
 
     def check_zone_element_state(self, element, game_state, player_pos=None, boxes_pos=None):
         '''Check if a zone element is valid based on its type and game state.'''
