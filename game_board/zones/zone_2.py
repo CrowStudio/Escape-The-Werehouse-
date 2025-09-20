@@ -16,7 +16,8 @@ with open(ZONE_2_PATH, 'r') as file:
 
 class ZoneTwo(Blitter):
     '''zone 2'''
-    def __init__(self):
+    def __init__(self, audio):
+        self.audio = audio
         super().__init__(ZONE_DATA, Zone2Tile)
         self.basic_tile = BasicTile
 
@@ -43,8 +44,10 @@ class ZoneTwo(Blitter):
                     # Print activation/deactivation with the requested format
                     if new_switch_value:
                         print(f'Switch type is: Latching - Activating {element_info}')
+                        self.audio.play_sound('sliding_door_opening')
                     else:
                         print(f'Switch type is: Latching - Deactivating {element_info}')
+                        self.audio.play_sound('sliding_door_closing')
 
                     # Invert door state
                     door_value = getattr(game_state, door_state)

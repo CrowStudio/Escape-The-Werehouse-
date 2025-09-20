@@ -477,7 +477,7 @@ class GameState:
                         return True
 
 
-    def check_momentary_switches(self):
+    def check_momentary_switches(self, audio):
         '''Check all momentary switches (e.g., floor plates) every frame.'''
         # Collect box positions
         box_positions = [
@@ -525,16 +525,20 @@ class GameState:
                     print(f'Switch type is: Momentary - Engaging {switch_name} ')
                     if 'closed' in door_state:
                         print('Opening trap door')
+                        audio.play_sound('trap_door_opening')
                     elif 'open' in door_state:
                         print('Closing trap door')
+                        audio.play_sound('trap_door_closing')
                     else:
                         print('Exit activated!')
                 else:
                     print(f'Switch type is: Momentary - Disengaging {switch_name} ')
                     if 'closed' in door_state:
                         print('Closing trap door')
+                        audio.play_sound('trap_door_closing')
                     elif 'open' in door_state:
                         print('Opening trap door')
+                        audio.play_sound('trap_door_opening')
                     else:
                         print('Exit deactivated!')
 

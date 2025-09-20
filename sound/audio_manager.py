@@ -17,7 +17,11 @@ class AudioManager:
             }
             self.sounds = {
                 'move': pygame.mixer.Sound('sound/moving.wav'),
-                'fall': pygame.mixer.Sound('sound/fall_in_pit.wav')
+                'fall': pygame.mixer.Sound('sound/fall_in_pit.wav'),
+                'sliding_door_opening': pygame.mixer.Sound('sound/sliding_door_opening.wav'),
+                'sliding_door_closing': pygame.mixer.Sound('sound/sliding_door_closing.wav'),
+                'trap_door_opening': pygame.mixer.Sound('sound/trap_door_opening.wav'),
+                'trap_door_closing': pygame.mixer.Sound('sound/trap_door_closing.wav')
             }
         except (pygame.error, FileNotFoundError) as e:
             logger.error(f"Failed to load audio: {e}")

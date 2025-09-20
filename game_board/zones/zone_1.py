@@ -14,7 +14,7 @@ with open(ZONE_1_PATH, 'r') as file:
 
 class ZoneOne(Blitter):
     '''zone 1'''
-    def __init__(self):
+    def __init__(self, audio):
         super().__init__(ZONE_DATA, BasicTile)
         self.basic_tile = BasicTile
 
